@@ -1,0 +1,43 @@
+{
+  "name": "thirtyinches",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "firebase": "^9.2.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.0.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.1",
+    "browserify-css": "^0.14.0",
+    "envify": "^4.1.0",
+    "uglify-js": "^3.14.2",
+    "uglifyify": "^5.0.2",
+    "watchify": "^3.11.1",
+    "mkdirp": "^0.5.1"
+  },
+  "scripts": {
+    "postinstall": "mkdirp public/js public/css",
+    "build": "browserify main.js -t babelify -t uglifyify | uglifyjs -cm > public/js/bundle.js",
+    "watch" : "watchify main.js -t babelify -o public/js/bundle.js -dv",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1995navinkumar/thirtyinches.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1995navinkumar/thirtyinches/issues"
+  },
+  "homepage": "https://github.com/1995navinkumar/thirtyinches#readme"
+}
