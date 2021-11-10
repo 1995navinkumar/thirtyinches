@@ -6,7 +6,8 @@
   "dependencies": {
     "firebase": "^9.2.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^6.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
@@ -25,8 +26,8 @@
   },
   "scripts": {
     "postinstall": "mkdirp public/js public/css",
-    "build": "browserify main.js -t babelify -t uglifyify | uglifyjs -cm > public/js/bundle.js",
-    "watch" : "watchify main.js -t babelify -o public/js/bundle.js -dv",
+    "build": "browserify main.js -g babelify -t uglifyify | uglifyjs -cm > public/js/bundle.js",
+    "watch": "watchify main.js -g babelify -o public/js/bundle.js -dv",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
