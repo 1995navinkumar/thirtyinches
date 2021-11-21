@@ -13,7 +13,7 @@ export function Home({ user }) {
     var signout = React.useCallback((e) => {
         const auth = getAuth();
         signOut(auth).then(() => {
-            navigate("/");
+            // navigate("/");
             // Sign-out successful.
         }).catch((error) => {
             // An error happened.
@@ -21,8 +21,9 @@ export function Home({ user }) {
     })
     return (
         <div>
+            <h3 style={{ fontSize: "24px" }}>{user.customFields.orgName}</h3>
             <p>Welcome
-                <span style={{ color: "red" }}> {user.displayName}</span>
+                <span style={{ color: "red" }}> {user.customFields.name}</span>
             </p>
 
             <button onClick={signout}>signout</button>

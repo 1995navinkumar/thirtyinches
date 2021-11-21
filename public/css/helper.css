@@ -1,0 +1,63 @@
+.inherit-height {
+    height: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.flex-row {
+    display: flex;
+}
+
+.flex-align-center {
+    align-items: center;
+}
+
+.flex-justify-center {
+    justify-content: center;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.ellipsis {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.xr--medium {
+    margin-right: 4px;
+}
+
+.xl--medium {
+    margin-left: 4px;
+}
+
+.fl-grow {
+    flex-grow: 1;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.hide {
+    display: none;
+}
+
+[contenteditable='true'] {
+    min-width: 24px;
+    border: none;
+    outline: none;
+    -webkit-user-select: text;
+    width: max-content;
+}

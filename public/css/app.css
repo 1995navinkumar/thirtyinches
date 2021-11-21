@@ -1,12 +1,81 @@
-.flex-row {
-    display: flex;
-    flex-direction: row;
+@import './user-agent.css';
+@import './helper.css';
+@font-face {
+    font-family: 'lato';
+    src: url('../Lato/Lato-Regular.ttf')
 }
 
-.flex-align-center {
-    align-items: center;
+@font-face {
+    font-family: 'bolded';
+    src: url('../Lato/Lato-Bold.ttf')
 }
 
-.flex-justify-center {
-    justify-content: center;
+html, body, #app-root {
+    height: 100%;
+}
+
+body {
+    font-family: lato sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app-header {
+    padding: 24px;
+    font-size: 24px;
+}
+
+.app-header--title {
+    color: #2e9bcd;
+    font-weight: bold;
+}
+
+.signin-container {
+    padding: 24px;
+    border: 1px solid #dedede;
+    border-radius: 5px;
+}
+
+.signin-title {
+    padding-bottom: 8px;
+}
+
+.username, .password, .orgname, .mailid {
+    padding: 8px 0px;
+}
+
+.username--input, .password--input, .orgname--input, .mailid--input {
+    border: 1px solid #dedede;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.signin-btn {
+    padding: 4px;
+    border-radius: 4px;
+    background: #2e9bcd;
+    color: white;
+    margin: 4px 0px;
+}
+
+.signin-google {
+    padding: 8px 0px;
+}
+
+.signin-google--btn {
+    padding: 4px;
+    border-radius: 4px;
+    background: #2e9bcd;
+    color: white;
+}
+
+.create-org-btn {
+    margin: 4px 0px;
+    margin-left: 12px;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #dedede;
+}
+
+.form-actions {
+    justify-content: space-around;
 }

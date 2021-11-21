@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { initializeApp } from "firebase/app";
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
 import App from './src/App.js';
 
 const firebaseConfig = {
@@ -17,9 +15,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
-const auth = getAuth();
 
 ReactDOM.render(<App />, document.getElementById('app-root'));
