@@ -1,13 +1,14 @@
 @import './user-agent.css';
 @import './helper.css';
+
 @font-face {
     font-family: 'lato';
-    src: url('../Lato/Lato-Regular.ttf')
+    src: url('../Lato/Lato-Regular.ttf');
 }
 
 @font-face {
     font-family: 'bolded';
-    src: url('../Lato/Lato-Bold.ttf')
+    src: url('../Lato/Lato-Bold.ttf');
 }
 
 html, body, #app-root {
@@ -15,7 +16,7 @@ html, body, #app-root {
 }
 
 body {
-    font-family: lato sans-serif;
+    font-family: 'lato', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
 
