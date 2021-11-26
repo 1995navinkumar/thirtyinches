@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import styled from 'styled-components';
 
 var Styles = styled.div`
@@ -61,11 +61,9 @@ const provider = new GoogleAuthProvider();
 export function SignIn({ setSignUp }) {
     var signInUsingGoogle = React.useCallback(() => {
         const auth = getAuth();
-        signInWithPopup(auth, provider)
+        signInWithRedirect(auth, provider)
             .then((result) => {
-
             }).catch((error) => {
-
             });
     })
 
