@@ -6,11 +6,14 @@ export function LandingPage() {
     var [isSignUp, setSignUp] = React.useState(false);
     return (
         <React.Fragment>
-            {
+            {/* {
                 isSignUp
                     ? <SignUp setSignUp={setSignUp} />
                     : <SignIn setSignUp={setSignUp} />
-            }
+            } */}
+
+             <SignIn setSignUp={setSignUp} />
+
         </React.Fragment>
     )
 } 

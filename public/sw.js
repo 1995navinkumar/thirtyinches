@@ -15,6 +15,7 @@ this.addEventListener("install", function (event) {
                 return cache.addAll(urlsToCache);
             })
     );
+
 })
 
 
@@ -26,3 +27,11 @@ this.addEventListener('fetch', function (event) {
         })
     );
 });
+
+this.addEventListener('periodicsync', event => {
+    if (event.tag == 'get-latest-news') {
+        console.log(event);
+        this.registration.showNotification("event")
+    }
+});
+

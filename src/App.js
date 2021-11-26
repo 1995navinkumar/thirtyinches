@@ -18,22 +18,22 @@ export default function App() {
     const auth = getAuth();
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {
-            if (userObj) {
-                getUserDetails(userObj)
-                    .then(details => {
-                        userObj.customFields = details;
-                        setUser(userObj);
-                    })
-            } else {
-                setUser(false);
-            }
+
+            setUser(userObj?? false);
+            // if (userObj) {
+            //     getUserDetails(userObj)
+            //         .then(details => {
+            //             userObj.customFields = details;
+            //         })
+            // } else {
+            //     setUser(false);
+            // }
         });
     }, []);
 
     return (
         <React.Fragment>
-            <Header />
-            <div className="flex-row flex-justify-center">
+            <div className="flex-column full-height">
                 {
                     user == null
                         ? <p> Loading... </p>

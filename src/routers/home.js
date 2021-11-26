@@ -21,9 +21,9 @@ export function Home({ user }) {
     })
     return (
         <div>
-            <h3 style={{ fontSize: "24px" }}>{user.customFields.orgName}</h3>
+            <h3 style={{ fontSize: "24px" }}>{}</h3>
             <p>Welcome
-                <span style={{ color: "red" }}> {user.customFields.name}</span>
+                <span style={{ color: "red" }}> {user.displayName}</span>
             </p>
 
             <button onClick={signout}>signout</button>
