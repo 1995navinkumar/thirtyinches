@@ -32,6 +32,8 @@ var Styles = styled.div`
 `
 
 export function AddOrg() {
+    console.log("add-org");
+    
     var [hideAdd, setHideAdd] = React.useState(true);
     return (
         <Styles>
@@ -55,7 +57,7 @@ function OrgForm() {
         var details = formEls.map(f => f.value);
         addOrgDetails(details).then((isAdded) => {
             if (isAdded) {
-                navigate("/dashboard");
+                navigate("/orgs");
             }
         });
     }, []);

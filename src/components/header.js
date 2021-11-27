@@ -1,17 +1,50 @@
 import React from 'react';
+import styled from 'styled-components';
+import { getAuth, signOut } from 'firebase/auth';
 
-export function Header() {
+var Styles = styled.header`
+    height : 44px;
+    border-bottom : 1px solid #FFF202;
+
+    .search-container {
+        flex : 1;
+    }
+
+    .menu-icon {
+        width : 32px;
+        height : 32px;
+    }
+
+    .signout-icon {
+        height : 20px;
+        width : 20px;
+        margin : 0px 8px;
+    }
+`
+
+export function AppHeader({ setShowMenu }) {
+
+    var signout = React.useCallback((e) => {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+            // Sign-out successful.
+        }).catch((error) => {
+            // An error happened.
+        });
+    });
+
+    var menuHandler = React.useCallback((e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        e.nativeEvent.stopImmediatePropagation();
+        setShowMenu(menu => !menu);
+    })
+
     return (
-        <React.Fragment>
-            <div className="app-header-container">
-                <div className="flex-row flex-justify-center app-header">
-                    <span className="oval-1"></span>
-                    <h1 className="app-header--title">30"</h1>
-                </div>
-                <div className="flex-row flex-justify-center">
-                    <p className="app-header--subtitle">Gym Management App</p>
-                </div>
-            </div>
-        </React.Fragment>
+        <Styles className="app-header flex-row flex-align-center">
+            <img src="images/menu.png" onClick={menuHandler} className="menu-icon" />
+            <div className="search-container"></div>
+            <img onClick={signout} className="signout-icon" src="images/logout.png" />
+        </Styles>
     )
 }

@@ -1,34 +1,20 @@
 import React from 'react';
-import { getAuth, signOut } from "firebase/auth";
 import styled from 'styled-components';
 import { AddOrg } from '../components/add-org';
-import { Dashboard } from '../components/dashboard';
+import { Dashboard } from '../routers/dashboard';
+import { Subscriptions } from '../routers/subscriptions';
+import { Orgs } from '../routers/orgs';
+import { AppHeader } from '../components/header';
+import { Menu } from '../components/menu';
+
 import {
     Routes,
     Route,
-    useNavigate
+    useNavigate,
+    useLocation
 } from "react-router-dom";
 
 var Styles = styled.div`
-    height : 100%;
-    display : flex;
-    flex-direction : column;
-
-    .app-header {
-        height : 44px;
-        border-bottom : 1px solid #FFF202;
-    }
-
-    .search-container {
-        flex : 1;
-    }
-
-    .signout-icon {
-        height : 20px;
-        width : 20px;
-        margin : 0px 8px;
-    }
-
     .app-body {
         flex : 1;
     }
@@ -41,33 +27,50 @@ var Styles = styled.div`
 
 
 export function Home({ user }) {
+    var location = useLocation();
     var navigate = useNavigate();
+
+    var [routerResolved, setRouterResolved] = React.useState(false);
+    var [showMenu, setShowMenu] = React.useState(false);
+
     React.useEffect(() => {
-        if (Object.keys(user.customFields).length === 0) {
-            navigate("/add-org");
+        var orgs = user.customFields.orgs;
+        if (!orgs) {
+            navigate("/orgs/add");
+        } else if (location.pathname == "/") {
+            navigate("/dashboard");
+        }
+        setRouterResolved(true);
+    }, []);
+
+    React.useEffect(() => {
+        var menuClickListener = document.addEventListener("click", (e) => {
+            setShowMenu(false);
+        })
+        return () => {
+            document.removeEventListener("click", menuClickListener);
         }
     }, []);
 
-
-    var signout = React.useCallback((e) => {
-        const auth = getAuth();
-        signOut(auth).then(() => {
-            // Sign-out successful.
-        }).catch((error) => {
-            // An error happened.
-        });
-    })
     return (
-        <Styles>
-            <header className="app-header flex-row flex-align-center">
-                <div className="search-container"></div>
-                <img onClick={signout} className="signout-icon" src="images/logout.png" />
-            </header>
+        <Styles className="full-height flex-column ">
+            <AppHeader setShowMenu={setShowMenu} />
             <main className="app-body">
-                <Routes>
-                    <Route path="/add-org" element={<AddOrg />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                </Routes>
+                <Menu showMenu={showMenu} />
+                {
+                    routerResolved
+                        ? (
+                            <Routes>
+                                <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/orgs" element={<Orgs />} >
+                                    <Route path="add" element={<AddOrg />} />
+                                </Route>
+                                <Route path="/subscriptions" element={<Subscriptions />} />
+                            </Routes>
+                        )
+                        : null
+                }
+
             </main>
             <footer className="app-footer flex-row flex-align-center flex-justify-center">
                 &copy; thirtyinches

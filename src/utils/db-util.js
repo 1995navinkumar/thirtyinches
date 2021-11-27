@@ -34,7 +34,7 @@ export async function getOrgDetails() {
     const q = query(collection(db, "orgs"), where("userId", "==", user.uid));
     return getDocs(q)
         .then(snapshot => {
-            return !snapshot.empty ? snapshot.docs.map(d => d.data()) : {};
+            return !snapshot.empty ? snapshot.docs.map(d => d.data()) : null;
         })
         .catch(er => { throw er });
 }

@@ -11,7 +11,9 @@ import { LandingPage } from './components/landingPage';
 
 import {
     HashRouter,
-    useNavigate
+    useNavigate,
+    Route,
+    Routes
 } from "react-router-dom";
 
 export default function App() {
@@ -44,7 +46,9 @@ export default function App() {
                                 ? <LandingPage />
                                 : (
                                     <HashRouter>
-                                        <Home user={user} />
+                                        <Routes>
+                                            <Route path="/*" element={<Home user={user} />} />
+                                        </Routes>
                                     </HashRouter>
                                 )
                         )
