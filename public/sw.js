@@ -22,8 +22,8 @@ this.addEventListener("install", function (event) {
 this.addEventListener('fetch', function (event) {
     // it can be empty if you just want to get rid of that error
     event.respondWith(
-        caches.match(event.request).then(function (response) {
-            return response || fetch(event.request);
+        fetch(event.request).catch(function () {
+            return caches.match(event.request);
         })
     );
 });

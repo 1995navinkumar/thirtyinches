@@ -4,13 +4,14 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { Header } from './components/header';
 import { Home } from './routers/home';
-import { getUserDetails } from './utils/auth-util';
-// import * as mailUtil from './utils/mail-util';
+
+import { getOrgDetails } from './utils/db-util';
 
 import { LandingPage } from './components/landingPage';
 
 import {
-    HashRouter
+    HashRouter,
+    useNavigate
 } from "react-router-dom";
 
 export default function App() {
@@ -18,16 +19,17 @@ export default function App() {
     const auth = getAuth();
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {
+            if (userObj) {
+                getOrgDetails()
+                    .then(details => {
+                        userObj.customFields = { orgs: details };
+                        setUser(userObj);
+                    })
+                    .catch(console.log);
 
-            setUser(userObj?? false);
-            // if (userObj) {
-            //     getUserDetails(userObj)
-            //         .then(details => {
-            //             userObj.customFields = details;
-            //         })
-            // } else {
-            //     setUser(false);
-            // }
+            } else {
+                setUser(false);
+            }
         });
     }, []);
 

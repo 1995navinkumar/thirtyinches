@@ -12,15 +12,18 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js', { scope: "." }).then(function (registration) {
-          Notification.requestPermission().then(() => {
-            navigator.serviceWorker.ready
-              .then(reg => {
-                return reg.periodicSync.register('get-latest-news', {
-                  minInterval: 1000 * 10
-                });
-              })
-              .catch(console.log);
-          })
+          // Notification.requestPermission().then(() => {
+          //   navigator.serviceWorker.ready
+          //     .then(reg => {
+          //       return reg.periodicSync.register('get-latest-news', {
+          //         minInterval: 1000 * 10
+          //       });
+          //     })
+          //     .catch(console.log);
+          // })
+
+          registration.update();
+
         }, function (err) {
           console.log('ServiceWorker registration failed: ', err);
         });

@@ -17,5 +17,16 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 6000
+    },
+    "ui": {
+      "enabled": true
+    }
   }
 }

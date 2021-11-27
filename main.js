@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { initializeApp } from "firebase/app";
-
 import App from './src/App.js';
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyD5q3f_PQWbMmY95Ao3pv3u48xRpz-p_Ls",
@@ -15,7 +16,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+var app = initializeApp(firebaseConfig);
 
+const db = getFirestore();
+connectFirestoreEmulator(db, 'localhost', 8080);
 
 ReactDOM.render(<App />, document.getElementById('app-root'));
