@@ -22,7 +22,7 @@ var Styles = styled.header`
     }
 `
 
-export function AppHeader({ setShowMenu }) {
+export function AppHeader({ setShowMenu, showMenuIcon }) {
 
     var signout = React.useCallback((e) => {
         const auth = getAuth();
@@ -42,7 +42,12 @@ export function AppHeader({ setShowMenu }) {
 
     return (
         <Styles className="app-header flex-row flex-align-center">
-            <img src="images/menu.png" onClick={menuHandler} className="menu-icon" />
+            {
+                showMenuIcon
+                    ? <img src="images/menu.png" onClick={menuHandler} className="menu-icon" />
+                    : null
+            }
+
             <div className="search-container"></div>
             <img onClick={signout} className="signout-icon" src="images/logout.png" />
         </Styles>

@@ -1,12 +1,21 @@
 import React from 'react';
-import { getAuth } from "firebase/auth";
+import { getOrgDetails } from '../utils/db-util';
 
 export function Dashboard() {
-    var user = getAuth().currentUser;
+    var [orgs, setOrgs] = React.useState();
+    
+    React.useEffect(() => {
+        getOrgDetails().then(d => setOrgs(d));
+    }, []);
+
     return (
         <React.Fragment>
             <div className="flex-row flex-align-cennter flex-justify-center">
-                {user.customFields.orgs[0].name}
+                {
+                    orgs && orgs.length > 0
+                        ? orgs[0].name
+                        : null
+                }
             </div>
         </React.Fragment>
     )

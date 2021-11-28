@@ -7,6 +7,8 @@ import {
     useNavigate
 } from "react-router-dom";
 
+import { AppContext } from '../context/AppContext';
+
 var Styles = styled.div`
     height : 100%;
     .add-org--btn {
@@ -31,16 +33,14 @@ var Styles = styled.div`
     }
 `
 
-export function AddOrg() {
-    console.log("add-org");
-    
+export function AddOrg({ setShowMenuIcon }) {
     var [hideAdd, setHideAdd] = React.useState(true);
     return (
         <Styles>
             <div className="full-height flex-column flex-justify-center flex-align-center">
                 {
                     hideAdd
-                        ? <OrgForm />
+                        ? <OrgForm setShowMenuIcon={setShowMenuIcon} />
                         : <button onClick={() => setHideAdd(!hideAdd)} className="add-org--btn">Add Org</button>
                 }
 
@@ -49,7 +49,7 @@ export function AddOrg() {
     )
 }
 
-function OrgForm() {
+function OrgForm({ setShowMenuIcon }) {
     var navigate = useNavigate();
     var formRef = React.useRef();
     var orgDetails = React.useCallback(() => {
@@ -57,6 +57,7 @@ function OrgForm() {
         var details = formEls.map(f => f.value);
         addOrgDetails(details).then((isAdded) => {
             if (isAdded) {
+                setShowMenuIcon(true);
                 navigate("/orgs");
             }
         });

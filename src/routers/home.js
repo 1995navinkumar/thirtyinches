@@ -6,6 +6,7 @@ import { Subscriptions } from '../routers/subscriptions';
 import { Orgs } from '../routers/orgs';
 import { AppHeader } from '../components/header';
 import { Menu } from '../components/menu';
+import { getOrgDetails } from '../utils/db-util';
 
 import {
     Routes,
@@ -32,10 +33,12 @@ export function Home({ user }) {
 
     var [routerResolved, setRouterResolved] = React.useState(false);
     var [showMenu, setShowMenu] = React.useState(false);
+    var [showMenuIcon, setShowMenuIcon] = React.useState(true);
 
     React.useEffect(() => {
         var orgs = user.customFields.orgs;
         if (!orgs) {
+            setShowMenuIcon(false);
             navigate("/orgs/add");
         } else if (location.pathname == "/") {
             navigate("/dashboard");
@@ -54,7 +57,7 @@ export function Home({ user }) {
 
     return (
         <Styles className="full-height flex-column ">
-            <AppHeader setShowMenu={setShowMenu} />
+            <AppHeader setShowMenu={setShowMenu} showMenuIcon={showMenuIcon} />
             <main className="app-body">
                 <Menu showMenu={showMenu} />
                 {
@@ -63,7 +66,7 @@ export function Home({ user }) {
                             <Routes>
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/orgs" element={<Orgs />} >
-                                    <Route path="add" element={<AddOrg />} />
+                                    <Route path="add" element={<AddOrg setShowMenuIcon={setShowMenuIcon} />} />
                                 </Route>
                                 <Route path="/subscriptions" element={<Subscriptions />} />
                             </Routes>

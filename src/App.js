@@ -16,6 +16,8 @@ import {
     Routes
 } from "react-router-dom";
 
+import { AppContext } from './context/AppContext';
+
 export default function App() {
     var [user, setUser] = React.useState(null);
     const auth = getAuth();
@@ -36,7 +38,7 @@ export default function App() {
     }, []);
 
     return (
-        <React.Fragment>
+        <AppContext.Provider value={{ setUser }}>
             <div className="flex-column full-height">
                 {
                     user == null
@@ -54,6 +56,6 @@ export default function App() {
                         )
                 }
             </div>
-        </React.Fragment>
+        </AppContext.Provider>
     )
 }
