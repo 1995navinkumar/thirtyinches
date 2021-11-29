@@ -5,7 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Header } from './components/header';
 import { Home } from './routers/home';
 
-import { getOrgDetails } from './utils/db-util';
+import { getOrgDetails, subscribeToOrgs } from './utils/db-util';
 
 import { LandingPage } from './components/landingPage';
 
@@ -20,13 +20,19 @@ import { AppContext } from './context/AppContext';
 
 export default function App() {
     var [user, setUser] = React.useState(null);
+    var [orgs, setOrgs] = React.useState([]);
+
     const auth = getAuth();
+
+    console.log("App");
+    
+
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {
             if (userObj) {
                 getOrgDetails()
                     .then(details => {
-                        userObj.customFields = { orgs: details };
+                        setOrgs(details);
                         setUser(userObj);
                     })
                     .catch(console.log);
@@ -35,10 +41,13 @@ export default function App() {
                 setUser(false);
             }
         });
+
+        return subscribeToOrgs(setOrgs);
+
     }, []);
 
     return (
-        <AppContext.Provider value={{ setUser }}>
+        <AppContext.Provider value={{ user, setUser, orgs, setOrgs }}>
             <div className="flex-column full-height">
                 {
                     user == null
@@ -48,9 +57,7 @@ export default function App() {
                                 ? <LandingPage />
                                 : (
                                     <HashRouter>
-                                        <Routes>
-                                            <Route path="/*" element={<Home user={user} />} />
-                                        </Routes>
+                                        <Home />
                                     </HashRouter>
                                 )
                         )

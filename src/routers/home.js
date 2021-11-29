@@ -6,7 +6,7 @@ import { Subscriptions } from '../routers/subscriptions';
 import { Orgs } from '../routers/orgs';
 import { AppHeader } from '../components/header';
 import { Menu } from '../components/menu';
-import { getOrgDetails } from '../utils/db-util';
+import { AppContext } from '../context/AppContext';
 
 import {
     Routes,
@@ -27,39 +27,42 @@ var Styles = styled.div`
 `
 
 
-export function Home({ user }) {
+export function Home() {
     var location = useLocation();
     var navigate = useNavigate();
+
+    var { orgs } = React.useContext(AppContext);
 
     var [routerResolved, setRouterResolved] = React.useState(false);
     var [showMenu, setShowMenu] = React.useState(false);
     var [showMenuIcon, setShowMenuIcon] = React.useState(true);
 
     React.useEffect(() => {
-        var orgs = user.customFields.orgs;
-        if (!orgs) {
+        if (!orgs || orgs.length == 0) {
             setShowMenuIcon(false);
             navigate("/orgs/add");
         } else if (location.pathname == "/") {
             navigate("/dashboard");
         }
         setRouterResolved(true);
-    }, []);
+    }, [orgs]);
 
     React.useEffect(() => {
-        var menuClickListener = document.addEventListener("click", (e) => {
+        var callback = (e) => {
+            if (e.target.closest(".app-menu")) {
+                return;
+            }
             setShowMenu(false);
-        })
-        return () => {
-            document.removeEventListener("click", menuClickListener);
         }
+        document.addEventListener("click", callback);
+        return () => document.removeEventListener("click", callback);
     }, []);
 
     return (
         <Styles className="full-height flex-column ">
             <AppHeader setShowMenu={setShowMenu} showMenuIcon={showMenuIcon} />
             <main className="app-body">
-                <Menu showMenu={showMenu} />
+                <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
                 {
                     routerResolved
                         ? (

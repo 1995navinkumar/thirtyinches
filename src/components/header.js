@@ -23,16 +23,6 @@ var Styles = styled.header`
 `
 
 export function AppHeader({ setShowMenu, showMenuIcon }) {
-
-    var signout = React.useCallback((e) => {
-        const auth = getAuth();
-        signOut(auth).then(() => {
-            // Sign-out successful.
-        }).catch((error) => {
-            // An error happened.
-        });
-    });
-
     var menuHandler = React.useCallback((e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -49,7 +39,6 @@ export function AppHeader({ setShowMenu, showMenuIcon }) {
             }
 
             <div className="search-container"></div>
-            <img onClick={signout} className="signout-icon" src="images/logout.png" />
         </Styles>
     )
 }

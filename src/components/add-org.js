@@ -55,8 +55,8 @@ function OrgForm({ setShowMenuIcon }) {
     var orgDetails = React.useCallback(() => {
         var formEls = Array.from(formRef.current.children).slice(0, 4);
         var details = formEls.map(f => f.value);
-        addOrgDetails(details).then((isAdded) => {
-            if (isAdded) {
+        addOrgDetails(details).then((resultSet) => {
+            if (resultSet) {
                 setShowMenuIcon(true);
                 navigate("/orgs");
             }

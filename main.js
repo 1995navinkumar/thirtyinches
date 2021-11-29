@@ -19,6 +19,6 @@ const firebaseConfig = {
 var app = initializeApp(firebaseConfig);
 
 const db = getFirestore();
-connectFirestoreEmulator(db, 'localhost', 8080);
+connectFirestoreEmulator(db, 'localhost', 9000);
 
 ReactDOM.render(<App />, document.getElementById('app-root'));

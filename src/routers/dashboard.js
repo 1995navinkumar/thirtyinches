@@ -1,12 +1,9 @@
 import React from 'react';
 import { getOrgDetails } from '../utils/db-util';
+import { AppContext } from '../context/AppContext';
 
 export function Dashboard() {
-    var [orgs, setOrgs] = React.useState();
-    
-    React.useEffect(() => {
-        getOrgDetails().then(d => setOrgs(d));
-    }, []);
+    var { orgs } = React.useContext(AppContext);
 
     return (
         <React.Fragment>
