@@ -33,14 +33,14 @@ var Styles = styled.div`
     }
 `
 
-export function AddOrg({ setShowMenuIcon }) {
+export function AddOrg({ }) {
     var [hideAdd, setHideAdd] = React.useState(true);
     return (
         <Styles>
             <div className="full-height flex-column flex-justify-center flex-align-center">
                 {
                     hideAdd
-                        ? <OrgForm setShowMenuIcon={setShowMenuIcon} />
+                        ? <OrgForm />
                         : <button onClick={() => setHideAdd(!hideAdd)} className="add-org--btn">Add Org</button>
                 }
 
@@ -49,7 +49,7 @@ export function AddOrg({ setShowMenuIcon }) {
     )
 }
 
-function OrgForm({ setShowMenuIcon }) {
+function OrgForm({ }) {
     var navigate = useNavigate();
     var formRef = React.useRef();
     var orgDetails = React.useCallback(() => {
@@ -57,7 +57,6 @@ function OrgForm({ setShowMenuIcon }) {
         var details = formEls.map(f => f.value);
         addOrgDetails(details).then((resultSet) => {
             if (resultSet) {
-                setShowMenuIcon(true);
                 navigate("/orgs");
             }
         });

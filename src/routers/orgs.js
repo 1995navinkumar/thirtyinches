@@ -4,26 +4,25 @@ import {
     Route,
     useNavigate,
     useLocation,
-    Outlet
+    Outlet,
+    Navigate
 } from "react-router-dom";
 
 import { deleteOrg } from '../utils/db-util';
 import { AppContext } from '../context/AppContext';
+import { AddOrg } from '../components/add-org';
+import { OrgList } from '../components/org-list';
 
 export function Orgs() {
     var { orgs } = React.useContext(AppContext);
-
     return (
         <div>
-            {
-                orgs.map(org =>
-                    <div key={org.id}>
-                        <p onClick={() => deleteOrg(org)}>{org.name}</p>
-                    </div>
-                )
-            }
+            <Routes>
+                <Route path="/" element={<Navigate replace to="/orgs/list" />} />
+                <Route path="/list" element={<OrgList />} />
+                <Route path="/add" element={<AddOrg />} />
+            </Routes>
 
-            <Outlet />
         </div>
     )
 } 

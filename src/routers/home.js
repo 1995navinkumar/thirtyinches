@@ -1,9 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { AddOrg } from '../components/add-org';
 import { Dashboard } from '../routers/dashboard';
-import { Subscriptions } from '../routers/subscriptions';
 import { Orgs } from '../routers/orgs';
+import { Subscriptions } from '../routers/subscriptions';
+import { Attendance } from '../routers/attendance';
+import { Feedback } from '../routers/feedback';
+import { Assets } from '../routers/assets';
+import { Expenses } from '../routers/expenses';
+import { Reports } from '../routers/reports';
+
 import { AppHeader } from '../components/header';
 import { Menu } from '../components/menu';
 import { AppContext } from '../context/AppContext';
@@ -12,7 +17,8 @@ import {
     Routes,
     Route,
     useNavigate,
-    useLocation
+    useLocation,
+    Navigate
 } from "react-router-dom";
 
 var Styles = styled.div`
@@ -26,26 +32,14 @@ var Styles = styled.div`
     }
 `
 
-
 export function Home() {
     var location = useLocation();
     var navigate = useNavigate();
 
     var { orgs } = React.useContext(AppContext);
 
-    var [routerResolved, setRouterResolved] = React.useState(false);
     var [showMenu, setShowMenu] = React.useState(false);
     var [showMenuIcon, setShowMenuIcon] = React.useState(true);
-
-    React.useEffect(() => {
-        if (!orgs || orgs.length == 0) {
-            setShowMenuIcon(false);
-            navigate("/orgs/add");
-        } else if (location.pathname == "/") {
-            navigate("/dashboard");
-        }
-        setRouterResolved(true);
-    }, [orgs]);
 
     React.useEffect(() => {
         var callback = (e) => {
@@ -64,17 +58,17 @@ export function Home() {
             <main className="app-body">
                 <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
                 {
-                    routerResolved
-                        ? (
-                            <Routes>
-                                <Route path="/dashboard" element={<Dashboard />} />
-                                <Route path="/orgs" element={<Orgs />} >
-                                    <Route path="add" element={<AddOrg setShowMenuIcon={setShowMenuIcon} />} />
-                                </Route>
-                                <Route path="/subscriptions" element={<Subscriptions />} />
-                            </Routes>
-                        )
-                        : null
+                    <Routes>
+                        <Route path="/" element={<Navigate replace to="/dashboard" />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/orgs*" element={<Orgs />} />
+                        <Route path="/subscriptions" element={<Subscriptions />} />
+                        <Route path="/assets" element={<Assets />} />
+                        <Route path="/attendance" element={<Attendance />} />
+                        <Route path="/expenses" element={<Expenses />} />
+                        <Route path="/feedbacks" element={<Feedback />} />
+                        <Route path="/reports" element={<Reports />} />
+                    </Routes>
                 }
 
             </main>

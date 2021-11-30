@@ -8,6 +8,7 @@ import { Home } from './routers/home';
 import { getOrgDetails, subscribeToOrgs } from './utils/db-util';
 
 import { LandingPage } from './components/landingPage';
+import { Loader } from './components/loader';
 
 import {
     HashRouter,
@@ -23,9 +24,6 @@ export default function App() {
     var [orgs, setOrgs] = React.useState([]);
 
     const auth = getAuth();
-
-    console.log("App");
-    
 
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {
@@ -51,7 +49,7 @@ export default function App() {
             <div className="flex-column full-height">
                 {
                     user == null
-                        ? <p> Loading... </p>
+                        ? <Loader />
                         : (
                             user == false
                                 ? <LandingPage />
