@@ -30,11 +30,12 @@
   },
   "scripts": {
     "postinstall": "mkdirp public/js public/css",
-    "deploy": "npm run build && firebase deploy",
+    "sw" : "node writeFilePath.js",
+    "deploy": "npm run sw && npm run build && firebase deploy",
     "serve": "http-server public --port 5000",
     "emulators" : "firebase emulators:start",
     "build": "browserify main.js -g babelify | uglifyjs -cm > public/js/bundle.js",
-    "watch": "watchify main.js -g babelify -o public/js/bundle.js -dv",
+    "watch": "npm run sw && watchify main.js -g babelify -o public/js/bundle.js -dv",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
