@@ -16,7 +16,7 @@ function walkSync(currentDirPath, callback) {
 var paths = ["/"];
 walkSync("public", (filePath) => paths.push(filePath));
 
-var filterFiles = ["DS_Store", "sw.js", "manifest"]
+var filterFiles = ["DS_Store", "sw.js", "manifest", "tmp"]
 
 paths = paths
     .filter(p => !filterFiles.some(fp => p.includes(fp)))

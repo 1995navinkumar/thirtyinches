@@ -31,7 +31,7 @@
   "scripts": {
     "postinstall": "mkdirp public/js public/css",
     "sw": "node writeFilePaths.js",
-    "deploy": "npm run build && firebase deploy",
+    "deploy": "npm run sw && npm run build && firebase deploy",
     "serve": "http-server public --port 5000",
     "emulators": "firebase emulators:start",
     "build": "NODE_ENV=production browserify -g babelify -g envify -g uglifyify main.js -o public/js/bundle.js",
