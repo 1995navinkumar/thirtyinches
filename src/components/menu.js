@@ -1,41 +1,50 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { getAuth, signOut } from 'firebase/auth';
 
 var Styles = styled.div`
-    width : 80%;
+    width : 300px;
     height : 100%;
-    background : white;
+    background : #F2F2F2;
     top: 0px;
+    box-shadow: 5px 0px 30px #CC4B00;
     position: absolute;
     left: -100%;
     transition : 0.3s ease-out;
-    padding : 8px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 
     .user-profile {
         height : 64px;
-        border : 1px solid #dedede;
-        border-radius : 8px;
+        padding : 8px;
         margin : 4px 0px;
+        border-bottom : 1px solid #efdbd0;
     }
 
     .user-detail {
         height : 100%;
-        padding : 8px;
     }
 
     .user-mail {
         font-size : 12px;
+        opacity : 0.6;
+        padding : 4px;
+    }
+
+    .user-name {
+        padding : 4px;
     }
 
 
     .current-org {
-        height : 64px;
-        border : 1px solid #dedede;
-        border-radius : 8px;
-        margin : 4px 0px;
+        height : 40px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        margin: 12px 0px;
+        width: calc(100% - 20px);
+        background: #DF5C11;
     }
 
     .profile-pic {
@@ -45,13 +54,17 @@ var Styles = styled.div`
     }
 
     .org-select {
-        width: 80%;
+        display : block;
         height: 32px;
+        background: none;
+        border: none;
+        outline : none;
+        color : #F2F2F2;
+        padding-left : 16px;
     }
 
     .navigation-drawer {
-        border : 1px solid #dedede;
-        border-radius : 8px;
+        
     }
 
     .menu-actions {
@@ -59,13 +72,32 @@ var Styles = styled.div`
         display : block;
     }
 
+    .routes-icon-container {
+        background: #FF7322;
+        width : 40px;
+    }
+
+    .routes-icon {
+        width : 20px;
+        height : 20px;
+    }
+
     .navigation-drawer li:hover {
         background : #dedede;
+    }
+
+    .active-link .routes-icon-container {
+        background : #CB4B01;
+    }
+
+    .active-link .menu-actions {
+        color : #CB4B01;
     }
 `
 
 export function Menu({ showMenu, setShowMenu }) {
     var menuStyle = showMenu ? { left: 0 } : {};
+    var navigate = useNavigate();
 
     var { orgs, user } = React.useContext(AppContext);
 
@@ -79,10 +111,6 @@ export function Menu({ showMenu, setShowMenu }) {
         });
     });
 
-    var handleClick = (e) => {
-        setShowMenu(false);
-    }
-
     return (
         <Styles style={menuStyle} className="app-menu flex-column">
             <div className="user-profile flex-row flex-align-center">
@@ -93,7 +121,7 @@ export function Menu({ showMenu, setShowMenu }) {
                 </div>
             </div>
 
-            <div className="current-org flex-row flex-align-center flex-justify-center">
+            <div className="current-org flex-row flex-align-center">
                 <select className="org-select">
                     {
                         orgs.map(org =>
@@ -107,13 +135,21 @@ export function Menu({ showMenu, setShowMenu }) {
                 <ul className="full-width full-height">
                     {
                         routes.map(r =>
-                            <li key={r.href} onClick={handleClick}>
-                                <Link className="menu-actions" to={r.href}>{r.label}</Link>
+                            <li className="flex-row" key={r.href} onClick={() => setShowMenu(false)}>
+                                <NavLink to={r.href} className={({ isActive }) => isActive ? "active-link flex-row full-width" : "flex-row full-width"}>
+                                    <div className="routes-icon-container flex-row flex-align-center flex-justify-center" >
+                                        <img className="routes-icon" src={r.icon} />
+                                    </div>
+                                    <p className="flex-1 menu-actions">{r.label}</p>
+                                </NavLink>
                             </li>
                         )
                     }
-                    <li>
-                        <span className="menu-actions" onClick={signout}>Logout</span>
+                    <li className="flex-row">
+                        <div className="routes-icon-container flex-row flex-align-center flex-justify-center" >
+                            <img className="routes-icon" src="images/expenses.svg" />
+                        </div>
+                        <span className="flex-1 menu-actions" onClick={signout}>Logout</span>
                     </li>
                 </ul>
             </div>
@@ -123,26 +159,40 @@ export function Menu({ showMenu, setShowMenu }) {
 
 var routes = [{
     href: "/dashboard",
-    label: "Dashboard"
+    label: "Dashboard",
+    icon: "images/dashboard.svg"
 }, {
     href: "/orgs",
-    label: "Orgs"
+    label: "Orgs",
+    icon: "images/orgs.svg"
+
 }, {
     href: "/subscriptions",
-    label: "Subscriptions"
+    label: "Subscriptions",
+    icon: "images/subscriptions.svg"
+
 }, {
     href: "/attendance",
-    label: "Attendance"
+    label: "Attendance",
+    icon: "images/attendance.svg"
+
 }, {
     href: "/assets",
-    label: "Assets"
+    label: "Assets",
+    icon: "images/assets.svg"
+
 }, {
     href: "/expenses",
-    label: "Expenses"
+    label: "Expenses",
+    icon: "images/expenses.svg"
+
 }, {
     href: "/reports",
-    label: "Reports"
+    label: "Reports",
+    icon: "images/assets.svg"
+
 }, {
     href: "/feedbacks",
-    label: "Feedbacks"
+    label: "Feedbacks",
+    icon: "images/orgs.svg"
 }]

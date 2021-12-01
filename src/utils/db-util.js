@@ -72,3 +72,30 @@ export function subscribeToOrgs(setOrgs) {
         setOrgs(orgs);
     })
 }
+
+
+// ------------------------------------ Subscriptions -----------------------------------------
+
+export async function addSubscription(subscriberDetail, subscriptionDetail) {
+    var db = getFirestore();
+    var subscribersRef = collection(db, "subscribers");
+
+    return addDoc(subscribersRef, {
+        ...subscriberDetail,
+        subscriptions: arrayUnion(subscriptionDetail)
+    })
+        .then(console.log)
+        .catch(console.log)
+
+}
+
+export async function getAllSubscribers() {
+    var db = getFirestore();
+    var subscribersRef = collection(db, "subscribers");
+    var q = query(subscribersRef);
+    return getDocs(q)
+        .then(snapshot => {
+            return !snapshot.empty ? snapshot.docs.map(d => ({ id: d.id, ...d.data() })) : [];
+        })
+        .catch(console.log);
+}

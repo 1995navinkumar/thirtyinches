@@ -61,8 +61,8 @@ export function Home() {
                     <Routes>
                         <Route path="/" element={<Navigate replace to="/dashboard" />} />
                         <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/orgs*" element={<Orgs />} />
-                        <Route path="/subscriptions" element={<Subscriptions />} />
+                        <Route path="/orgs/*" element={<Orgs />} />
+                        <Route path="/subscriptions/*" element={<Subscriptions />} />
                         <Route path="/assets" element={<Assets />} />
                         <Route path="/attendance" element={<Attendance />} />
                         <Route path="/expenses" element={<Expenses />} />

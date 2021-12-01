@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { initializeApp } from "firebase/app";
 import App from './src/App.js';
 import { getFirestore } from "firebase/firestore";
-// import { connectFirestoreEmulator } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD5q3f_PQWbMmY95Ao3pv3u48xRpz-p_Ls",
@@ -20,6 +19,9 @@ var app = initializeApp(firebaseConfig);
 
 const db = getFirestore();
 
-// connectFirestoreEmulator(db, 'localhost', 9000);
+if (process.env.NODE_ENV != "production") {
+    var { connectFirestoreEmulator } = require("firebase/firestore");
+    connectFirestoreEmulator(db, 'localhost', 9000);
+}
 
 ReactDOM.render(<App />, document.getElementById('app-root'));
