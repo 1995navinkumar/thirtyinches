@@ -15,7 +15,7 @@ html, body, #app-root {
 }
 
 body {
-    font-family: 'lato';
+    font-family: lato, sans-serif;
     -webkit-font-smoothing: antialiased;
     background: #FF7322;
 }

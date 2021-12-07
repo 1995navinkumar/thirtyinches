@@ -7,7 +7,6 @@ this.addEventListener("install", function (event) {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(function (cache) {
-                console.log('Opened cache');
                 return cache.addAll(urlsToCache);
             })
     );
@@ -22,12 +21,5 @@ this.addEventListener('fetch', function (event) {
             return caches.match(event.request);
         })
     );
-});
-
-this.addEventListener('periodicsync', event => {
-    if (event.tag == 'get-latest-news') {
-        console.log(event);
-        this.registration.showNotification("event")
-    }
 });
 

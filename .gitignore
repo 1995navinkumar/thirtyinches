@@ -1,5 +1,6 @@
 node_modules
 public/js/bundle.js
+public/firebase-messaging-sw.js
 public/sw.js
 *.log
 .firebase
