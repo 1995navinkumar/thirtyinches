@@ -16,13 +16,13 @@ import { OrgList } from '../components/org-list';
 export function Orgs() {
     var { orgs } = React.useContext(AppContext);
     return (
-        <div>
+        <React.Fragment>
             <Routes>
                 <Route path="/" element={<Navigate replace to="/orgs/list" />} />
                 <Route path="/list" element={<OrgList />} />
                 <Route path="/add" element={<AddOrg />} />
             </Routes>
 
-        </div>
+        </React.Fragment>
     )
 } 

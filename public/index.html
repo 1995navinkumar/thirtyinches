@@ -13,7 +13,6 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js', { scope: ".", type: "module" }).then(function (registration) {
-          registration.update();
           console.log("Service worker registered");
           window.ThirtyInchesSW = registration;
         }, function (err) {
@@ -25,11 +24,16 @@
     }
   </script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
 </head>
 
 <body>
   <div id="app-root"></div>
+
   <script defer src="./js/bundle.js"></script>
+
 </body>
 
 </html>

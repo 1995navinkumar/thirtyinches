@@ -9,7 +9,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^6.0.2",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "unique-names-generator": "^4.6.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
@@ -34,6 +35,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/1995navinkumar/thirtyinches.git"
+  },
+  "browser": {
+    "crypto": false
   },
   "keywords": [],
   "author": "",

@@ -15,6 +15,7 @@ var Styles = styled.div`
     transition : 0.3s ease-out;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
+    z-index : 2;
 
     .user-profile {
         height : 64px;
@@ -99,17 +100,33 @@ export function Menu({ showMenu, setShowMenu }) {
     var menuStyle = showMenu ? { left: 0 } : {};
     var navigate = useNavigate();
 
-    var { orgs, user } = React.useContext(AppContext);
+    var { orgs, user, setOrgs } = React.useContext(AppContext);
 
     var signout = React.useCallback((e) => {
         const auth = getAuth();
         signOut(auth).then(() => {
             location.hash = "";
+            navigate("/");
             // Sign-out successful.
         }).catch((error) => {
             // An error happened.
         });
     });
+
+    var onOrgChange = (e) => {
+        var selectedOrg = e.target.value;
+        var newOrgs = [...orgs];
+
+        newOrgs.forEach(org => {
+            if (org.id == selectedOrg) {
+                org.selected = true;
+            } else {
+                org.selected = false;
+            }
+        })
+        setShowMenu(false);
+        setOrgs(newOrgs);
+    }
 
     return (
         <Styles style={menuStyle} className="app-menu flex-column">
@@ -122,10 +139,10 @@ export function Menu({ showMenu, setShowMenu }) {
             </div>
 
             <div className="current-org flex-row flex-align-center">
-                <select className="org-select">
+                <select onChange={onOrgChange} className="org-select">
                     {
                         orgs.map(org =>
-                            <option key={org.id}>{org.name}</option>
+                            <option value={org.id} key={org.id}>{org.name}</option>
                         )
                     }
                 </select>
@@ -163,7 +180,7 @@ var routes = [{
     icon: "images/dashboard.svg"
 }, {
     href: "/orgs",
-    label: "Orgs",
+    label: "Orgs & Branches",
     icon: "images/orgs.svg"
 
 }, {

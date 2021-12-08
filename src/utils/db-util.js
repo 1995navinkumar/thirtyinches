@@ -1,8 +1,31 @@
-import { collection, query, where, getDocs, arrayUnion, addDoc, getFirestore, deleteDoc, doc, onSnapshot } from "firebase/firestore";
-import * as fdb from 'firebase/firestore';
+import {
+    getFirestore, collection, doc,
+    getDocs, addDoc, deleteDoc, updateDoc,
+    query, where, arrayUnion, onSnapshot,
+} from "firebase/firestore";
+
 import { getAuth } from "firebase/auth";
 
-window.fdb = fdb;
+export async function createOrg(orgDetails) {
+    var user = getAuth().currentUser;
+    const db = getFirestore();
+
+    // validation to be added
+
+    return addDoc(collection(db, "orgs"), {
+        ...orgDetails,
+        userId: user.email
+    });
+
+}
+
+export async function addBranch(orgRef, branchDetails) {
+    return updateDoc(orgRef, {
+        branches: arrayUnion({
+            ...branchDetails
+        })
+    })
+}
 
 export async function addOrgDetails(details) {
     var user = getAuth().currentUser;
@@ -12,7 +35,7 @@ export async function addOrgDetails(details) {
 
     try {
         const orgDocRef = await addDoc(collection(db, "orgs"), {
-            userId: user.uid,
+            userId: user.email,
             name: orgName,
             branches: arrayUnion({
                 name: branchName,
@@ -33,9 +56,9 @@ export async function getOrgDetails() {
     var user = getAuth().currentUser;
     const db = getFirestore();
 
-    window.db = db;
+    // const q = query(collection(db, "orgs"), where("userId", "==", user.email));
+    const q = query(collection(db, "orgs"));
 
-    const q = query(collection(db, "orgs"), where("userId", "==", user.uid));
     return getDocs(q)
         .then(snapshot => {
             return !snapshot.empty ? snapshot.docs.map(d => ({ id: d.id, ...d.data() })) : [];
@@ -76,6 +99,25 @@ export function subscribeToOrgs(setOrgs) {
 
 // ------------------------------------ Subscriptions -----------------------------------------
 
+export async function addSubscriber(subscriberDetail) {
+    var db = getFirestore();
+    var subscribersRef = collection(db, "subscribers");
+
+    // add validation
+
+    return addDoc(subscribersRef, {
+        ...subscriberDetail
+    })
+}
+
+
+export async function addNewSubscription(subscriberRef, subscriptionDetail) {
+    return updateDoc(subscriberRef, {
+        subscriptions: arrayUnion(subscriptionDetail)
+    })
+}
+
+
 export async function addSubscription(subscriberDetail, subscriptionDetail) {
     var db = getFirestore();
     var subscribersRef = collection(db, "subscribers");
@@ -89,10 +131,11 @@ export async function addSubscription(subscriberDetail, subscriptionDetail) {
 
 }
 
-export async function getAllSubscribers() {
+
+export async function getAllSubscribers(orgId) {
     var db = getFirestore();
     var subscribersRef = collection(db, "subscribers");
-    var q = query(subscribersRef);
+    var q = query(subscribersRef, where("orgId", "==", orgId));
     return getDocs(q)
         .then(snapshot => {
             return !snapshot.empty ? snapshot.docs.map(d => ({ id: d.id, ...d.data() })) : [];

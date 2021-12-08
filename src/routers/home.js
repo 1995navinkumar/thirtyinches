@@ -24,6 +24,7 @@ import {
 var Styles = styled.div`
     .app-body {
         flex : 1;
+        height: calc(100% - 108px);
     }
 
     .app-footer {

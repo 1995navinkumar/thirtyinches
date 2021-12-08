@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { addSubscription } from '../../utils/db-util';
 import { useNavigate } from 'react-router';
 import { AppContext } from '../../context/AppContext';
+import { parseXLS } from '../../utils/file-util';
 
 var Styles = styled.div`
     .add-subscriber-form input, .add-subscriber-form textarea {
@@ -26,6 +27,10 @@ export function AddSubscribers() {
     var { orgs } = React.useContext(AppContext);
     var navigate = useNavigate();
     var formRef = React.useRef();
+
+    var fileRef = React.useRef();
+
+
     var subDetails = React.useCallback(() => {
         var formEls = Array.from(formRef.current.children);
         formEls.pop();
@@ -42,9 +47,21 @@ export function AddSubscribers() {
             })
 
     }, []);
+
+    function readXls(e) {
+        var file = fileRef.current.files[0];
+        parseXLS(file)
+            .then(console.log)
+            .catch(console.log)
+    }
+
     return (
         <Styles className="flex-column flex-align-center">
-            <div>Sub add</div>
+            {/* <div>Sub add</div> */}
+
+            {/* <input type="file" id="imageFile" capture="camera" accept="image/*"/> */}
+
+            {/* <input type="file" ref={fileRef} onChange={readXls} /> */}
 
             <div ref={formRef} className="add-subscriber-form flex-column flex-align-center">
                 <input type="text" placeholder="name" name="name" />

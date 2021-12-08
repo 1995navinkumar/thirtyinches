@@ -3,7 +3,7 @@ var CACHE_NAME = 'resource-cache-v1';
 
 var urlsToCache = $$;
 
-this.addEventListener("install", function (event) {
+self.addEventListener("install", function (event) {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(function (cache) {
@@ -14,7 +14,7 @@ this.addEventListener("install", function (event) {
 })
 
 
-this.addEventListener('fetch', function (event) {
+self.addEventListener('fetch', function (event) {
     // it can be empty if you just want to get rid of that error
     event.respondWith(
         fetch(event.request).catch(function () {

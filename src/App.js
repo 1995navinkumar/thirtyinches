@@ -23,7 +23,26 @@ export default function App() {
     var [user, setUser] = React.useState(null);
     var [orgs, setOrgs] = React.useState([]);
 
+    if (orgs.length > 0) {
+        var selectedOrg = orgs.find(o => o.selected);
+
+        if (!selectedOrg) {
+            orgs[0].selected = true;
+        }
+    }
+
     const auth = getAuth();
+
+    if (process.env.NODE_ENV != "production") {
+        if (user) {
+            getOrgDetails().then(details => {
+                if (details.length == 0) {
+                    var { generateData } = require('./mockData.js');
+                    generateData();
+                }
+            })
+        }
+    }
 
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {

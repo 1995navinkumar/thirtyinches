@@ -19,3 +19,7 @@ body {
     -webkit-font-smoothing: antialiased;
     background: #FF7322;
 }
+
+.firebase-emulator-warning {
+    display: none;
+}

@@ -37,13 +37,13 @@ var Styles = styled.div`
 export function Dashboard() {
     var { orgs } = React.useContext(AppContext);
     var navigate = useNavigate();
-    
+    var selectedOrg = orgs.find(o => o.selected);
     return (
         <Styles className="full-height">
             <div className="full-height flex-row flex-align-cennter flex-justify-center ">
                 {
                     orgs && orgs.length > 0
-                        ? orgs[0].name
+                        ? selectedOrg.name
                         : (
                             <div className="flex-column flex-align-center add-branch-container">
                                 <img className="add-new-branch" src="images/add-new-branch.svg" />

@@ -13,14 +13,14 @@ import {
 } from "react-router-dom";
 
 var Styles = styled.div`
-
+  
 `
 
 export function Subscriptions() {
     var location = useLocation();
     var pathname = location.pathname;
     return (
-        <Styles>
+        <Styles className="full-height">
             <Routes>
                 <Route path="/" element={<Navigate replace to={pathname + "/list"} />} />
                 <Route path="/list" element={<SubscribersList />} />

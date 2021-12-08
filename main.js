@@ -5,6 +5,10 @@ import App from './src/App.js';
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
+import * as dbUtils from './src/utils/db-util';
+
+window.dbUtils = dbUtils;
+
 const firebaseConfig = {
     apiKey: "AIzaSyD5q3f_PQWbMmY95Ao3pv3u48xRpz-p_Ls",
     authDomain: "gym-management-dfd3b.firebaseapp.com",
@@ -45,6 +49,9 @@ const db = getFirestore();
 
 if (process.env.NODE_ENV != "production") {
     var { connectFirestoreEmulator } = require("firebase/firestore");
+    var { getAuth, connectAuthEmulator } = require("firebase/auth");
+    const auth = getAuth();
+    connectAuthEmulator(auth, "http://localhost:9099");
     connectFirestoreEmulator(db, 'localhost', 9000);
 }
 
