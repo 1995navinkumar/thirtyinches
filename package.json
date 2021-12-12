@@ -27,9 +27,12 @@
     "sw": "node writeFilePaths.js",
     "deploy": "npm run sw && npm run build && firebase deploy",
     "serve": "http-server public --port 5000",
-    "emulators": "firebase emulators:start",
+    "emulators": "firebase emulators:start --import ./emulators-export",
+    "export": "firebase emulators:export ./emulators-export",
     "build": "webpack --mode=production",
+    "compress": "gzip -k public/js/bundle.js",
     "watch": "webpack --watch --mode=development",
+    "lh": "lighthouse http://localhost:5000 --budget-path=./budget.json --quiet --chrome-flags='--headless' --output-path=./li-out.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

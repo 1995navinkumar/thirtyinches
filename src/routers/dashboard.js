@@ -34,7 +34,7 @@ var Styles = styled.div`
     }
 `
 
-export function Dashboard() {
+export default function Dashboard() {
     var { orgs } = React.useContext(AppContext);
     var navigate = useNavigate();
     var selectedOrg = orgs.find(o => o.selected);
@@ -48,7 +48,7 @@ export function Dashboard() {
                             <div className="flex-column flex-align-center add-branch-container">
                                 <img className="add-new-branch" src="images/add-new-branch.svg" />
                                 <button onClick={() => navigate("/orgs/add")} className="add-org--btn">
-                                    <img className="plus" src="images/plus.svg"/>
+                                    <img className="plus" src="images/plus.svg" />
                                     <span className="add-org--text">Add Organisation</span>
                                 </button>
                             </div>

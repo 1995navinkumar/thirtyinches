@@ -1,7 +1,11 @@
 node_modules
-public/js/bundle.js
+public/js/*
 public/firebase-messaging-sw.js
 public/sw.js
 *.log
+*.gz
 .firebase
 .github
+/*.html
+
+emulators-export

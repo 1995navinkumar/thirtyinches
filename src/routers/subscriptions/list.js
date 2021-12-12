@@ -16,10 +16,10 @@ import styled from 'styled-components';
 var Styles = styled.div`
     .subscribers-list {
         overflow : scroll;
-        background: #F2F2F2;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
-        border-radius: 10px;
-        padding : 4px 8px;
+        // background: #F2F2F2;
+        // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+        // border-radius: 10px;
+        // padding : 4px 8px;
     }
     
     .subscribers-list-container {
@@ -76,7 +76,7 @@ export function SubscribersList() {
     React.useEffect(() => {
         var selectedOrg = orgs.find(o => o.selected);
         if (selectedOrg) {
-            getAllSubscribers(selectedOrg.id)
+            getAllSubscribers(selectedOrg.name, selectedOrg.branches.map(b => b.name))
                 .then(setSubscriptions)
         }
     }, [orgs]);

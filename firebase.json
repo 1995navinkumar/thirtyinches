@@ -23,7 +23,7 @@
       "port": 9000
     },
     "hosting": {
-      "port": 6000
+      "port": 8000
     },
     "ui": {
       "enabled": true

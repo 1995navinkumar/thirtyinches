@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { getAuth, signOut } from 'firebase/auth';
+import { addPersonalisedData } from '../utils/db-util';
 
 var Styles = styled.div`
     width : 300px;
@@ -102,6 +103,8 @@ export function Menu({ showMenu, setShowMenu }) {
 
     var { orgs, user, setOrgs } = React.useContext(AppContext);
 
+    var selectedOrg = orgs.find(o => o.selected);
+
     var signout = React.useCallback((e) => {
         const auth = getAuth();
         signOut(auth).then(() => {
@@ -118,12 +121,17 @@ export function Menu({ showMenu, setShowMenu }) {
         var newOrgs = [...orgs];
 
         newOrgs.forEach(org => {
-            if (org.id == selectedOrg) {
+            if (org.name == selectedOrg) {
                 org.selected = true;
             } else {
                 org.selected = false;
             }
+        });
+
+        addPersonalisedData(user.email, {
+            selectedOrg
         })
+
         setShowMenu(false);
         setOrgs(newOrgs);
     }
@@ -139,10 +147,10 @@ export function Menu({ showMenu, setShowMenu }) {
             </div>
 
             <div className="current-org flex-row flex-align-center">
-                <select onChange={onOrgChange} className="org-select">
+                <select value={selectedOrg.name} onChange={onOrgChange} className="org-select">
                     {
                         orgs.map(org =>
-                            <option value={org.id} key={org.id}>{org.name}</option>
+                            <option value={org.name} key={org.name} > {org.name}</option>
                         )
                     }
                 </select>
@@ -170,7 +178,7 @@ export function Menu({ showMenu, setShowMenu }) {
                     </li>
                 </ul>
             </div>
-        </ Styles>
+        </ Styles >
     )
 }
 
@@ -180,7 +188,7 @@ var routes = [{
     icon: "images/dashboard.svg"
 }, {
     href: "/orgs",
-    label: "Orgs & Branches",
+    label: "Branches",
     icon: "images/orgs.svg"
 
 }, {

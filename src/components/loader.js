@@ -37,7 +37,7 @@ var Styles = styled.div`
     }
     
 `
-export function Loader() {
+export default function Loader() {
     return (
         <Styles>
             <div className="lds-hourglass"></div>

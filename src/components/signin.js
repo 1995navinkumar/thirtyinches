@@ -58,7 +58,7 @@ var Styles = styled.div`
 
 const provider = new GoogleAuthProvider();
 
-export function SignIn({ setSignUp }) {
+export default function SignIn({ setSignUp }) {
     var signInUsingGoogle = React.useCallback(() => {
         const auth = getAuth();
         signInWithRedirect(auth, provider)

@@ -2,19 +2,13 @@ import React from 'react';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { Header } from './components/header';
-import { Home } from './routers/home';
+import Loader from './components/loader';
 
-import { getOrgDetails, subscribeToOrgs } from './utils/db-util';
-
-import { LandingPage } from './components/landingPage';
-import { Loader } from './components/loader';
+const SignIn = React.lazy(() => import('./components/signin'));
+const Home = React.lazy(() => import('./routers/home'));
 
 import {
-    HashRouter,
-    useNavigate,
-    Route,
-    Routes
+    HashRouter
 } from "react-router-dom";
 
 import { AppContext } from './context/AppContext';
@@ -22,6 +16,7 @@ import { AppContext } from './context/AppContext';
 export default function App() {
     var [user, setUser] = React.useState(null);
     var [orgs, setOrgs] = React.useState([]);
+    const auth = getAuth();
 
     if (orgs.length > 0) {
         var selectedOrg = orgs.find(o => o.selected);
@@ -31,55 +26,44 @@ export default function App() {
         }
     }
 
-    const auth = getAuth();
-
-    if (process.env.NODE_ENV != "production") {
-        if (user) {
-            getOrgDetails().then(details => {
-                if (details.length == 0) {
-                    var { generateData } = require('./mockData.js');
-                    generateData();
-                }
-            })
-        }
-    }
-
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {
             if (userObj) {
-                getOrgDetails()
-                    .then(details => {
-                        setOrgs(details);
-                        setUser(userObj);
-                    })
-                    .catch(console.log);
+                import('./utils/db-util').then(({ getOrgDetails }) => {
+                    getOrgDetails(userObj.email)
+                        .then(details => {
+                            setOrgs(details);
+                            setUser(userObj);
+                        })
+                        .catch(console.log);
+                })
 
             } else {
                 setUser(false);
             }
         });
 
-        return subscribeToOrgs(setOrgs);
-
     }, []);
 
     return (
         <AppContext.Provider value={{ user, setUser, orgs, setOrgs }}>
             <div className="flex-column full-height">
-                {
+                <React.Suspense fallback={<div>loading...</div>}>
+                    {
 
-                    user == null
-                        ? <Loader />
-                        : (
-                            user == false
-                                ? <LandingPage />
-                                : (
-                                    <HashRouter>
-                                        <Home />
-                                    </HashRouter>
-                                )
-                        )
-                }
+                        user == null
+                            ? <Loader />
+                            : (
+                                user == false
+                                    ? <SignIn />
+                                    : (
+                                        <HashRouter>
+                                            <Home />
+                                        </HashRouter>
+                                    )
+                            )
+                    }
+                </React.Suspense>
             </div>
         </AppContext.Provider>
     )
