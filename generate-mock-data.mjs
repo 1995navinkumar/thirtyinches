@@ -23,7 +23,7 @@ var app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 connectAuthEmulator(auth, "http://localhost:9099");
-connectFirestoreEmulator(db, 'localhost', 9000);
+connectFirestoreEmulator(db, 'localhost', 9010);
 
 generateData();
 
@@ -42,6 +42,18 @@ async function generateData() {
             var branch = branches[brIdx];
             await dbUtils.createBranch(org.name, branch);
 
+            var assets = generateAssets();
+            for (var assetIdx = 0; assetIdx < assets.length; assetIdx++) {
+                var asset = assets[assetIdx];
+                await dbUtils.addAsset(org.name, branch.name, asset);
+            }
+
+
+            var expenses = generateExpenses();
+            for (var expIdx = 0; expIdx < expenses.length; expIdx++) {
+                var expense = expenses[expIdx];
+                await dbUtils.addExpense(org.name, branch.name, expense);
+            }
 
             subscribers = generateSubscribers();
             for (var subIdx = 0; subIdx < subscribers.length; subIdx++) {
@@ -53,6 +65,24 @@ async function generateData() {
                 for (var sbnIdx = 0; sbnIdx < subscriptions.length; sbnIdx++) {
                     var subscription = subscriptions[sbnIdx];
                     await dbUtils.addSubscription(subscriberRef.id, subscription);
+
+                    var { start, end } = subscription;
+                    var diff = end - start;
+
+                    var reasonableDiff = Math.floor(Math.random() * diff);
+
+                    var reasonableDayDiff = Math.floor(reasonableDiff / (1000 * 3600 * 24));
+
+                    for (var dateIdx = 0; dateIdx < reasonableDayDiff % 10; dateIdx++) {
+                        var timestamp = start + reasonableDiff;
+                        await dbUtils.markAttendance(
+                            org.name,
+                            branch.name,
+                            subscriber.contact,
+                            timestamp
+                        )
+                    }
+
                 }
             }
         }
@@ -78,7 +108,7 @@ async function generateData() {
 
     // org admin
 
-    var usersRef = collection(db, "users");
+    var usersRef = collection(db, "userPrivileges");
 
     await addDoc(usersRef, {
         userId: users[0],
@@ -221,6 +251,30 @@ function generateBranches(branchLimit = 1) {
                 name: uniqueNamesGenerator({ dictionaries: [names] }),
                 address: uniqueNamesGenerator({ dictionaries: [countries] }),
                 contact: uniqueNamesGenerator({ dictionaries: [NumberDictionary.generate({ length: 10 })] })
+            }
+        })
+}
+
+function generateExpenses(limit = 10) {
+    return new Array(limit)
+        .fill(0)
+        .map((el, idx) => {
+            return {
+                title: `Expense_${idx + 1}`,
+                description: "expense",
+                amount: Math.ceil(Math.random() * 5000)
+            }
+        })
+}
+
+function generateAssets(limit = 10) {
+    return new Array(limit)
+        .fill(0)
+        .map(() => {
+            return {
+                title: `dumbbell_${Math.ceil(Math.random() * 30)}kg`,
+                description: "asset",
+                cost: Math.ceil(Math.random() * 5000)
             }
         })
 }

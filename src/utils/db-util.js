@@ -26,9 +26,8 @@ export async function createBranch(orgName, branchDetails) {
 
 export async function getOrgDetails(userId) {
     const db = getFirestore();
-
-
-    var q = query(collection(db, "users"), where("userId", "==", userId));
+    
+    var q = query(collection(db, "userPrivileges"), where("userId", "==", userId));
 
     var orgs = await getDocs(q).then(getData) || [];
 
@@ -161,6 +160,61 @@ export async function addPersonalisedData(userId, data) {
     }
 
 }
+
+
+// expense
+
+export async function addExpense(orgName, branchName, expenseDetail) {
+    var db = getFirestore();
+    var expenseRef = collection(db, "expenses");
+    return await addDoc(expenseRef, {
+        orgName,
+        branchName,
+        ...expenseDetail
+    })
+}
+
+export async function getAllExpense(orgName) {
+    var db = getFirestore();
+    var expenseRef = collection(db, "expenses");
+    var q = query(expenseRef, where("orgName", "==", orgName));
+
+    return getDocs(q).then(getData);
+}
+
+// asset
+
+export async function addAsset(orgName, branchName, assetDetail) {
+    var db = getFirestore();
+    var assetsRef = collection(db, "assets");
+    return await addDoc(assetsRef, {
+        orgName,
+        branchName,
+        ...assetDetail
+    })
+}
+
+export async function getAllAssets(orgName) {
+    var db = getFirestore();
+    var assetsRef = collection(db, "assets");
+    var q = query(assetsRef, where("orgName", "==", orgName));
+
+    return getDocs(q).then(getData);
+}
+
+// attendance
+
+export async function markAttendance(orgName, branchName, contact, timestamp) {
+    var db = getFirestore();
+    var attendanceRef = collection(db, "attendance");
+    return await addDoc(attendanceRef, {
+        orgName,
+        branchName,
+        contact,
+        timestamp
+    })
+}
+
 
 
 // utils

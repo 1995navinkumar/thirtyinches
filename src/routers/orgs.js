@@ -8,7 +8,7 @@ import {
     Navigate
 } from "react-router-dom";
 
-import { deleteOrg } from '../utils/db-util';
+import { deleteOrg } from '../utils/db-util.js';
 import { AppContext } from '../context/AppContext';
 import { AddOrg } from '../components/add-org';
 import { OrgList } from '../components/org-list';

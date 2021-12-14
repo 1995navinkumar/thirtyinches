@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { getAuth, signOut } from 'firebase/auth';
-import { addPersonalisedData } from '../utils/db-util';
+import { addPersonalisedData } from '../utils/db-util.js';
 
 var Styles = styled.div`
     width : 300px;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { addOrgDetails } from '../utils/db-util';
+import { addOrgDetails } from '../utils/db-util.js';
 import {
     Routes,
     Route,

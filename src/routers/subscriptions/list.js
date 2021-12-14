@@ -8,7 +8,7 @@ import {
     Navigate,
     Link
 } from "react-router-dom";
-import { getAllSubscribers } from '../../utils/db-util';
+import { getAllSubscribers } from '../../utils/db-util.js';
 import { AppContext } from '../../context/AppContext';
 
 import styled from 'styled-components';
@@ -16,10 +16,6 @@ import styled from 'styled-components';
 var Styles = styled.div`
     .subscribers-list {
         overflow : scroll;
-        // background: #F2F2F2;
-        // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
-        // border-radius: 10px;
-        // padding : 4px 8px;
     }
     
     .subscribers-list-container {

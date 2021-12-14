@@ -29,7 +29,7 @@ export default function App() {
     React.useEffect(() => {
         onAuthStateChanged(auth, userObj => {
             if (userObj) {
-                import('./utils/db-util').then(({ getOrgDetails }) => {
+                import('./utils/db-util.js').then(({ getOrgDetails }) => {
                     getOrgDetails(userObj.email)
                         .then(details => {
                             setOrgs(details);

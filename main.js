@@ -48,7 +48,7 @@ if (process.env.NODE_ENV != "production") {
     var { getAuth, connectAuthEmulator } = require("firebase/auth");
     const auth = getAuth();
     connectAuthEmulator(auth, "http://localhost:9099");
-    connectFirestoreEmulator(db, 'localhost', 9000);
+    connectFirestoreEmulator(db, 'localhost', 9010);
 }
 
 ReactDOM.render(<App />, document.getElementById('app-root'));

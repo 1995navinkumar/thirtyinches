@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { addSubscription } from '../../utils/db-util';
+import { addSubscription } from '../../utils/db-util.js';
 import { useNavigate } from 'react-router';
 import { AppContext } from '../../context/AppContext';
 import { parseXLS } from '../../utils/file-util';
