@@ -35,9 +35,11 @@ export function Expenses() {
 
     React.useEffect(() => {
         var selectedOrg = orgs.find(o => o.selected);
-        getAllExpense(selectedOrg.name).then(exps => {
-            setExpenses(exps || []);
-        })
+        if (selectedOrg) {
+            getAllExpense(selectedOrg.name).then(exps => {
+                setExpenses(exps || []);
+            })
+        }
     }, []);
 
     return (

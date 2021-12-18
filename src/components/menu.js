@@ -146,15 +146,21 @@ export function Menu({ showMenu, setShowMenu }) {
                 </div>
             </div>
 
-            <div className="current-org flex-row flex-align-center">
-                <select value={selectedOrg.name} onChange={onOrgChange} className="org-select">
-                    {
-                        orgs.map(org =>
-                            <option value={org.name} key={org.name} > {org.name}</option>
-                        )
-                    }
-                </select>
-            </div>
+            {
+                selectedOrg
+                    ? (
+                        <div className="current-org flex-row flex-align-center">
+                            <select value={selectedOrg.name} onChange={onOrgChange} className="org-select">
+                                {
+                                    orgs.map(org =>
+                                        <option value={org.name} key={org.name} > {org.name}</option>
+                                    )
+                                }
+                            </select>
+                        </div>
+                    )
+                    : null
+            }
 
             <div className="navigation-drawer flex-row flex-align-center">
                 <ul className="full-width full-height">

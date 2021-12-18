@@ -35,10 +35,11 @@ export function Assets() {
 
     React.useEffect(() => {
         var selectedOrg = orgs.find(o => o.selected);
-        getAllAssets(selectedOrg.name).then(assts => {
-            setAssets(assts || []);
-
-        })
+        if (selectedOrg) {
+            getAllAssets(selectedOrg.name).then(assts => {
+                setAssets(assts || []);
+            })
+        }
     }, []);
 
     return (
