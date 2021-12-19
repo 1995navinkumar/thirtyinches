@@ -38,7 +38,7 @@
     "server-watch": "NODE_ENV=development nodemon index.js >>logs/dev.log | bunyan -o json",
     "emulators": "firebase emulators:start --import ./emulators-export",
     "export": "firebase emulators:export ./emulators-export",
-    "cliet-sw": "node client/writeFilePaths.js",
+    "client-sw": "node client/writeFilePaths.js",
     "client-build": "webpack --mode=production",
     "client-watch": "webpack --watch --mode=development",
     "client-lh": "lighthouse http://localhost:5000 --budget-path=./budget.json --quiet --chrome-flags='--headless' --output-path=./li-out.html",
