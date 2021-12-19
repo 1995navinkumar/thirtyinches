@@ -16,6 +16,7 @@
     "react-router-dom": "^6.0.2",
     "styled-components": "^5.3.3",
     "unique-names-generator": "^4.6.0",
+    "bunyan": "^1.8.15",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -25,7 +26,6 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.2.3",
-    "bunyan": "^1.8.15",
     "nodemon": "^2.0.15",
     "ntee": "^2.0.0",
     "webpack": "^5.50.0",
