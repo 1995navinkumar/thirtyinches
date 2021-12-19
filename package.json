@@ -32,7 +32,7 @@
     "webpack-cli": "^4.8.0"
   },
   "scripts": {
-    "postinstall": "mkdir -p logs && mkdirp public/js public/css && npm run client-build && node replaceServiceAccount.js",
+    "postinstall": "mkdir -p logs && mkdirp public/js public/css && npm run client-build",
     "start": "NODE_ENV=production node main.js >> logs/app.log",
     "server-watch": "NODE_ENV=development nodemon main.js >>logs/dev.log | bunyan -o json",
     "emulators": "firebase emulators:start --import ./emulators-export",
