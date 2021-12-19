@@ -63,6 +63,6 @@ app.use(errorLogger, function (err, req, res, next) {
 });
 
 // listen for request
-app.listen(process.env.port || 8800, function () {
-    console.log('server running on port', process.env.port || 8800);
+app.listen(process.env.PORT || 8800, function () {
+    console.log('server running on PORT', process.env.PORT || 8800);
 });
