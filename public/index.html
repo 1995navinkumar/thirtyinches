@@ -15,7 +15,6 @@
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('/sw.js', { scope: ".", type: "module" }).then(function (registration) {
           console.log("Service worker registered");
-          window.ThirtyInchesSW = registration;
         }, function (err) {
           console.log('ServiceWorker registration failed: ', err);
         });

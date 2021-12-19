@@ -14,7 +14,7 @@ const babelConfig = {
 }
 
 const appConfig = {
-  entry: './main.js',
+  entry: './client/index.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public/js'),
@@ -27,7 +27,7 @@ const appConfig = {
 };
 
 const serviceWorkerConfig = {
-  entry: './src/firebase-messaging-sw.js',
+  entry: './client/src/firebase-messaging-sw.js',
   output: {
     filename: 'firebase-messaging-sw.js',
     path: path.resolve(__dirname, 'public')

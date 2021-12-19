@@ -9,3 +9,5 @@ public/sw.js
 /*.html
 
 emulators-export
+logs
+serviceAccount.json
