@@ -1,33 +1,9 @@
-import { initializeApp } from "firebase/app";
-
-import { getAuth, connectAuthEmulator } from "firebase/auth";
-
 import { uniqueNamesGenerator, names, countries, NumberDictionary } from 'unique-names-generator';
 
-import * as dbUtils from "./src/utils/db-util.js";
+import * as dbUtils from "./src/utils/api-util";
 
-import { connectFirestoreEmulator, getFirestore, collection, addDoc } from "firebase/firestore";
+export async function generateData() {
 
-
-const firebaseConfig = {
-    apiKey: "AIzaSyD5q3f_PQWbMmY95Ao3pv3u48xRpz-p_Ls",
-    authDomain: "gym-management-dfd3b.firebaseapp.com",
-    projectId: "gym-management-dfd3b",
-    storageBucket: "gym-management-dfd3b.appspot.com",
-    messagingSenderId: "878638516602",
-    appId: "1:878638516602:web:c86af309222d834ab42ec3",
-    measurementId: "G-KPE00KH76M"
-};
-
-var app = initializeApp(firebaseConfig);
-const db = getFirestore();
-const auth = getAuth();
-connectAuthEmulator(auth, "http://localhost:9099");
-connectFirestoreEmulator(db, 'localhost', 9010);
-
-generateData();
-
-async function generateData() {
 
     var orgs, branches, subscribers, subscriptions;
 
@@ -58,13 +34,10 @@ async function generateData() {
             subscribers = generateSubscribers();
             for (var subIdx = 0; subIdx < subscribers.length; subIdx++) {
                 var subscriber = subscribers[subIdx];
-                var subscriberRef = await dbUtils.addSubscriber(org.name, branch.name, subscriber);
-
-
                 subscriptions = generateSubscriptions(3);
                 for (var sbnIdx = 0; sbnIdx < subscriptions.length; sbnIdx++) {
                     var subscription = subscriptions[sbnIdx];
-                    await dbUtils.addSubscription(subscriberRef.id, subscription);
+                    await dbUtils.addSubscription(org.name, branch.name, subscriber, subscription);
 
                     var { start, end } = subscription;
                     var diff = end - start;
@@ -90,14 +63,8 @@ async function generateData() {
 
 
     var roles = generateRoles();
-    var rolesRef = collection(db, "roles");
 
-    for (var roleIdx = 0; roleIdx < roles.length; roleIdx++) {
-        var role = roles[roleIdx];
-        await addDoc(rolesRef, {
-            ...role
-        })
-    }
+    await dbUtils.addDefaultRoles(roles);
 
     var users = [
         "orgadmin@example.com",
@@ -108,25 +75,16 @@ async function generateData() {
 
     // org admin
 
-    var usersRef = collection(db, "userPrivileges");
-
-    await addDoc(usersRef, {
+    await dbUtils.addPrivilege({
         userId: users[0],
         roleName: "OrgAdmin",
         orgName: orgs[0].name,
         branches: orgs[0].branches.map(b => b.name)
-    });
+    })
 
-    await addDoc(usersRef, {
-        userId: users[0],
-        roleName: "OrgAdmin",
-        orgName: orgs[1].name,
-        branches: orgs[1].branches.map(b => b.name)
-    });
+    // // org moderator
 
-    // org moderator
-
-    await addDoc(usersRef, {
+    await dbUtils.addPrivilege({
         userId: users[1],
         roleName: "OrgModerator",
         orgName: orgs[1].name,
@@ -134,7 +92,8 @@ async function generateData() {
     });
 
     // branch admin
-    await addDoc(usersRef, {
+
+    await dbUtils.addPrivilege({
         userId: users[2],
         roleName: "BranchAdmin",
         orgName: orgs[0].name,
@@ -144,14 +103,12 @@ async function generateData() {
 
     // technician
 
-    await addDoc(usersRef, {
+    await dbUtils.addPrivilege({
         userId: users[3],
         roleName: "Technician",
         orgName: orgs[0].name,
         branches: orgs[0].branches.map(b => b.name)
     });
-
-    process.exit(1);
 
 }
 
@@ -287,7 +244,7 @@ function generateSubscribers(limit = 10) {
                 name: uniqueNamesGenerator({ dictionaries: [names] }),
                 dob: randomDate(),
                 address: uniqueNamesGenerator({ dictionaries: [countries] }),
-                contact: uniqueNamesGenerator({ dictionaries: [NumberDictionary.generate({ length: 10 })] })
+                contact: +(uniqueNamesGenerator({ dictionaries: [NumberDictionary.generate({ length: 10 })] }))
             }
         })
 }

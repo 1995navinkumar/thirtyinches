@@ -1,4 +1,4 @@
-import { getIdToken } from './auth-util';
+import { getIdToken, getUserId } from './auth-util';
 
 function _throw(er) {
     throw er;
@@ -13,6 +13,10 @@ async function fetchData(url, options = {}) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${jwt}`
         }
+    }
+
+    if (process.env.NODE_ENV == "development") {
+        defaultOptions.headers.uid = await getUserId();
     }
 
     return fetch(
@@ -38,8 +42,6 @@ export async function createBranch(orgName, branchDetails) {
         }
     )
 }
-
-window.createBranch = createBranch;
 
 export async function getOrgDetails(userId) {
     const db = getFirestore();
@@ -107,27 +109,20 @@ export function subscribeToOrgs(setOrgs) {
 
 // ------------------------------------ Subscriptions -----------------------------------------
 
-export async function addSubscriber(orgName, branchName, subscriberDetail) {
-    var db = getFirestore();
-    var subscribersRef = collection(db, "subscribers");
-
-    // add validation
-
-    return addDoc(subscribersRef, {
-        ...subscriberDetail,
-        orgName,
-        branchName
-    })
+export async function addSubscription(orgName, branchName, subscriberDetail, subscriptionDetail) {
+    return fetchData(
+        "api/subscriptions/add",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                subscriptionDetail,
+                subscriberDetail,
+                orgName,
+                branchName
+            })
+        }
+    );
 }
-
-export async function addSubscription(subscriberId, subscriptionDetail) {
-    var db = getFirestore();
-    var subscriberDocRef = doc(db, "subscribers", subscriberId);
-    return updateDoc(subscriberDocRef, {
-        subscriptions: arrayUnion(subscriptionDetail)
-    })
-}
-
 
 export async function getAllSubscribers(orgName, branchNames) {
     var db = getFirestore();
@@ -139,22 +134,38 @@ export async function getAllSubscribers(orgName, branchNames) {
 // Privileges
 
 export async function addPrivilege(p) {
-    var db = getFirestore();
-    var privilegesRef = collection(db, "privileges");
-    return addDoc(privilegesRef, {
-        name: p
-    });
+    return fetchData(
+        "api/userprivilege/add",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                ...p
+            })
+        }
+    )
+}
+
+export async function addDefaultRoles(roles) {
+    return fetchData(
+        "api/roles/populate",
+        {
+            method: "POST",
+            body: JSON.stringify({ roles })
+        }
+    )
 }
 
 export async function addRole(orgName, role) {
-    var db = getFirestore();
-    var orgsRef = collection(db, "orgs");
-    var orgId = await getOrgId(orgName);
-    if (orgId) {
-        return updateDoc(doc(orgsRef, orgId), {
-            roles: arrayUnion(role)
-        });
-    }
+    return fetchData(
+        "api/orgs/addRole",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                orgName,
+                role
+            })
+        }
+    )
 }
 
 export async function addPersonalisedData(userId, data) {
@@ -182,13 +193,18 @@ export async function addPersonalisedData(userId, data) {
 // expense
 
 export async function addExpense(orgName, branchName, expenseDetail) {
-    var db = getFirestore();
-    var expenseRef = collection(db, "expenses");
-    return await addDoc(expenseRef, {
-        orgName,
-        branchName,
-        ...expenseDetail
-    })
+    return fetchData(
+        "api/expenses/add",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                orgName,
+                branchName,
+                expenseDetail
+            })
+        }
+    )
+
 }
 
 export async function getAllExpense(orgName) {
@@ -202,13 +218,18 @@ export async function getAllExpense(orgName) {
 // asset
 
 export async function addAsset(orgName, branchName, assetDetail) {
-    var db = getFirestore();
-    var assetsRef = collection(db, "assets");
-    return await addDoc(assetsRef, {
-        orgName,
-        branchName,
-        ...assetDetail
-    })
+    return fetchData(
+        "api/assets/add",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                orgName,
+                branchName,
+                assetDetail
+            })
+        }
+
+    )
 }
 
 export async function getAllAssets(orgName) {
@@ -222,14 +243,18 @@ export async function getAllAssets(orgName) {
 // attendance
 
 export async function markAttendance(orgName, branchName, contact, timestamp) {
-    var db = getFirestore();
-    var attendanceRef = collection(db, "attendance");
-    return await addDoc(attendanceRef, {
-        orgName,
-        branchName,
-        contact,
-        timestamp
-    })
+    return fetchData(
+        "api/attendance/add",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                orgName,
+                branchName,
+                contact,
+                timestamp
+            })
+        }
+    );
 }
 
 

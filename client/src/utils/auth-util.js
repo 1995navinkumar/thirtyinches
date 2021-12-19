@@ -22,3 +22,7 @@ export async function getIdToken() {
     return getAuth().currentUser?.getIdToken();
 }
 
+export async function getUserId() {
+    return getAuth().currentUser.email;
+}
+

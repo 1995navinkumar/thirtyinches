@@ -23,4 +23,9 @@ router.post("/create-branch", async (req, res, next) => {
     })
 });
 
+router.get("/list", async (req, res, next) => {
+    var db = await getDB();
+    var userId = req.uid;
+})
+
 module.exports = router;

@@ -42,6 +42,8 @@ var app = initializeApp(firebaseConfig);
 
 if (process.env.NODE_ENV != "production") {
     var { getAuth, connectAuthEmulator } = require("firebase/auth");
+    var { generateData } = require("./generate-mock-data");
+    window.generateData = generateData;
     const auth = getAuth();
     connectAuthEmulator(auth, "http://localhost:9099");
 }
