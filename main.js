@@ -34,7 +34,6 @@ app.use("/api", async function (req, res, next) {
     if (process.env.NODE_ENV != "development" && jwt && jwt.length > 0) {
         try {
             var decodedToken = await getAuth().verifyIdToken(jwt);
-            console.log(decodedToken)
             authorized = true;
         } catch (er) {
             console.log(er);
