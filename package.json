@@ -32,16 +32,14 @@
     "webpack-cli": "^4.8.0"
   },
   "scripts": {
-    "server-watch": "NODE_ENV=development nodemon index.js >>logs/dev.log | bunyan -o json",
-    "start": "NODE_ENV=production node index.js >> logs/app.log",
     "postinstall": "mkdir -p logs && mkdirp public/js public/css",
-    "deploy": "npm run client-sw && npm run build && firebase deploy",
+    "prestart" : "npm run client-sw && npm run client-build",
+    "start": "NODE_ENV=production node index.js >> logs/app.log",
+    "server-watch": "NODE_ENV=development nodemon index.js >>logs/dev.log | bunyan -o json",
     "emulators": "firebase emulators:start --import ./emulators-export",
     "export": "firebase emulators:export ./emulators-export",
     "cliet-sw": "node client/writeFilePaths.js",
-    "client-serve": "http-server public --port 8080 --proxy http://localhost:8800",
     "client-build": "webpack --mode=production",
-    "client-compress": "gzip -k public/js/bundle.js",
     "client-watch": "webpack --watch --mode=development",
     "client-lh": "lighthouse http://localhost:5000 --budget-path=./budget.json --quiet --chrome-flags='--headless' --output-path=./li-out.html",
     "test": "echo \"Error: no test specified\" && exit 1"
