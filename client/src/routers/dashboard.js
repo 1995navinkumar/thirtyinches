@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppContext } from '../context';
+import { AppContext, HomeContext } from '../context';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -35,15 +35,14 @@ var Styles = styled.div`
 `
 
 export default function Dashboard() {
-    var { orgs } = React.useContext(AppContext);
+    var { selectedOrg } = React.useContext(HomeContext);
     var navigate = useNavigate();
-    var selectedOrg = orgs.find(o => o.selected);
     return (
         <Styles className="full-height">
             <div className="full-height flex-row flex-align-cennter flex-justify-center ">
                 {
-                    orgs && orgs.length > 0
-                        ? selectedOrg.name
+                    selectedOrg
+                        ? selectedOrg
                         : (
                             <div className="flex-column flex-align-center add-branch-container">
                                 <img className="add-new-branch" src="images/add-new-branch.svg" />

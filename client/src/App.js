@@ -13,32 +13,27 @@ import {
 
 import { AppContext } from './context';
 
+import { getUserPrivileges } from './utils/api-util';
+
 export default function App() {
     var [user, setUser] = React.useState(null);
-    var [orgs, setOrgs] = React.useState([]);
-
-    if (orgs.length > 0) {
-        var selectedOrg = orgs.find(o => o.selected);
-
-        if (!selectedOrg) {
-            orgs[0].selected = true;
-        }
-    }
+    var [userPrivileges, setUserPrivileges] = React.useState(null);
 
     React.useEffect(() => {
-        AuthStateChanged()
-            .then(userObj => {
-                if (userObj) {
-                    setUser(userObj);
-                    setOrgs([]);
-                } else {
-                    setUser(false);
-                }
-            });
+        AuthStateChanged(userObj => {
+            if (userObj) {
+                getUserPrivileges().then(({ privileges }) => {
+                    setUserPrivileges(privileges);
+                })
+                setUser(userObj);
+            } else {
+                setUser(false);
+            }
+        })
     }, []);
 
     return (
-        <AppContext.Provider value={{ user, setUser, orgs, setOrgs }}>
+        <AppContext.Provider value={{ user, userPrivileges }}>
             <div className="flex-column full-height">
                 {
 
@@ -48,9 +43,11 @@ export default function App() {
                             user == false
                                 ? <SignIn />
                                 : (
-                                    <HashRouter>
-                                        <Home />
-                                    </HashRouter>
+                                    userPrivileges
+                                        ? <HashRouter>
+                                            <Home />
+                                        </HashRouter>
+                                        : null
                                 )
                         )
                 }

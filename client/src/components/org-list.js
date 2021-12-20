@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { AppContext } from '../context';
+import { AppContext, HomeContext } from '../context';
 import { Link } from 'react-router-dom';
+import { getBranchDetails } from '../utils/api-util';
 
 var Styles = styled.div`
     .add-branch {
@@ -33,8 +34,17 @@ var Styles = styled.div`
 `
 
 export default function OrgList() {
-    var { orgs } = React.useContext(AppContext);
-    var selectedOrg = orgs.find(o => o.selected);
+    var { selectedOrg } = React.useContext(HomeContext);
+
+    var [branches, setBranches] = React.useState([]);
+
+    React.useEffect(() => {
+        if (selectedOrg) {
+            getBranchDetails(selectedOrg)
+                .then(doc => setBranches(doc.branches))
+                .catch(console.log)
+        }
+    }, [selectedOrg]);
 
     return (
         <Styles className="full-height">
@@ -43,11 +53,11 @@ export default function OrgList() {
                 <Link className="add-branch" to="/orgs/add">+</Link>
             </div>
             {
-                selectedOrg && selectedOrg.branches.length > 0
+                branches.length > 0
                     ? (
                         <div className="branch-list-container">
                             <ul className="branch-list">
-                                {selectedOrg.branches.map(branch =>
+                                {branches.map(branch =>
                                     <li className="branch-card" key={branch.name}>
                                         <p>{branch.name}</p>
                                         <p>{branch.address}</p>

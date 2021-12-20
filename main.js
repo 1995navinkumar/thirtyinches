@@ -23,7 +23,7 @@ app.use("/api", api);
 app.use(errorLogger, function (err, req, res, next) {
     // sanity
     if (res.headerSent) { return next(err) };
-    // an error passed without statusCode is assinged 500
+    // an error passed without statusCode is assigned 500
     err.statusCode = (err.statusCode) ? err.statusCode : 500;
     res.status(err.statusCode).send(err);
 });
@@ -31,4 +31,8 @@ app.use(errorLogger, function (err, req, res, next) {
 // listen for request
 app.listen(process.env.PORT || 8800, function () {
     console.log('server running on PORT', process.env.PORT || 8800);
+});
+
+process.on('uncaughtException', (err) => {
+    console.log(err);
 });

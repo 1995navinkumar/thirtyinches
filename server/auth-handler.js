@@ -2,6 +2,8 @@ const admin = require("firebase-admin");
 
 const { getAuth } = require("firebase-admin/auth");
 
+const getDB = require("./mongo");
+
 var serviceAccount = require("./serviceAccount.json");
 
 admin.initializeApp({
@@ -20,8 +22,9 @@ async function authHandler(req, res, next) {
     if (mode == "development") {
         var uid = req.headers.uid;
         authorized = uid.length > 0 && jwt && jwt.length > 0;
-        if (authorized) { 
+        if (authorized) {
             req.uid = uid;
+            req.userPrivileges = await getUserPrivileges(uid);
         }
     }
 
@@ -30,6 +33,7 @@ async function authHandler(req, res, next) {
             var decodedToken = await getAuth().verifyIdToken(jwt);
             var usermail = decodedToken.email;
             req.uid = usermail;
+            req.userPrivileges = await getUserPrivileges(usermail);
             authorized = true;
         } catch (er) {
             console.log(er);
@@ -44,6 +48,16 @@ async function authHandler(req, res, next) {
         res.send("Invalid Token");
         res.end();
     }
+}
+
+async function getUserPrivileges(userId) {
+    var db = await getDB();
+    return await
+        db.collection("userPrivileges")
+            .find({
+                userId
+            })
+            .toArray()
 }
 
 module.exports = authHandler;

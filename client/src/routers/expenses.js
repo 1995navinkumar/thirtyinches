@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getAllExpense } from '../utils/api-util';
-import { AppContext } from '../context';
+import { AppContext, HomeContext } from '../context';
 
 var Styles = styled.div`
     .card-list-container {
@@ -30,17 +30,14 @@ var Styles = styled.div`
 `
 
 export default function Expenses() {
-    var { orgs } = React.useContext(AppContext);
+    var { selectedOrg } = React.useContext(HomeContext);
     var [expenses, setExpenses] = React.useState([]);
 
     React.useEffect(() => {
-        var selectedOrg = orgs.find(o => o.selected);
         if (selectedOrg) {
-            getAllExpense(selectedOrg.name).then(exps => {
-                setExpenses(exps || []);
-            })
+            getAllExpense(selectedOrg).then(setExpenses)
         }
-    }, []);
+    }, [selectedOrg]);
 
     return (
         <Styles className="full-height">
@@ -49,17 +46,19 @@ export default function Expenses() {
                 <Link className="add-plus" to="/subscriptions/add">+</Link>
             </div>
             {
-                <div className="card-list-container">
-                    <ul className="card-container full-height">
-                        {
-                            expenses.map((exp, idx) => (
-                                <li key={idx} className="card">
-                                    {exp.title}
-                                </li>
-                            ))
-                        }
-                    </ul>
-                </div>
+                selectedOrg
+                    ? <div className="card-list-container">
+                        <ul className="card-container full-height">
+                            {
+                                expenses.map((exp, idx) => (
+                                    <li key={idx} className="card">
+                                        {exp.title}
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    : null
             }
         </Styles>
     )

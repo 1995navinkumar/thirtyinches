@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { AppContext } from '../context';
+import { AppContext, HomeContext } from '../context';
 import { addPersonalisedData } from '../utils/api-util.js';
 import { logout } from '../utils/auth-util';
 
@@ -101,9 +101,11 @@ export default function Menu({ showMenu, setShowMenu }) {
     var menuStyle = showMenu ? { left: 0 } : {};
     var navigate = useNavigate();
 
-    var { orgs, user, setOrgs } = React.useContext(AppContext);
+    var { userPrivileges, user } = React.useContext(AppContext);
 
-    var selectedOrg = orgs.find(o => o.selected);
+    var { selectedOrg, setSelectedOrg } = React.useContext(HomeContext);
+
+    var orgs = userPrivileges.map(p => p.orgName);
 
     var signout = React.useCallback((e) => {
         logout().then(() => {
@@ -116,23 +118,10 @@ export default function Menu({ showMenu, setShowMenu }) {
     });
 
     var onOrgChange = (e) => {
-        var selectedOrg = e.target.value;
-        var newOrgs = [...orgs];
-
-        newOrgs.forEach(org => {
-            if (org.name == selectedOrg) {
-                org.selected = true;
-            } else {
-                org.selected = false;
-            }
-        });
-
-        addPersonalisedData(user.email, {
-            selectedOrg
-        })
-
+        var sOrg = e.target.value;
+        setSelectedOrg(sOrg);
         setShowMenu(false);
-        setOrgs(newOrgs);
+        addPersonalisedData({ selectedOrg: sOrg });
     }
 
     return (
@@ -149,10 +138,10 @@ export default function Menu({ showMenu, setShowMenu }) {
                 selectedOrg
                     ? (
                         <div className="current-org flex-row flex-align-center">
-                            <select value={selectedOrg.name} onChange={onOrgChange} className="org-select">
+                            <select value={selectedOrg} onChange={onOrgChange} className="org-select">
                                 {
                                     orgs.map(org =>
-                                        <option value={org.name} key={org.name} > {org.name}</option>
+                                        <option value={org} key={org} > {org}</option>
                                     )
                                 }
                             </select>

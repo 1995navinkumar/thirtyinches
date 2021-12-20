@@ -1,6 +1,8 @@
 import { uniqueNamesGenerator, names, countries, NumberDictionary } from 'unique-names-generator';
 
-import * as dbUtils from "./src/utils/api-util";
+import * as apiUtils from "./src/utils/api-util";
+
+window.apiUtils = apiUtils;
 
 export async function generateData() {
 
@@ -11,33 +13,42 @@ export async function generateData() {
 
     for (var orgIdx = 0; orgIdx < orgs.length; orgIdx++) {
         var org = orgs[orgIdx];
+
+        await apiUtils.createOrg(org.name);
+
         branches = generateBranches(2);
         org.branches = branches; // mutation
 
         for (var brIdx = 0; brIdx < branches.length; brIdx++) {
             var branch = branches[brIdx];
-            await dbUtils.createBranch(org.name, branch);
+            await apiUtils.createBranch(org.name, branch);
 
             var assets = generateAssets();
             for (var assetIdx = 0; assetIdx < assets.length; assetIdx++) {
                 var asset = assets[assetIdx];
-                await dbUtils.addAsset(org.name, branch.name, asset);
+                await apiUtils.addAsset(org.name, {
+                    branchName: branch.name,
+                    ...asset
+                });
             }
 
 
             var expenses = generateExpenses();
             for (var expIdx = 0; expIdx < expenses.length; expIdx++) {
                 var expense = expenses[expIdx];
-                await dbUtils.addExpense(org.name, branch.name, expense);
+                await apiUtils.addExpense(org.name, branch.name, expense);
             }
 
             subscribers = generateSubscribers();
             for (var subIdx = 0; subIdx < subscribers.length; subIdx++) {
                 var subscriber = subscribers[subIdx];
+
+                await apiUtils.addSubscriber(org.name, branch.name, subscriber);
+
                 subscriptions = generateSubscriptions(3);
                 for (var sbnIdx = 0; sbnIdx < subscriptions.length; sbnIdx++) {
                     var subscription = subscriptions[sbnIdx];
-                    await dbUtils.addSubscription(org.name, branch.name, subscriber, subscription);
+                    await apiUtils.addSubscription(org.name, subscriber.contact, subscription);
 
                     var { start, end } = subscription;
                     var diff = end - start;
@@ -48,7 +59,7 @@ export async function generateData() {
 
                     for (var dateIdx = 0; dateIdx < reasonableDayDiff % 10; dateIdx++) {
                         var timestamp = start + reasonableDiff;
-                        await dbUtils.markAttendance(
+                        await apiUtils.markAttendance(
                             org.name,
                             branch.name,
                             subscriber.contact,
@@ -64,7 +75,7 @@ export async function generateData() {
 
     var roles = generateRoles();
 
-    await dbUtils.addDefaultRoles(roles);
+    await apiUtils.addDefaultRoles(roles);
 
     var users = [
         "orgadmin@example.com",
@@ -75,16 +86,16 @@ export async function generateData() {
 
     // org admin
 
-    await dbUtils.addPrivilege({
-        userId: users[0],
-        roleName: "OrgAdmin",
-        orgName: orgs[0].name,
-        branches: orgs[0].branches.map(b => b.name)
-    })
+    // await apiUtils.addPrivilege({
+    //     userId: users[0],
+    //     roleName: "OrgAdmin",
+    //     orgName: orgs[0].name,
+    //     branches: orgs[0].branches.map(b => b.name)
+    // })
 
     // // org moderator
 
-    await dbUtils.addPrivilege({
+    await apiUtils.addPrivilege({
         userId: users[1],
         roleName: "OrgModerator",
         orgName: orgs[1].name,
@@ -93,7 +104,7 @@ export async function generateData() {
 
     // branch admin
 
-    await dbUtils.addPrivilege({
+    await apiUtils.addPrivilege({
         userId: users[2],
         roleName: "BranchAdmin",
         orgName: orgs[0].name,
@@ -103,7 +114,7 @@ export async function generateData() {
 
     // technician
 
-    await dbUtils.addPrivilege({
+    await apiUtils.addPrivilege({
         userId: users[3],
         roleName: "Technician",
         orgName: orgs[0].name,

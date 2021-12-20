@@ -1,15 +1,9 @@
 import React from 'react';
 import {
-    Routes,
-    Route,
-    useNavigate,
-    useLocation,
-    Outlet,
-    Navigate,
     Link
 } from "react-router-dom";
 import { getAllSubscribers } from '../../utils/api-util.js';
-import { AppContext } from '../../context';
+import { AppContext, HomeContext } from '../../context';
 
 import styled from 'styled-components';
 
@@ -67,15 +61,15 @@ var Styles = styled.div`
 `
 
 export default function SubscribersList() {
-    var { orgs } = React.useContext(AppContext);
+    var { selectedOrg } = React.useContext(HomeContext);
     var [subscriptions, setSubscriptions] = React.useState([]);
+
     React.useEffect(() => {
-        var selectedOrg = orgs.find(o => o.selected);
         if (selectedOrg) {
-            getAllSubscribers(selectedOrg.name, selectedOrg.branches.map(b => b.name))
+            getAllSubscribers(selectedOrg)
                 .then(setSubscriptions)
         }
-    }, [orgs]);
+    }, [selectedOrg]);
 
     return (
         <Styles className="full-height">
@@ -90,7 +84,7 @@ export default function SubscribersList() {
                         <div className="subscribers-list-container">
                             <ul className="subscribers-list full-height">
                                 {subscriptions.map(sub =>
-                                    <li className="subscriber-card flex-column" key={sub.id}>
+                                    <li className="subscriber-card flex-column" key={sub.contact}>
                                         <div className="flex-align-center flex-row flex-1">
                                             <img src="images/profile-pic.png" className="sub-profile-pic" />
                                             <div className="subscriber-detail">

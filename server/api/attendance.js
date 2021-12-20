@@ -3,10 +3,11 @@ const router = express.Router();
 const getDB = require("../mongo");
 
 
-router.post("/add", async function markAttendance(req, res) {
+router.post("/:orgName/:contact", async function markAttendance(req, res) {
     var db = await getDB();
 
-    var { orgName, branchName, contact, timestamp } = req.body;
+    var { orgName, contact } = req.params;
+    var { branchName, timestamp } = req.body;
 
     await db.collection("attendance")
         .insertOne({

@@ -3,7 +3,7 @@ const router = express.Router();
 const getDB = require("../mongo");
 
 
-router.post("/add", async function createNewUserPrivilege(req, res) {
+router.post("/", async function createNewUserPrivilege(req, res) {
     var db = await getDB();
 
     var details = {
@@ -23,5 +23,11 @@ router.post("/add", async function createNewUserPrivilege(req, res) {
     });
 
 });
+
+router.get("/", async function getUserPrivileges(req, res, next) {
+    res.json({
+        privileges: req.userPrivileges
+    })
+})
 
 module.exports = router;

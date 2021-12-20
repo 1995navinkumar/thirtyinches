@@ -1,10 +1,8 @@
 import { getAuth, onAuthStateChanged, signOut, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 
-export async function AuthStateChanged() {
+export function AuthStateChanged(cb) {
     const auth = getAuth();
-    return new Promise((resolve, reject) => {
-        onAuthStateChanged(auth, resolve, reject)
-    });
+    onAuthStateChanged(auth, cb)
 }
 
 export async function signInWithGoogle() {
