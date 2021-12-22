@@ -110,8 +110,9 @@ export default function SubscribersList() {
 function getEndsIn(subscriberDetails) {
     var { subscriptions } = subscriberDetails;
     subscriptions.sort((a, b) => {
-        return b.end - a.end;
+        return new Date(b.end).getTime() - new Date(a.end).getTime();
     });
-    var remaining = subscriptions[0].end - Date.now();
+
+    var remaining = new Date(subscriptions[0].end).getTime() - Date.now();
     return Math.floor(remaining / (1000 * 60 * 60 * 24));
 }

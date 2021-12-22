@@ -10,6 +10,10 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
+var demoAccounts = [
+    "Uq6uheVxXlNsr217p64xdmE01C72"
+]
+
 async function authHandler(req, res, next) {
     var headers = req.headers;
     var authorization = headers.authorization || "";
@@ -24,7 +28,8 @@ async function authHandler(req, res, next) {
         authorized = uid.length > 0 && jwt && jwt.length > 0;
         if (authorized) {
             req.uid = uid;
-            req.userPrivileges = await getUserPrivileges(uid);
+            req.dbname = "demo";
+            req.userPrivileges = await getUserPrivileges(req, uid);
         }
     }
 
@@ -32,8 +37,17 @@ async function authHandler(req, res, next) {
         try {
             var decodedToken = await getAuth().verifyIdToken(jwt);
             var usermail = decodedToken.email;
+
+            var isDemoMode = demoAccounts.includes(decodedToken.uid) && req.headers.demomode == "true";
+
+            console.log(`isDemoMode : ${isDemoMode}`, decodedToken.uid);
+
+            if (isDemoMode) {
+                req.dbname = "demo";
+            }
+
             req.uid = usermail;
-            req.userPrivileges = await getUserPrivileges(usermail);
+            req.userPrivileges = await getUserPrivileges(req, usermail);
             authorized = true;
         } catch (er) {
             console.log(er);
@@ -50,8 +64,8 @@ async function authHandler(req, res, next) {
     }
 }
 
-async function getUserPrivileges(userId) {
-    var db = await getDB();
+async function getUserPrivileges(req, userId) {
+    var db = await getDB(req.dbname);
     return await
         db.collection("userPrivileges")
             .find({

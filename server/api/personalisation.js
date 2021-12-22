@@ -3,14 +3,13 @@ const router = express.Router();
 const getDB = require("../mongo");
 
 router.put("/", async function addPersonalisedData(req, res, next) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var { data } = req.body;
     await db.collection("personalisation")
-        .replaceOne({
+        .updateOne({
             userId: req.uid
         }, {
-            userId: req.uid,
-            ...data
+            $set: { ...data }
         }, {
             upsert: true
         })
@@ -21,7 +20,7 @@ router.put("/", async function addPersonalisedData(req, res, next) {
 });
 
 router.get("/", async function getPersonalisedData(req, res, next) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var data = await db.collection("personalisation").findOne({ userId: req.uid });
     res.json(data || {});
 })

@@ -1,4 +1,12 @@
-import { getIdToken, getUserId } from './auth-util';
+import { getIdToken, getUserId, isDemoMode } from './auth-util';
+// -------------------------------------------------------- Dashboard & Cards ---------------------------------------
+
+export async function getCardData(cardName, params) {
+    return fetchData(
+        `api/dashboard/${cardName}?${getQueryParams(params)}`
+    )
+}
+
 
 // -------------------------------------------------------- Orgs & Branches ---------------------------------------
 
@@ -192,6 +200,10 @@ function _throw(er) {
     throw er;
 }
 
+function getQueryParams(params = {}) {
+    return (new URLSearchParams(params)).toString();
+}
+
 export async function fetchData(url, options = {}) {
     var jwt = await getIdToken();
 
@@ -205,6 +217,10 @@ export async function fetchData(url, options = {}) {
 
     if (process.env.NODE_ENV == "development") {
         defaultOptions.headers.uid = await getUserId();
+    }
+
+    if (isDemoMode()) { 
+        defaultOptions.headers.demomode = "true";
     }
 
     return fetch(

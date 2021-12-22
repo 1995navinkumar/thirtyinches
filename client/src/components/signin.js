@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { signInWithGoogle } from '../utils/auth-util';
+import { signInWithGoogle, signInAsDemoUser } from '../utils/auth-util';
 
 var Styles = styled.div`
     height : 100%;
@@ -54,6 +54,11 @@ var Styles = styled.div`
         width : 20px;
         height : 20px;
     }
+
+    .demo-container {
+        padding-top : 24px;
+        color : white;
+    }
 `
 
 
@@ -64,6 +69,12 @@ export default function SignIn({ setSignUp }) {
             }).catch((error) => {
             });
     })
+
+    var loginAsDemoUser = React.useCallback(() => {
+        signInAsDemoUser("demo-orgadmin@rocketmail.com", "orgadmin30")
+            .then(console.log)
+            .catch(console.log)
+    }, []);
 
     return (
         <Styles>
@@ -80,13 +91,17 @@ export default function SignIn({ setSignUp }) {
                 <div className="signin-description">
                     <p>Manage Subscriptions, Expenses, Attendance and much more..! </p>
                 </div>
-                <div className="signin-google flex-row flex-justify flex-1">
+                <div className="signin-google flex-column flex-align-center flex-1">
 
                     <button onClick={signInUsingGoogle} className="signin-google--btn">
                         <span>Continue with Google</span>
                     </button>
+                    <div className='demo-container'>
+                        <button onClick={loginAsDemoUser}>Live Demo</button>
+                    </div>
                 </div>
                 <img className="signin-backdrop" src="images/logo.svg"></img>
+
             </div>
         </Styles>
     )

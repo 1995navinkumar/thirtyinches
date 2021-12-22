@@ -4,7 +4,7 @@ const getDB = require("../mongo");
 
 
 router.post("/populate", async function populateDefaultRoles(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
 
     var { roles } = req.body;
 

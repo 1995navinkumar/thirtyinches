@@ -1,8 +1,19 @@
-import { getAuth, onAuthStateChanged, signOut, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+
+var isDemo = false;
+
+var demoAccounts = [
+    "Uq6uheVxXlNsr217p64xdmE01C72"
+]
 
 export function AuthStateChanged(cb) {
     const auth = getAuth();
-    onAuthStateChanged(auth, cb)
+    onAuthStateChanged(auth, (userObj) => {
+        if (userObj && demoAccounts.includes(userObj.uid)) {
+            isDemo = true;   
+        }
+        cb(userObj);
+    })
 }
 
 export async function signInWithGoogle() {
@@ -22,5 +33,18 @@ export async function getIdToken() {
 
 export async function getUserId() {
     return getAuth().currentUser.email;
+}
+
+
+export async function signInAsDemoUser(email, password) {
+    const auth = getAuth();
+    return signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            isDemo = true;
+        });
+}
+
+export function isDemoMode() {
+    return isDemo;
 }
 

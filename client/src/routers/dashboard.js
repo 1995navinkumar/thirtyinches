@@ -2,6 +2,9 @@ import React from 'react';
 import { AppContext, HomeContext } from '../context';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import PChart from '../components/pie-chart';
+import IncomeVersusExpense from '../components/bar-chart';
+import { getCardData } from '../utils/api-util';
 
 var Styles = styled.div`
     .add-branch-container {
@@ -32,6 +35,20 @@ var Styles = styled.div`
     .plus {
         margin : 0px 8px;
     }
+
+    .card {
+        padding-left : 8px;
+    }
+
+    .card-title {
+        color : white;
+        font-weight : bold;
+    }
+
+    .card-body {
+        width : 100%;
+        height : calc(100% - 12px);
+    }
 `
 
 export default function Dashboard() {
@@ -39,21 +56,34 @@ export default function Dashboard() {
     var navigate = useNavigate();
     return (
         <Styles className="full-height">
-            <div className="full-height flex-row flex-align-cennter flex-justify-center ">
+            <div className="full-height full-width">
                 {
                     selectedOrg
-                        ? selectedOrg
-                        : (
-                            <div className="flex-column flex-align-center add-branch-container">
-                                <img className="add-new-branch" src="images/add-new-branch.svg" />
-                                <button onClick={() => navigate("/orgs/add")} className="add-org--btn">
-                                    <img className="plus" src="images/plus.svg" />
-                                    <span className="add-org--text">Add Organisation</span>
-                                </button>
-                            </div>
-                        )
+                        ? <ShowCards />
+                        : <AddOrganisation />
                 }
             </div>
         </Styles>
+    )
+}
+
+function ShowCards() {
+    return (
+        <div className='full-height full-width'>
+            <IncomeVersusExpense/>
+        </div>
+    )
+}
+
+function AddOrganisation() {
+    var navigate = useNavigate();
+    return (
+        <div className="flex-column flex-align-center add-branch-container">
+            <img className="add-new-branch" src="images/add-new-branch.svg" />
+            <button onClick={() => navigate("/orgs/add")} className="add-org--btn">
+                <img className="plus" src="images/plus.svg" />
+                <span className="add-org--text">Add Organisation</span>
+            </button>
+        </div>
     )
 }

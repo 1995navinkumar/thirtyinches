@@ -4,7 +4,7 @@ const getDB = require("../mongo");
 
 
 router.post("/", async function createNewUserPrivilege(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
 
     var details = {
         userId: req.body.userId,

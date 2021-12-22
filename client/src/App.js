@@ -18,6 +18,7 @@ import { getUserPrivileges } from './utils/api-util';
 export default function App() {
     var [user, setUser] = React.useState(null);
     var [userPrivileges, setUserPrivileges] = React.useState(null);
+    var [isDemoMode, setIsDemoMode] = React.useState(false);
 
     React.useEffect(() => {
         AuthStateChanged(userObj => {
@@ -33,7 +34,7 @@ export default function App() {
     }, []);
 
     return (
-        <AppContext.Provider value={{ user, userPrivileges }}>
+        <AppContext.Provider value={{ user, userPrivileges, isDemoMode }}>
             <div className="flex-column full-height">
                 {
 
@@ -41,7 +42,7 @@ export default function App() {
                         ? <Loader />
                         : (
                             user == false
-                                ? <SignIn />
+                                ? <SignIn setIsDemoMode={setIsDemoMode} />
                                 : (
                                     userPrivileges
                                         ? <HashRouter>

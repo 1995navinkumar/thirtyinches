@@ -9,10 +9,13 @@ const attendance = require("./attendance");
 const expenses = require("./expenses");
 const assets = require("./assets");
 const personalisation = require("./personalisation");
+const dashboard = require("./dashboard");
 
 router.get("/usermeta", async (req, res, next) => {
     res.json({});
 });
+
+router.use("/dashboard", dashboard);
 
 router.use("/orgs", orgs);
 

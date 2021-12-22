@@ -3,7 +3,7 @@ const router = express.Router();
 const getDB = require("../mongo");
 
 router.post("/", async function createNewOrg(req, res, next) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     let { orgName } = req.body;
 
     try {
@@ -41,7 +41,7 @@ router.post("/", async function createNewOrg(req, res, next) {
 })
 
 router.post("/:orgName/branches", async function createNewBranch(req, res, next) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var orgName = req.params.orgName;
     var { branchDetails } = req.body;
 
@@ -79,7 +79,7 @@ router.post("/:orgName/branches", async function createNewBranch(req, res, next)
 });
 
 router.get("/:orgName/branches", async function (req, res, next) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var orgName = req.params.orgName;
 
     try {

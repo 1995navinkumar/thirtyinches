@@ -3,7 +3,7 @@ const router = express.Router();
 const getDB = require("../mongo");
 
 router.get("/:orgName", async function getSubscribers(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var { orgName } = req.params;
 
     var allowedBranches = req.userPrivileges.find(doc => doc.orgName == orgName).branches;
@@ -18,7 +18,7 @@ router.get("/:orgName", async function getSubscribers(req, res) {
 })
 
 router.post("/:orgName", async function addSubscriber(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
 
     var orgName = req.params.orgName;
 
@@ -38,15 +38,18 @@ router.post("/:orgName", async function addSubscriber(req, res) {
 });
 
 router.post("/:orgName/:contact/subscriptions", async function addSubscriptions(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
 
     var { orgName, contact } = req.params;
     var { subscriptionDetail } = req.body;
 
+    subscriptionDetail.start = new Date(subscriptionDetail.start);
+    subscriptionDetail.end = new Date(subscriptionDetail.end);
+
     await db.collection("subscribers")
         .updateOne(
             {
-                contact : +contact,
+                contact: +contact,
                 orgName
             },
             {

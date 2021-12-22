@@ -4,7 +4,7 @@ const getDB = require("../mongo");
 
 
 router.get("/:orgName", async function getAllAssets(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var { orgName } = req.params;
 
     var allowedBranches = req.userPrivileges.find(doc => doc.orgName == orgName).branches;
@@ -20,9 +20,11 @@ router.get("/:orgName", async function getAllAssets(req, res) {
 })
 
 router.post("/:orgName", async function newAsset(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var { orgName } = req.params;
     var { assetDetail } = req.body;
+
+    assetDetail.timestamp = new Date(assetDetail.timestamp);
 
     await db.collection("assets")
         .insertOne({

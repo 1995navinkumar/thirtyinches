@@ -10,3 +10,4 @@ public/sw.js
 
 emulators-export
 logs
+mongo-export

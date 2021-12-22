@@ -5,6 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "body-parser": "^1.19.1",
+    "bunyan": "^1.8.15",
     "compression": "^1.7.4",
     "express": "^4.17.2",
     "firebase": "^9.6.0",
@@ -14,9 +15,9 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^6.0.2",
+    "recharts": "^2.1.8",
     "styled-components": "^5.3.3",
     "unique-names-generator": "^4.6.0",
-    "bunyan": "^1.8.15",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -33,7 +34,7 @@
   },
   "scripts": {
     "postinstall": "mkdir -p logs && mkdirp public/js public/css && npm run client-build",
-    "start": "NODE_ENV=production node main.js >> logs/app.log",
+    "start": "NODE_ENV=production DB=production node main.js >> logs/app.log",
     "server-watch": "NODE_ENV=development nodemon main.js | ntee logs/dev.log | bunyan -o json",
     "emulators": "firebase emulators:start --import ./emulators-export",
     "export": "firebase emulators:export ./emulators-export",

@@ -26,6 +26,7 @@ var Styles = styled.div`
     .app-body {
         flex : 1;
         height: calc(100% - 108px);
+        overflow-y : scroll;
     }
 
     .app-footer {

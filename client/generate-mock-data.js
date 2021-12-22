@@ -223,26 +223,42 @@ function generateBranches(branchLimit = 1) {
         })
 }
 
+var expenseCategory = [
+    "Maintenance",
+    "Wage",
+    "Asset Purchase",
+    "Misc"
+]
+
 function generateExpenses(limit = 10) {
+    var sixMonthsFromNow = 6 * 30 * 24 * 60 * 60 * 1000;
+    var generateRandomTime = () => (new Date(Date.now() - (sixMonthsFromNow * Math.random()))).getTime();
+
     return new Array(limit)
         .fill(0)
         .map((el, idx) => {
             return {
                 title: `Expense_${idx + 1}`,
                 description: "expense",
-                amount: Math.ceil(Math.random() * 5000)
+                amount: Math.ceil(Math.random() * 5000),
+                timestamp: generateRandomTime(),
+                category: expenseCategory[Math.floor(Math.random() * expenseCategory.length)]
             }
         })
 }
 
 function generateAssets(limit = 10) {
+    var sixMonthsFromNow = 6 * 30 * 24 * 60 * 60 * 1000;
+    var generateRandomTime = () => (new Date(Date.now() - (sixMonthsFromNow * Math.random()))).getTime();
+
     return new Array(limit)
         .fill(0)
         .map(() => {
             return {
                 title: `dumbbell_${Math.ceil(Math.random() * 30)}kg`,
                 description: "asset",
-                cost: Math.ceil(Math.random() * 5000)
+                cost: Math.ceil(Math.random() * 5000),
+                timestamp: generateRandomTime()
             }
         })
 }
@@ -261,26 +277,45 @@ function generateSubscribers(limit = 10) {
 }
 
 function generateSubscriptions(limit = 3) {
-    var oneDay = 1 * 1000 * 60 * 60 * 24;
-    var now = new Date(Date.now()).getTime();
-    var previousEndDate = new Date(now + (oneDay * 30) + (Math.random() * oneDay * 365)).getTime();
+    var now = Date.now();
+    var oneDay = 24 * 3600 * 1000;
+
+    var getRandomDate = (max) => {
+        return Math.floor((Math.random() * max * oneDay))
+    }
+
+    var canMakeActiveSubscription = Math.random() < 0.75;
+
+    var start = now - getRandomDate(100);
+    var end = start + (canMakeActiveSubscription ? getRandomDate(365) : getRandomDate(30));
+
+    var dates = [];
+
+    dates.push({ start, end });
 
     var generateDate = () => {
-        var start = new Date(previousEndDate - (Math.random() * oneDay * 365)).getTime();
-        var end = previousEndDate;
+        var previousStart = dates[dates.length - 1].start;
+        let nextStart = previousStart - getRandomDate(365);
+        let nextEnd = nextStart + Math.floor(Math.random() * (previousStart - nextStart));
 
-        previousEndDate = new Date(start - oneDay * 30).getTime();
-        return {
-            start, end
-        }
+        dates.push({
+            start: nextStart,
+            end: nextEnd
+        });
     }
+
+    new Array(limit - 1)
+        .fill(0)
+        .forEach(generateDate);
 
     return new Array(limit)
         .fill(0)
-        .map(sub => {
+        .map((sub, idx) => {
             return {
-                ...generateDate(),
+                ...dates[idx],
                 amountPaid: Math.floor(Math.random() * 4000)
             }
         })
 }
+
+window.generateSubscriptions = generateSubscriptions;

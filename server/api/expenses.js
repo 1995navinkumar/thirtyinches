@@ -4,7 +4,7 @@ const getDB = require("../mongo");
 
 
 router.get("/:orgName", async function getAllExpense(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
     var { orgName } = req.params;
 
     var allowedBranches = req.userPrivileges.find(doc => doc.orgName == orgName).branches;
@@ -21,11 +21,13 @@ router.get("/:orgName", async function getAllExpense(req, res) {
 })
 
 router.post("/:orgName", async function newExpense(req, res) {
-    var db = await getDB();
+    var db = await getDB(req.dbname);
 
     var { orgName } = req.params;
 
     var { branchName, expenseDetail } = req.body;
+
+    expenseDetail.timestamp = new Date(expenseDetail.timestamp);
 
     await db.collection("expenses")
         .insertOne({
