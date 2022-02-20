@@ -8,7 +8,7 @@ import { logout } from '../utils/auth-util';
 var Styles = styled.div`
     width : 300px;
     height : 100%;
-    background : #F2F2F2;
+    background : var(--primary-color);
     top: 0px;
     box-shadow: 5px 0px 30px #CC4B00;
     position: absolute;
@@ -46,7 +46,7 @@ var Styles = styled.div`
         border-bottom-right-radius: 4px;
         margin: 12px 0px;
         width: calc(100% - 20px);
-        background: #DF5C11;
+        background: var(--primary-dark-color);
     }
 
     .profile-pic {
@@ -61,7 +61,7 @@ var Styles = styled.div`
         background: none;
         border: none;
         outline : none;
-        color : #F2F2F2;
+        color : var(--text-on-primary);
         padding-left : 16px;
     }
 
@@ -89,7 +89,7 @@ var Styles = styled.div`
     }
 
     .active-link .routes-icon-container {
-        background : #CB4B01;
+        background : var(--primary-dark-color);
     }
 
     .active-link .menu-actions {

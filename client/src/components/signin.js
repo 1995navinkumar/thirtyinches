@@ -5,18 +5,24 @@ import { signInWithGoogle, signInAsDemoUser } from '../utils/auth-util';
 var Styles = styled.div`
     height : 100%;
 
-    .signin-header-container {
-        height : 144px;
-        padding : 24px;
+    .signin-container {
+        background-color : var(--primary-color);
+        color : var(--text-on-primary);
     }
 
-    .signin-header--title {
-        font-size : 60px;
-        color : #FFF202;
+    .signin-header-container {
+        height : 144px;
+        padding : 32px;
+        color : var(--text-on-primary);
+    }
+    
+    .logo-stacked {
+        position : absolute;
     }
 
     .signin-header--subtitle {
-        color : #4D4900;
+        font-size : 18px;
+        padding : 20px;
     }
 
     .signin-backdrop {
@@ -31,8 +37,9 @@ var Styles = styled.div`
     }
 
     .signin-description {
+        margin-top : 48px;
         padding : 24px;
-        color : #4D4900;
+        color : var(--text-color);
         font-size : 24px;
     }
 
@@ -41,23 +48,37 @@ var Styles = styled.div`
     }
 
     .signin-google--btn {
-        width: 100%;
-        background: #EE6211;
+        width: 172px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 100%);
         height: 44px;
+        border : 1px solid var(--text-on-primary);
         border-radius: 44px;
         color : #FFFFFF;
-        font-size: 20px;
-        font-weight: bold
+        font-size: 13px;
+        font-weight : 600;
+        padding : 0px 16px;
     }
 
     .google-logo {
-        width : 20px;
-        height : 20px;
+        margin-right : 8px;
+    }
+
+    .live-demo-icon {
+         margin-right : 4px;
+         border : 1px solid;
+         border-radius : 50%;
+         height : 16px;
+         width : 16px;
     }
 
     .demo-container {
-        padding-top : 24px;
-        color : white;
+        border: 1px solid var(--primary-color);
+        padding: 6px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        margin-top: 24px;
+        font-size : 13px;
     }
 `
 
@@ -81,8 +102,8 @@ export default function SignIn({ setSignUp }) {
             <div className="signin-container flex-column full-height">
                 <div className="signin-header-container">
                     <div className="flex-row flex-justify-center app-header">
-                        <span className="oval-1"></span>
-                        <h1 className="signin-header--title">30"</h1>
+                        <img src="/images/logo-outline.svg" />
+                        <img className='logo-stacked' src="/images/logo-filled.svg" />
                     </div>
                     <div className="flex-row flex-justify-center">
                         <p className="signin-header--subtitle">Gym Management App</p>
@@ -93,11 +114,17 @@ export default function SignIn({ setSignUp }) {
                 </div>
                 <div className="signin-google flex-column flex-align-center flex-1">
 
-                    <button onClick={signInUsingGoogle} className="signin-google--btn">
-                        <span>Continue with Google</span>
+                    <button onClick={signInUsingGoogle} className="signin-google--btn flex-row flex-align-center flex-justify-center">
+                        <img src="/images/google-logo.svg" className='google-logo' />
+                        <span>Sign in with Google</span>
                     </button>
                     <div className='demo-container'>
-                        <button onClick={loginAsDemoUser}>Live Demo</button>
+                        <button onClick={loginAsDemoUser} className="flex-row flex-align-center flex-justify-center">
+                            <span className='flex-row flex-justify-center live-demo-icon'>
+                                <img src="/images/live-demo.svg" style={{ objectFit: 'none' }} />
+                            </span>
+                            <span>Live Demo</span>
+                        </button>
                     </div>
                 </div>
                 <img className="signin-backdrop" src="images/logo.svg"></img>

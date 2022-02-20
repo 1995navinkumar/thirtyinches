@@ -1,5 +1,6 @@
 @import './user-agent.css';
 @import './helper.css';
+
 @font-face {
     font-family: 'lato';
     src: url('../Lato/Lato-Regular.ttf');
@@ -10,6 +11,19 @@
     src: url('../Lato/Lato-Bold.ttf');
 }
 
+:root {
+    --primary-color: #D00737;
+    --primary-light-color: #f7fbfc;
+    --primary-dark-color: #7B0421;
+
+    --background-color: #E5E5E5;
+    --text-on-background: #333333;
+
+    --text-on-primary: #FFFFFF;
+    --text-on-tertiary: var(--text-color);
+}
+
+
 html, body, #app-root {
     height: 100%;
 }
@@ -17,9 +31,15 @@ html, body, #app-root {
 body {
     font-family: lato, sans-serif;
     -webkit-font-smoothing: antialiased;
-    background: #FF7322;
+    background: var(--background-color);
+    color: var(--text-on-background);
 }
 
 .firebase-emulator-warning {
     display: none;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
 }

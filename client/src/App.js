@@ -13,6 +13,7 @@ import {
 
 import { AppContext } from './context';
 
+
 import { getUserPrivileges } from './utils/api-util';
 
 export default function App() {
@@ -37,7 +38,6 @@ export default function App() {
         <AppContext.Provider value={{ user, userPrivileges, isDemoMode }}>
             <div className="flex-column full-height">
                 {
-
                     user == null
                         ? <Loader />
                         : (
@@ -52,6 +52,7 @@ export default function App() {
                                 )
                         )
                 }
+
             </div>
         </AppContext.Provider>
     )

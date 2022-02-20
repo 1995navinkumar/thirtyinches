@@ -22,7 +22,10 @@ const appConfig = {
   module: {
     rules: [{
       ...babelConfig
-    }]
+    }, {
+      test: /\.css$/i,
+      use: ["style-loader", "css-loader"],
+    },]
   }
 };
 

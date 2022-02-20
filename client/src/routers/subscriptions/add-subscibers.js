@@ -1,9 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
-import { addSubscription } from '../../utils/api-util.js';
+import { addSubscriber } from '../../utils/api-util.js';
 import { useNavigate } from 'react-router';
-import { AppContext } from '../../context';
-import { parseXLS } from '../../utils/file-util';
+import { HomeContext } from '../../context';
+
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+
+import AdapterDateFns from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import Button from '@mui/material/Button';
+
+import { validate, composeValidators } from '@sknk/object-validator';
+import {
+    maxDate,
+    date,
+    regex,
+    truthy
+} from '@sknk/object-validator/predicates';
 
 var Styles = styled.div`
     .add-subscriber-form input, .add-subscriber-form textarea {
@@ -24,56 +39,132 @@ var Styles = styled.div`
 `
 
 export default function AddSubscribers() {
-    var { orgs } = React.useContext(AppContext);
+    var { selectedOrg, showToastMessage } = React.useContext(HomeContext);
+
     var navigate = useNavigate();
-    var formRef = React.useRef();
 
-    var fileRef = React.useRef();
+    let [name, setName] = React.useState("");
+    let [dob, setDob] = React.useState(null);
+    let [address, setAddress] = React.useState("");
+    let [contact, setContact] = React.useState("");
+    let [period, setPeriod] = React.useState(3);
+    let [amount, setAmount] = React.useState("");
+
+    let [errors, setErrors] = React.useState({});
 
 
-    var subDetails = React.useCallback(() => {
-        var formEls = Array.from(formRef.current.children);
-        formEls.pop();
+    var subDetails = () => {
+        var formDetails = {
+            name,
+            dob,
+            address,
+            contact,
+            period,
+            amount
+        }
 
-        var details = formEls.map(f => ({ value: f.value, name: f.name }));
-        var subscriberDetails = arrayToObj(details.slice(0, 4));
-        var subscriptionDetails = arrayToObj(details.slice(4));
+        var formErrors = {}
 
-        subscriberDetails.orgId = getSelectedOrgAndBranch(orgs);
+        var subValidation = composeValidators(
+            validate(
+                truthy
+            )(
+                ["name", "dob", "address", "contact", "period", "amount"],
+                (e, { key, value }) => {
+                    formErrors[key] = "Field cannot be empty";
+                    return false;
+                }
+            ),
+            validate(
+                date,
+                maxDate(new Date(Date.now() - (10 * 365 * 24 * 60 * 60 * 1000)))
+            )(
+                ["dob"],
+                (error) => {
+                    formErrors.dob = "Age must be above 10.";
+                    return false;
+                }
+            ),
 
-        addSubscription(subscriberDetails, subscriptionDetails)
-            .then(() => {
-                navigate("/subscriptions/list");
+            validate(
+                regex(/^[a-z ,.'-]+$/i)
+            )(
+                ["name"],
+                () => {
+                    formErrors.name = "Enter proper name.";
+                    return false;
+                }
+            )
+
+        )
+
+        subValidation(formDetails);
+        setErrors(formErrors);
+
+        if (Object.keys(formErrors).length == 0) {
+            addSubscriber(selectedOrg, "Cyndia", {
+                name, address, dob, contact
             })
+                .then(res => {
+                    showToastMessage({
+                        message: "Successfully added subscriber"
+                    })
+                })
+                .catch(err => {
+                    alert("Error in adding subscriber");
+                })
+        }
 
-    }, []);
-
-    function readXls(e) {
-        var file = fileRef.current.files[0];
-        parseXLS(file)
-            .then(console.log)
-            .catch(console.log)
     }
 
     return (
         <Styles className="flex-column flex-align-center">
-            {/* <div>Sub add</div> */}
+            <Box
+                className='flex-column flex-align-center'
+                component="form"
+                sx={{
+                    '& > :not(style)': { m: 1, width: '25ch' },
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <TextField error={errors?.name?.length > 0} helperText={errors.name} value={name} onChange={(e) => setName(e.target.value)} id="sname" label="Name" variant="outlined" />
 
-            {/* <input type="file" id="imageFile" capture="camera" accept="image/*"/> */}
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        label="D.O.B"
+                        value={dob}
+                        onChange={(newValue) => {
+                            newValue && setDob(newValue.toDate());
+                        }}
+                        renderInput={(params) => <TextField {...params} error={errors?.dob?.length > 0} helperText={errors.dob} />}
+                    />
+                </LocalizationProvider>
 
-            {/* <input type="file" ref={fileRef} onChange={readXls} /> */}
+                <TextField error={errors?.address?.length > 0} helperText={errors.address} value={address} onChange={(e) => setAddress(e.target.value)} id="saddress" label="Address" multiline={true} autoComplete="off" />
 
-            <div ref={formRef} className="add-subscriber-form flex-column flex-align-center">
-                <input type="text" placeholder="name" name="name" />
-                <input type="date" name="dob" placeholder="D.O.B" />
-                <textarea name="address" placeholder="Address" />
-                <input type="tel" name="contact" placeholder="contact number" pattern="[0-9]{10}" />
+                <TextField
+                    value={contact}
+                    onChange={(e) => {
+                        if (e.target.value.length > 10) {
+                            return;
+                        }
+                        setContact(e.target.value);
+                    }}
+                    error={errors?.contact?.length > 0}
+                    helperText={errors.contact}
+                    type={"number"}
+                    label="Contact"
+                />
 
-                <input type="date" name="subscribe from" placeholder="start from" />
-                <input type="number" name="duration" placeholder="No.of months" />
-                <input type="number" name="amount paid" placeholder="amount paid" />
-                <button onClick={subDetails} className="add-subscriber--btn">Add</button>
-            </div>
+                <TextField error={errors?.period?.length > 0} helperText={errors.period} value={period} onChange={(e) => setPeriod(e.target.value)} type={"number"} label="No.of Months" />
+
+                <TextField error={errors?.amount?.length > 0} helperText={errors.amount} value={amount} onChange={(e) => setAmount(e.target.value)} inputProps={{ type: "number", pattern: "[0-9]{10}" }} type={"number"} label="Amount Paid" />
+
+                <Button variant="contained" onClick={subDetails}>Add</Button>
+
+            </Box>
+
         </Styles>
     )
 }

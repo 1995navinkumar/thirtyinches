@@ -13,12 +13,16 @@ import Menu from '../components/menu';
 
 import Dashboard from '../routers/dashboard';
 
+import ToastMessage from '../components/ToastMessage';
+
+
 import { AppContext, HomeContext } from '../context';
 
 import {
     Routes,
     Route,
-    Navigate
+    Navigate,
+    useNavigate
 } from "react-router-dom";
 import { getPersonalisedData } from '../utils/api-util';
 
@@ -30,8 +34,9 @@ var Styles = styled.div`
     }
 
     .app-footer {
-        height : 44px;
-        border-top : 1px solid #FFF202;
+        height : 56px;
+        background-color : var(--text-on-primary);
+        justify-content : space-around;
     }
 `
 
@@ -41,7 +46,13 @@ export default function Home() {
 
     var [selectedOrg, setSelectedOrg] = React.useState(null);
 
-    var { userPrivileges } = React.useContext(AppContext)
+    var { userPrivileges } = React.useContext(AppContext);
+
+    var [toastProps, setToastProps] = React.useState({ messageId: 0 });
+
+    var showToastMessage = React.useCallback(({ message, type }) => {
+        setToastProps(props => ({ message, type, messageId: props.messageId + 1 }));
+    }, []);
 
     React.useEffect(() => {
         var callback = (e) => {
@@ -65,7 +76,7 @@ export default function Home() {
     }, []);
 
     return (
-        <HomeContext.Provider value={{ selectedOrg, setSelectedOrg }}>
+        <HomeContext.Provider value={{ selectedOrg, setSelectedOrg, showToastMessage }}>
             <Styles className="full-height flex-column ">
                 <AppHeader setShowMenu={setShowMenu} showMenuIcon={showMenuIcon} />
                 <main className="app-body">
@@ -85,10 +96,28 @@ export default function Home() {
                     }
 
                 </main>
-                <footer className="app-footer flex-row flex-align-center flex-justify-center">
-                    &copy; thirtyinches
-                </footer>
+
+                <ToastMessage {...toastProps} />
+
+                <Footer />
+
+                {/* <footer className="app-footer flex-row flex-align-center flex-justify-center">
+                    <img className='icon' src="/images/home-icon.svg" />
+                </footer> */}
             </Styles>
         </HomeContext.Provider>
+    )
+}
+
+function Footer() {
+    var navigate = useNavigate();
+    return (
+        <footer className='app-footer flex-row flex-align-center'>
+            <img className='icon' onClick={() => navigate("/dashboard")} src="/images/home-icon.svg" />
+            <img className='icon' onClick={() => navigate("/subscriptions")} src="/images/subscription-outline.svg" />
+            <img className='icon' onClick={() => navigate("/attendance")} src="/images/assets-icon.svg" />
+            <img className='icon' onClick={() => navigate("/assets")} src="/images/attendance-icon.svg" />
+            <img className='icon' onClick={() => navigate("/expenses")} src="/images/subscription-outline.svg" />
+        </footer>
     )
 }

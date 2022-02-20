@@ -6,7 +6,7 @@ export default function IncomeVersusExpense() {
     var [cardData, setCardData] = React.useState(null);
 
     React.useEffect(() => {
-        getCardData("incomeVersusExpense", { noOfMonthsBefore: 6 }).then(setCardData);
+        getCardData("incomeVersusExpense", { noOfMonthsBefore: 3 }).then(setCardData);
     }, []);
 
     return (

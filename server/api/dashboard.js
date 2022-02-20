@@ -17,6 +17,8 @@ var cardHandlers = {
 async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
     var gt = new Date(Date.now() - (noOfMonthsBefore * 30 * 24 * 3600 * 1000));
 
+    // console.log(ISODate);
+
     // var currentMonth = (new Date()).getMonth();
 
     var income = await db.collection("subscribers")
@@ -33,7 +35,7 @@ async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
             }, {
                 '$match': {
                     'subscriptions.start': {
-                        '$gte': new Date('Sun, 01 Aug 2021 00:00:00 GMT'),
+                        '$gte': gt,
                         '$lte': new Date()
                     }
                 }
@@ -73,7 +75,7 @@ async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
             {
                 '$match': {
                     'timestamp': {
-                        '$gte': new Date('Sun, 01 Aug 2021 00:00:00 GMT'),
+                        '$gte': gt,
                         '$lte': new Date()
                     }
                 }
@@ -139,7 +141,9 @@ async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
 
 
 
-    return Object.values(groupByMonth);
+    return Object
+        .values(groupByMonth)
+        .sort((a, b) => (a.year - b.year) || (a.month - b.month));
 
 }
 
