@@ -7,11 +7,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function ToastMessage({ message, severity = "success", messageId }) {
+export default function ToastMessage({ message, severity = "success", onClose = () => { }, messageId }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClose = (event, reason) => {
         setOpen(false);
+        onClose(event, reason);
     };
 
     React.useEffect(() => {

@@ -5,7 +5,7 @@ import Loader from './components/loader';
 import SignIn from './components/signin';
 import Home from './routers/home';
 
-import { AuthStateChanged } from './utils/auth-util';
+import { selectUser, userAuthStateAction } from './redux/user';
 
 import {
     HashRouter
@@ -14,43 +14,31 @@ import {
 import { AppContext } from './context';
 
 
-import { getUserPrivileges } from './utils/api-util';
-
-export default function App() {
-    var [user, setUser] = React.useState(null);
-    var [userPrivileges, setUserPrivileges] = React.useState(null);
-    var [isDemoMode, setIsDemoMode] = React.useState(false);
+export default function App({ AppStore }) {
+    var { getState } = AppStore;
+    var user = selectUser(getState());
 
     React.useEffect(() => {
-        AuthStateChanged(userObj => {
-            if (userObj) {
-                getUserPrivileges().then(({ privileges }) => {
-                    setUserPrivileges(privileges);
-                })
-                setUser(userObj);
-            } else {
-                setUser(false);
-            }
-        })
+        AppStore.dispatch(userAuthStateAction());
     }, []);
 
     return (
-        <AppContext.Provider value={{ user, userPrivileges, isDemoMode }}>
+        <AppContext.Provider value={AppStore}>
             <div className="flex-column full-height">
                 {
-                    user == null
-                        ? <Loader />
-                        : (
-                            user == false
-                                ? <SignIn setIsDemoMode={setIsDemoMode} />
-                                : (
-                                    userPrivileges
+                    user.settled
+                        ? (
+                            user.auth.uid
+                                ? (
+                                    user.privileges
                                         ? <HashRouter>
                                             <Home />
                                         </HashRouter>
                                         : null
                                 )
+                                : <SignIn />
                         )
+                        : <Loader />
                 }
 
             </div>

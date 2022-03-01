@@ -17,18 +17,18 @@ router.get("/:orgName", async function getSubscribers(req, res) {
     res.json(subscribers);
 })
 
-router.post("/:orgName", async function addSubscriber(req, res) {
+router.post("/:orgName", async function addNewSubscription(req, res) {
     var db = await getDB(req.dbname);
 
-    var orgName = req.params.orgName;
+    var { orgName } = req.params;
 
-    var { branchName, subscriberDetail } = req.body;
+    var { subscriberDetail, subscriptionDetail } = req.body;
 
     await db.collection("subscribers")
         .insertOne({
             orgName,
-            branchName,
-            ...subscriberDetail
+            ...subscriberDetail,
+            subscriptions: subscriptionDetail
         });
 
     res.json({
@@ -37,7 +37,7 @@ router.post("/:orgName", async function addSubscriber(req, res) {
 
 });
 
-router.post("/:orgName/:contact/subscriptions", async function addSubscriptions(req, res) {
+router.post("/:orgName/:contact/subscriptions", async function renewSubscription(req, res) {
     var db = await getDB(req.dbname);
 
     var { orgName, contact } = req.params;

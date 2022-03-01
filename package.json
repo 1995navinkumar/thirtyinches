@@ -24,6 +24,8 @@
     "react-html5-camera-photo": "^1.5.5",
     "react-router-dom": "^6.0.2",
     "recharts": "^2.1.8",
+    "redux": "^4.1.2",
+    "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.3",
     "unique-names-generator": "^4.6.0",
     "uuid": "^8.3.2"

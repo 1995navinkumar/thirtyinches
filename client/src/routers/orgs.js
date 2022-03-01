@@ -13,15 +13,15 @@ import AddOrg from '../components/add-org';
 import OrgList from '../components/org-list';
 
 export default function Orgs() {
-    var { orgs } = React.useContext(AppContext);
     return (
-        <React.Fragment>
-            <Routes>
-                <Route path="/" element={<Navigate replace to="/orgs/list" />} />
-                <Route path="/list" element={<OrgList />} />
-                <Route path="/add" element={<AddOrg />} />
-            </Routes>
-
-        </React.Fragment>
+        <div className='flex-column full-height'>
+            <div className='flex-1'>
+                <Routes>
+                    <Route path="/" element={<Navigate replace to="/orgs/list" />} />
+                    <Route path="/list" element={<OrgList />} />
+                    <Route path="/add" element={<AddOrg />} />
+                </Routes>
+            </div>
+        </div>
     )
 } 

@@ -12,6 +12,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import AppHeader from '../../components/header.js';
+import Footer from '../../components/footer.js';
 
 var Styles = styled.div`
     .subscribers-list {
@@ -120,29 +122,37 @@ export default function SubscribersList() {
         }
     }, [selectedOrg]);
 
+    console.log(subscriptions);
+
     return (
-        <Styles className="full-height">
-            {
-                subscriptions.length > 0
-                    ? (
-                        <div className='flex-column full-height'>
-                            <ListFilter />
-                            <div className="subscribers-list-container">
-                                <ul className="subscribers-list full-height">
-                                    {subscriptions.map(subscriber =>
-                                        <Subscriber key={subscriber.contact} subscriber={subscriber} />
-                                    )}
-                                </ul>
+        <Styles className="full-height flex-column">
+            <AppHeader title={"Subscriptions"} />
+            <div className='flex-1' style={{ position: "relative" }}>
+
+                {
+                    subscriptions.length > 0
+                        ? (
+                            <div className='flex-column full-height'>
+                                <ListFilter />
+                                <div className="subscribers-list-container">
+                                    <ul className="subscribers-list full-height">
+                                        {subscriptions.map(subscriber =>
+                                            <Subscriber key={subscriber.contact} subscriber={subscriber} />
+                                        )}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    )
-                    : null
-            }
+                        )
+                        : null
+                }
 
-            {/* <Fab onClick={() => navigate("../add")} style={{ position: "fixed", bottom: "12px", right: "12px" }} color="primary" aria-label="add">
-                <AddIcon />
-            </Fab> */}
+                <Fab onClick={() => navigate("../add")} style={{ position: "absolute", bottom: "12px", right: "12px" }} color="primary" aria-label="add">
+                    <AddIcon />
+                </Fab>
 
+            </div>
+
+            <Footer />
         </Styles>
     )
 }

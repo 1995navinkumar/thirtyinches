@@ -10,8 +10,7 @@ export default function IncomeVersusExpense() {
     }, []);
 
     return (
-        <React.Fragment>
-
+        <div className='card-container'>
             <div className='card' style={{ height: "300px", width: "100%" }}>
                 <p className='card-title'>Income vs Expense</p>
                 <div className='card-body'>
@@ -22,9 +21,7 @@ export default function IncomeVersusExpense() {
                     }
                 </div>
             </div>
-
-
-        </React.Fragment>
+        </div>
     );
 }
 

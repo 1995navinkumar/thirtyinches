@@ -10,12 +10,12 @@ export async function getCardData(cardName, params) {
 
 // -------------------------------------------------------- Orgs & Branches ---------------------------------------
 
-export async function createOrg(orgName) {
+export async function createOrg(orgName, branchDetails) {
     return fetchData(
         "api/orgs",
         {
             method: "POST",
-            body: JSON.stringify({ orgName })
+            body: JSON.stringify({ orgName, branchDetails })
         }
     )
 }
@@ -39,10 +39,16 @@ export async function getBranchDetails(orgName) {
     )
 }
 
+export async function getOrgDetails() {
+    return fetchData(
+        `api/orgs`
+    )
+}
+
 
 // ---------------------------------------------------- Subscribers -----------------------------------------
 
-export async function addSubscriber(orgName, branchName, subscriberDetail) {
+export async function addNewSubscription(orgName, branchName, subscriberDetail, subscriptionDetail) {
     return fetchData(
         `api/subscribers/${orgName}`,
         {
@@ -197,7 +203,11 @@ export async function markAttendance(orgName, branchName, contact, timestamp) {
 //------------------------------------------------------------ utils --------------------------------------
 
 function _throw(er) {
-    throw er;
+    er.json()
+        .then(msg => msg)
+        .catch(msg => {
+            throw new Error(msg);
+        })
 }
 
 function getQueryParams(params = {}) {
@@ -219,7 +229,7 @@ export async function fetchData(url, options = {}) {
         defaultOptions.headers.uid = await getUserId();
     }
 
-    if (isDemoMode()) { 
+    if (isDemoMode()) {
         defaultOptions.headers.demomode = "true";
     }
 
@@ -230,6 +240,14 @@ export async function fetchData(url, options = {}) {
             ...options,
         }
     )
-        .then(res => res.ok ? res.json() : _throw(res))
-        .catch(err => console.log(err));
+        .then(res => {
+            return res.json()
+                .then(data => {
+                    if (res.ok) {
+                        return data;
+                    } else {
+                        throw data;
+                    }
+                })
+        })
 }

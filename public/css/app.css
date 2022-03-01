@@ -20,7 +20,6 @@
     --text-on-background: #333333;
 
     --text-on-primary: #FFFFFF;
-    --text-on-tertiary: var(--text-color);
 }
 
 
@@ -42,4 +41,24 @@ body {
 .icon {
     width: 24px;
     height: 24px;
+}
+
+#app-root .MuiInputLabel-root {
+    /* color: var(--primary-color); */
+}
+
+#app-root .Mui-focused.MuiInputLabel-outlined {
+    color: var(--primary-color);
+}
+
+#app-root .Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--primary-color) !important;
+}
+
+#app-root .MuiDivider-root::before, #app-root .MuiDivider-root::after {
+    top : 0;
+}
+
+#app-root .MuiDivider-wrapper {
+    opacity: 0.5;
 }

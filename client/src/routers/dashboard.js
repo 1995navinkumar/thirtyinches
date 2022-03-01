@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import PChart from '../components/pie-chart';
 import IncomeVersusExpense from '../components/bar-chart';
 import { getCardData } from '../utils/api-util';
+import { getSelectedOrg } from '../redux/user';
+import AppHeader from '../components/header';
+import Footer from '../components/footer';
 
 var Styles = styled.div`
     .add-branch-container {
@@ -12,15 +15,16 @@ var Styles = styled.div`
         top : 20%;
     }
     .add-new-branch {
-        width : 120px;
-        height : 120px;
-        margin : 12px 0px;
+        width : 164px;
+        height : 164px;
+        margin : 24px 0px;
     }
 
     .add-org--btn {
+        margin-top : 32px;
         width : 202px;
         height : 40px;
-        background: rgba(255, 255, 255, 0.15);
+        background: var(--primary-color);
         border: 1px solid #FFFFFF;
         box-sizing: border-box;
         border-radius: 50px;
@@ -36,33 +40,43 @@ var Styles = styled.div`
         margin : 0px 8px;
     }
 
+    .card-container {
+        padding : 16px;
+    }
+
     .card {
-        padding-left : 8px;
+        background : #FFFFFF;
+        border-radius : 8px;
+        display : flex;
+        flex-direction : column;
     }
 
     .card-title {
-        color : white;
         font-weight : bold;
+        padding : 8px;
     }
 
     .card-body {
         width : 100%;
-        height : calc(100% - 12px);
+        flex : 1;
     }
 `
 
 export default function Dashboard() {
-    var { selectedOrg } = React.useContext(HomeContext);
-    var navigate = useNavigate();
+    var { getState } = React.useContext(AppContext);
+    var selectedOrg = getSelectedOrg(getState());
+
     return (
-        <Styles className="full-height">
-            <div className="full-height full-width">
+        <Styles className="full-height flex-column">
+            <AppHeader title={"Dashboard"} />
+            <div className="flex-1">
                 {
                     selectedOrg
                         ? <ShowCards />
                         : <AddOrganisation />
                 }
             </div>
+            <Footer />
         </Styles>
     )
 }
@@ -70,7 +84,7 @@ export default function Dashboard() {
 function ShowCards() {
     return (
         <div className='full-height full-width'>
-            <IncomeVersusExpense/>
+            <IncomeVersusExpense />
         </div>
     )
 }
@@ -79,7 +93,7 @@ function AddOrganisation() {
     var navigate = useNavigate();
     return (
         <div className="flex-column flex-align-center add-branch-container">
-            <img className="add-new-branch" src="images/add-new-branch.svg" />
+            <img className="add-new-branch" src="images/no-org.svg" />
             <button onClick={() => navigate("/orgs/add")} className="add-org--btn">
                 <img className="plus" src="images/plus.svg" />
                 <span className="add-org--text">Add Organisation</span>

@@ -4,13 +4,14 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { AppContext, HomeContext } from '../context';
 import { addPersonalisedData } from '../utils/api-util.js';
 import { logout } from '../utils/auth-util';
+import { getSelectedOrg, selectPrivileges, selectUser, setPersonalisationAction } from '../redux/user';
 
 var Styles = styled.div`
     width : 300px;
     height : 100%;
-    background : var(--primary-color);
+    background : var(--primary-light-color);
     top: 0px;
-    box-shadow: 5px 0px 30px #CC4B00;
+    box-shadow: 5px 0px 30px var(--primary-color);
     position: absolute;
     left: -100%;
     transition : 0.3s ease-out;
@@ -22,7 +23,7 @@ var Styles = styled.div`
         height : 64px;
         padding : 8px;
         margin : 4px 0px;
-        border-bottom : 1px solid #efdbd0;
+        border-bottom : 1px solid var(--primary-color);
     }
 
     .user-detail {
@@ -75,7 +76,7 @@ var Styles = styled.div`
     }
 
     .routes-icon-container {
-        background: #FF7322;
+        background: var(--primary-color);
         width : 40px;
     }
 
@@ -93,44 +94,49 @@ var Styles = styled.div`
     }
 
     .active-link .menu-actions {
-        color : #CB4B01;
+        color: var(--primary-dark-color);
+        font-weight: bold;
     }
 `
 
 export default function Menu({ showMenu, setShowMenu }) {
     var menuStyle = showMenu ? { left: 0 } : {};
-    var navigate = useNavigate();
 
-    var { userPrivileges, user } = React.useContext(AppContext);
+    var { getState, dispatch } = React.useContext(AppContext);
 
-    var { selectedOrg, setSelectedOrg } = React.useContext(HomeContext);
+    var user = selectUser(getState());
 
-    var orgs = userPrivileges.map(p => p.orgName);
+    var selectedOrg = getSelectedOrg(getState());
+
+    var orgs = selectPrivileges(getState()).map(p => p.orgName);
 
     var signout = React.useCallback((e) => {
         logout().then(() => {
-            location.hash = "";
-            navigate("/");
+            window.location.reload();
             // Sign-out successful.
         }).catch((error) => {
             // An error happened.
+            console.log(error);
         });
     });
 
     var onOrgChange = (e) => {
         var sOrg = e.target.value;
-        setSelectedOrg(sOrg);
+
+        dispatch(
+            setPersonalisationAction({ selectedOrg: sOrg })
+        );
+
         setShowMenu(false);
-        addPersonalisedData({ selectedOrg: sOrg });
     }
 
     return (
         <Styles style={menuStyle} className="app-menu flex-column">
             <div className="user-profile flex-row flex-align-center">
-                <img src={user.photoURL ? user.photoURL : "images/profile-pic.png"} className="profile-pic" />
+                <img src={user.auth.photoURL ? user.auth.photoURL : "images/profile-pic.png"} className="profile-pic" />
                 <div className="flex-1 flex-column flex-justify-center user-detail">
-                    <p className="user-name">{user.displayName}</p>
-                    <p className="user-mail">{user.email}</p>
+                    <p className="user-name">{user.auth.displayName}</p>
+                    <p className="user-mail">{user.auth.email}</p>
                 </div>
             </div>
 

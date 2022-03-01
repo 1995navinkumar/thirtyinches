@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { initializeApp } from "firebase/app";
 import App from './src/App.js';
+
+import { AppStore } from './src/redux/AppStore';
+
 // import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
@@ -48,4 +51,12 @@ if (process.env.NODE_ENV != "production") {
     connectAuthEmulator(auth, "http://localhost:9099");
 }
 
-ReactDOM.render(<App />, document.getElementById('app-root'));
+function render() {
+    ReactDOM.render(<App AppStore={AppStore} />, document.getElementById('app-root'));
+}
+
+AppStore.subscribe(render);
+
+render();
+
+

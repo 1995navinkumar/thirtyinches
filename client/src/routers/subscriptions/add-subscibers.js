@@ -11,6 +11,7 @@ import AdapterDateFns from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { validate, composeValidators } from '@sknk/object-validator';
 import {
@@ -19,8 +20,13 @@ import {
     regex,
     truthy
 } from '@sknk/object-validator/predicates';
+import SecondaryHeader from '../../components/secondary-header.js';
 
 var Styles = styled.div`
+    height : 100%;
+    .form-container {
+        padding-top : 80px;
+    }
     .add-subscriber-form input, .add-subscriber-form textarea {
         margin : 8px 0px;
         min-height : 32px;
@@ -98,37 +104,46 @@ export default function AddSubscribers() {
 
         )
 
-        subValidation(formDetails);
+        subValidation(formDetails, e => { });
         setErrors(formErrors);
 
-        if (Object.keys(formErrors).length == 0) {
-            addSubscriber(selectedOrg, "Cyndia", {
-                name, address, dob, contact
-            })
-                .then(res => {
-                    showToastMessage({
-                        message: "Successfully added subscriber"
-                    })
-                })
-                .catch(err => {
-                    alert("Error in adding subscriber");
-                })
-        }
+        // if (Object.keys(formErrors).length == 0) {
+        //     addSubscriber(selectedOrg, "Cyndia", {
+        //         name, address, dob, contact
+        //     })
+        //         .then(res => {
+        //             showToastMessage({
+        //                 message: "Successfully added subscriber"
+        //             })
+        //         })
+        //         .catch(err => {
+        //             alert("Error in adding subscriber");
+        //         })
+        // }
 
     }
 
     return (
-        <Styles className="flex-column flex-align-center">
+        <Styles className="flex-column full-height">
+            <SecondaryHeader title={"Add Subscription"} />
             <Box
-                className='flex-column flex-align-center'
+                className='flex-column flex-align-center form-container flex-1'
                 component="form"
                 sx={{
                     '& > :not(style)': { m: 1, width: '25ch' },
                 }}
-                noValidate
-                autoComplete="off"
+                autoComplete="nope"
             >
-                <TextField error={errors?.name?.length > 0} helperText={errors.name} value={name} onChange={(e) => setName(e.target.value)} id="sname" label="Name" variant="outlined" />
+                <TextField
+                    error={errors?.name?.length > 0}
+                    helperText={errors.name}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    id="sname"
+                    label="Name"
+                    variant="outlined"
+                    autoComplete="nope"
+                />
 
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
@@ -141,7 +156,16 @@ export default function AddSubscribers() {
                     />
                 </LocalizationProvider>
 
-                <TextField error={errors?.address?.length > 0} helperText={errors.address} value={address} onChange={(e) => setAddress(e.target.value)} id="saddress" label="Address" multiline={true} autoComplete="off" />
+                <TextField
+                    error={errors?.address?.length > 0}
+                    helperText={errors.address}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    id="saddress"
+                    label="Address"
+                    multiline={true}
+                    autoComplete="nope"
+                />
 
                 <TextField
                     value={contact}
@@ -161,7 +185,10 @@ export default function AddSubscribers() {
 
                 <TextField error={errors?.amount?.length > 0} helperText={errors.amount} value={amount} onChange={(e) => setAmount(e.target.value)} inputProps={{ type: "number", pattern: "[0-9]{10}" }} type={"number"} label="Amount Paid" />
 
-                <Button variant="contained" onClick={subDetails}>Add</Button>
+
+                <LoadingButton onClick={subDetails} style={{ marginTop: "64px" }} variant="contained">Add</LoadingButton>
+
+                {/* <Button variant="contained" onClick={subDetails}>Add</Button> */}
 
             </Box>
 
