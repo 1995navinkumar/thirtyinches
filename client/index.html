@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>30"</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="icon" href="images/app-icon.png" type="image/png">
+    <link rel="dns-prefetch" href="https://apis.google.com">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js', { scope: ".", type: "module" }).then(function (registration) {
+                    console.log("Service worker registered");
+                }, function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+
+            });
+
+        }
+    </script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script> -->
+
+</head>
+
+<body>
+    $svg
+
+    <div id="app-root"></div>
+
+    <script defer src="./js/bundle.js"></script>
+
+</body>
+
+</html>

@@ -10,7 +10,7 @@ router.get("/:orgName", async function getSubscribers(req, res) {
 
     var subscribers = await db.collection("subscribers")
         .find(
-            { orgName, branchName: { $in: allowedBranches } }
+            { orgName }
         )
         .toArray();
 
@@ -24,16 +24,28 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
 
     var { subscriberDetail, subscriptionDetail } = req.body;
 
-    await db.collection("subscribers")
-        .insertOne({
-            orgName,
-            ...subscriberDetail,
-            subscriptions: subscriptionDetail
-        });
-
-    res.json({
-        ...req.body
-    });
+    try {
+        await db.collection("subscribers")
+            .insertOne({
+                orgName,
+                ...subscriberDetail,
+                subscriptions: [subscriptionDetail]
+            });
+        res.status(201);
+        res.json({
+            status: "success",
+            message: "Subscription added successfully",
+            data: {
+                ...req.body
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500);
+        res.json({
+            message: error.message
+        })
+    }
 
 });
 

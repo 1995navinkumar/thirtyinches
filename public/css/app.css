@@ -43,6 +43,14 @@ body {
     height: 24px;
 }
 
+.svg-filled {
+    fill: var(--primary-color);
+}
+
+.svg-dark-filled {
+    fill: var(--primary-dark-color);
+}
+
 #app-root .MuiInputLabel-root {
     /* color: var(--primary-color); */
 }
@@ -56,7 +64,7 @@ body {
 }
 
 #app-root .MuiDivider-root::before, #app-root .MuiDivider-root::after {
-    top : 0;
+    top: 0;
 }
 
 #app-root .MuiDivider-wrapper {

@@ -7,12 +7,22 @@ import Home from './routers/home';
 
 import { selectUser, userAuthStateAction } from './redux/user';
 
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+
+
 import {
     HashRouter
 } from "react-router-dom";
 
 import { AppContext } from './context';
 
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#D00737'
+        }
+    }
+});
 
 export default function App({ AppStore }) {
     var { getState } = AppStore;
@@ -24,24 +34,26 @@ export default function App({ AppStore }) {
 
     return (
         <AppContext.Provider value={AppStore}>
-            <div className="flex-column full-height">
-                {
-                    user.settled
-                        ? (
-                            user.auth.uid
-                                ? (
-                                    user.privileges
-                                        ? <HashRouter>
-                                            <Home />
-                                        </HashRouter>
-                                        : null
-                                )
-                                : <SignIn />
-                        )
-                        : <Loader />
-                }
+            <ThemeProvider theme={theme}>
+                <div className="flex-column full-height">
+                    {
+                        user.settled
+                            ? (
+                                user.auth.uid
+                                    ? (
+                                        user.privileges
+                                            ? <HashRouter>
+                                                <Home />
+                                            </HashRouter>
+                                            : null
+                                    )
+                                    : <SignIn />
+                            )
+                            : <Loader />
+                    }
 
-            </div>
+                </div>
+            </ThemeProvider>
         </AppContext.Provider>
     )
 }

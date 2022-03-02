@@ -2,44 +2,13 @@ import React from 'react';
 import { AppContext, HomeContext } from '../context';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import PChart from '../components/pie-chart';
 import IncomeVersusExpense from '../components/bar-chart';
-import { getCardData } from '../utils/api-util';
 import { getSelectedOrg } from '../redux/user';
 import AppHeader from '../components/header';
 import Footer from '../components/footer';
+import AddOrganisation from '../components/add-organisation';
 
 var Styles = styled.div`
-    .add-branch-container {
-        position : relative;
-        top : 20%;
-    }
-    .add-new-branch {
-        width : 164px;
-        height : 164px;
-        margin : 24px 0px;
-    }
-
-    .add-org--btn {
-        margin-top : 32px;
-        width : 202px;
-        height : 40px;
-        background: var(--primary-color);
-        border: 1px solid #FFFFFF;
-        box-sizing: border-box;
-        border-radius: 50px;
-    }
-
-    .add-org--text {
-        font-size: 16px;
-        line-height: 18px;
-        color: #FFFFFF;
-    }
-
-    .plus {
-        margin : 0px 8px;
-    }
-
     .card-container {
         padding : 16px;
     }
@@ -85,19 +54,6 @@ function ShowCards() {
     return (
         <div className='full-height full-width'>
             <IncomeVersusExpense />
-        </div>
-    )
-}
-
-function AddOrganisation() {
-    var navigate = useNavigate();
-    return (
-        <div className="flex-column flex-align-center add-branch-container">
-            <img className="add-new-branch" src="images/no-org.svg" />
-            <button onClick={() => navigate("/orgs/add")} className="add-org--btn">
-                <img className="plus" src="images/plus.svg" />
-                <span className="add-org--text">Add Organisation</span>
-            </button>
         </div>
     )
 }

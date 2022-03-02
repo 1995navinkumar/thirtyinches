@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { addSubscriber } from '../../utils/api-util.js';
+import { addSubscription } from '../../utils/api-util.js';
 import { useNavigate } from 'react-router';
-import { HomeContext } from '../../context';
+import { AppContext, HomeContext } from '../../context';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { validate, composeValidators } from '@sknk/object-validator';
@@ -21,11 +21,14 @@ import {
     truthy
 } from '@sknk/object-validator/predicates';
 import SecondaryHeader from '../../components/secondary-header.js';
+import { selectBranchDetails } from '../../redux/orgs.js';
+import { getSelectedOrg } from '../../redux/user.js';
+import { MenuItem } from '@mui/material';
 
 var Styles = styled.div`
     height : 100%;
     .form-container {
-        padding-top : 80px;
+        padding-top : 40px;
     }
     .add-subscriber-form input, .add-subscriber-form textarea {
         margin : 8px 0px;
@@ -45,8 +48,10 @@ var Styles = styled.div`
 `
 
 export default function AddSubscribers() {
-    var { selectedOrg, showToastMessage } = React.useContext(HomeContext);
-
+    var { getState } = React.useContext(AppContext);
+    var selectedOrg = getSelectedOrg(getState());
+    var { showToastMessage } = React.useContext(HomeContext);
+    var branches = selectBranchDetails(getState(), selectedOrg);
     var navigate = useNavigate();
 
     let [name, setName] = React.useState("");
@@ -55,8 +60,10 @@ export default function AddSubscribers() {
     let [contact, setContact] = React.useState("");
     let [period, setPeriod] = React.useState(3);
     let [amount, setAmount] = React.useState("");
+    let [branchName, setBranchName] = React.useState(branches?.[0]?.name ?? "");
 
     let [errors, setErrors] = React.useState({});
+    let [disableBtn, setDisableBtn] = React.useState(false);
 
 
     var subDetails = () => {
@@ -66,7 +73,8 @@ export default function AddSubscribers() {
             address,
             contact,
             period,
-            amount
+            amount,
+            branchName
         }
 
         var formErrors = {}
@@ -75,7 +83,7 @@ export default function AddSubscribers() {
             validate(
                 truthy
             )(
-                ["name", "dob", "address", "contact", "period", "amount"],
+                ["name", "dob", "address", "contact", "period", "amount", "branchName"],
                 (e, { key, value }) => {
                     formErrors[key] = "Field cannot be empty";
                     return false;
@@ -107,19 +115,34 @@ export default function AddSubscribers() {
         subValidation(formDetails, e => { });
         setErrors(formErrors);
 
-        // if (Object.keys(formErrors).length == 0) {
-        //     addSubscriber(selectedOrg, "Cyndia", {
-        //         name, address, dob, contact
-        //     })
-        //         .then(res => {
-        //             showToastMessage({
-        //                 message: "Successfully added subscriber"
-        //             })
-        //         })
-        //         .catch(err => {
-        //             alert("Error in adding subscriber");
-        //         })
-        // }
+        if (Object.keys(formErrors).length == 0) {
+
+            let start = new Date();
+            let end = new Date(Date.now() + (period * 30 * 24 * 60 * 60 * 1000));
+
+            setDisableBtn(true);
+
+            addSubscription(
+                selectedOrg,
+                { name, address, dob, contact }, //subscriber detail
+                { amount, start, end, branchName } // subscription details
+            )
+                .then(res => {
+                    showToastMessage({
+                        message: "Subscriber added successfully"
+                    })
+                    setDisableBtn(false);
+
+                })
+                .catch(err => {
+                    console.log(err);
+                    showToastMessage({
+                        message: err.message,
+                        severity: "error"
+                    });
+                    setDisableBtn(false);
+                })
+        }
 
     }
 
@@ -134,7 +157,11 @@ export default function AddSubscribers() {
                 }}
                 autoComplete="nope"
             >
+
+                <Divider style={{ marginBottom: "12px" }} textAlign='left'>Subscriber Detail</Divider>
+
                 <TextField
+                    size='small'
                     error={errors?.name?.length > 0}
                     helperText={errors.name}
                     value={name}
@@ -152,7 +179,7 @@ export default function AddSubscribers() {
                         onChange={(newValue) => {
                             newValue && setDob(newValue.toDate());
                         }}
-                        renderInput={(params) => <TextField {...params} error={errors?.dob?.length > 0} helperText={errors.dob} />}
+                        renderInput={(params) => <TextField {...params} size='small' error={errors?.dob?.length > 0} helperText={errors.dob} />}
                     />
                 </LocalizationProvider>
 
@@ -165,6 +192,7 @@ export default function AddSubscribers() {
                     label="Address"
                     multiline={true}
                     autoComplete="nope"
+                    size='small'
                 />
 
                 <TextField
@@ -179,14 +207,53 @@ export default function AddSubscribers() {
                     helperText={errors.contact}
                     type={"number"}
                     label="Contact"
+                    size='small'
                 />
 
-                <TextField error={errors?.period?.length > 0} helperText={errors.period} value={period} onChange={(e) => setPeriod(e.target.value)} type={"number"} label="No.of Months" />
+                <div style={{ marginBottom: "24px" }}></div>
 
-                <TextField error={errors?.amount?.length > 0} helperText={errors.amount} value={amount} onChange={(e) => setAmount(e.target.value)} inputProps={{ type: "number", pattern: "[0-9]{10}" }} type={"number"} label="Amount Paid" />
+                <Divider style={{ marginBottom: "12px" }} textAlign='left'>Subscription Detail</Divider>
+
+                <TextField
+                    value={branchName}
+                    onChange={e => setBranchName(e.target.value)}
+                    select // tell TextField to render select
+                    size='small'
+                    label="Branch Name"
+                >
+                    {
+                        branches.map(br => (
+                            <MenuItem key={br.name} value={br.name}>
+                                {br.name}
+                            </MenuItem>
+                        ))
+                    }
+
+                </TextField>
+
+                <TextField
+                    error={errors?.period?.length > 0}
+                    helperText={errors.period}
+                    value={period}
+                    onChange={(e) => setPeriod(e.target.value)}
+                    type={"number"}
+                    label="No.of Months"
+                    size='small'
+                />
+
+                <TextField
+                    error={errors?.amount?.length > 0}
+                    helperText={errors.amount}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    inputProps={{ type: "number", pattern: "[0-9]{10}" }}
+                    type={"number"}
+                    label="Amount Paid"
+                    size='small'
+                />
 
 
-                <LoadingButton onClick={subDetails} style={{ marginTop: "64px" }} variant="contained">Add</LoadingButton>
+                <LoadingButton loading={disableBtn} onClick={subDetails} style={{ marginTop: "64px" }} variant="contained">Add</LoadingButton>
 
                 {/* <Button variant="contained" onClick={subDetails}>Add</Button> */}
 

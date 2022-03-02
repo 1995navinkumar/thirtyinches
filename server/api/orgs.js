@@ -45,7 +45,6 @@ router.get("/", async function getOrgDetails(req, res, next) {
     let db = await getDB(req.dbname);
     let userId = req.uid;
     let userPrivileges = req.userPrivileges;
-    console.log(userPrivileges);
 
     try {
         var orgDetail = await pureDBFns.getOrgDetails({ db, userPrivileges });

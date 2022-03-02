@@ -2,6 +2,7 @@ import React from 'react';
 import { getAllSubscribers } from '../../utils/api-util.js';
 import { AppContext, HomeContext } from '../../context';
 import { useNavigate } from "react-router-dom";
+import { getSelectedOrg } from '../../redux/user.js';
 
 import styled from 'styled-components';
 
@@ -14,146 +15,70 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import AppHeader from '../../components/header.js';
 import Footer from '../../components/footer.js';
-
-var Styles = styled.div`
-    .subscribers-list {
-        overflow : scroll;
-    }
-    
-    .subscribers-list-container {
-        padding : 16px;
-        height : calc(100% - 36px);
-    }
-
-    .subscriber-card {
-        padding : 8px;
-        margin : 8px 0px;
-        background: #FFFFFF;
-        box-shadow: 0px 2px 15px -10px rgba(0, 0, 0, 0.25);
-        border-radius: 5px;
-        // height : 82px;
-    }
-
-    .sub-profile-pic {
-        height : 48px;
-        width : 48px;
-        border-radius : 5px;
-        object-fit : none;
-    }
-
-    .subscriber-detail {
-        padding-left : 8px;
-    }
-
-    .subscriber-name {
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 17px;
-        color: #404040;
-    }
-
-    .subscriber-contact {
-        opacity : 0.6;
-        font-size : 12px;
-        line-height : 18px;
-    }
-
-    .validity-container{
-        width : 92px;
-        height : 48px;
-        border-radius : 5px;
-        color : var(--text-on-primary);
-        font-size : 13px;
-    }
-
-    .subscriber-detail-container {
-        padding : 8px;
-    }
-
-    .subscription-detail-container {
-        padding : 8px;
-    }
-
-    .subscription-count__label {
-        opacity : 0.5;
-    }
-
-    .validity {
-        opacity : 0.6;
-        font-size : 14px;
-        line-height : 18px;
-    }
-
-    .add-subscriber {
-        font-size : 30px;
-        padding-right : 20px;
-    }
-
-    .filter-container {
-        padding : 0px 16px;
-    }
-
-    .filter-btn {
-        padding : 2px 8px;
-        background : white;
-        border : 1px solid var(--primary-color);
-        border-radius : 3px;
-        color : var(--primary-color);
-        min-width : 100px;
-    }
-
-    .sort {
-        background : white;
-        border-radius : 3px;
-        padding : 5px;
-    }
-`
+import Loader from '../../components/loader.js';
+import NoData from '../../components/no-data.js';
 
 export default function SubscribersList() {
-    var navigate = useNavigate();
+    var { getState } = React.useContext(AppContext);
+    var selectedOrg = getSelectedOrg(getState());
 
-    var { selectedOrg } = React.useContext(HomeContext);
+    var [loading, setLoading] = React.useState(true);
+
     var [subscriptions, setSubscriptions] = React.useState([]);
 
     React.useEffect(() => {
         if (selectedOrg) {
+            setLoading(true);
             getAllSubscribers(selectedOrg)
-                .then(setSubscriptions)
+                .then(data => {
+                    setSubscriptions(data);
+                })
+                .finally(() => setLoading(false))
         }
     }, [selectedOrg]);
 
-    console.log(subscriptions);
+
 
     return (
         <Styles className="full-height flex-column">
             <AppHeader title={"Subscriptions"} />
             <div className='flex-1' style={{ position: "relative" }}>
-
                 {
-                    subscriptions.length > 0
-                        ? (
-                            <div className='flex-column full-height'>
-                                <ListFilter />
-                                <div className="subscribers-list-container">
-                                    <ul className="subscribers-list full-height">
-                                        {subscriptions.map(subscriber =>
-                                            <Subscriber key={subscriber.contact} subscriber={subscriber} />
-                                        )}
-                                    </ul>
-                                </div>
-                            </div>
-                        )
-                        : null
+                    loading
+                        ? <Loader />
+                        : <SubscriptionContainer subscriptions={subscriptions} />
                 }
-
-                <Fab onClick={() => navigate("../add")} style={{ position: "absolute", bottom: "12px", right: "12px" }} color="primary" aria-label="add">
-                    <AddIcon />
-                </Fab>
-
             </div>
-
             <Footer />
         </Styles>
+    )
+}
+
+function SubscriptionContainer({ subscriptions }) {
+    var navigate = useNavigate();
+
+    return (
+        <React.Fragment>
+            {
+                subscriptions.length > 0
+                    ? (
+                        <div className='flex-column full-height'>
+                            <ListFilter />
+                            <div className="subscribers-list-container">
+                                <ul className="subscribers-list full-height">
+                                    {subscriptions.map(subscriber =>
+                                        <Subscriber key={subscriber.contact} subscriber={subscriber} />
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
+                    )
+                    : <NoData description='Add a subscriber'/>
+            }
+            <Fab onClick={() => navigate("../add")} style={{ position: "absolute", bottom: "12px", right: "12px" }} color="primary" aria-label="add">
+                <AddIcon />
+            </Fab>
+        </React.Fragment>
     )
 }
 
@@ -286,3 +211,97 @@ var formatter = new Intl.DateTimeFormat('en-us', options);
 function formatDate(date) {
     return formatter.format(date);
 }
+
+var Styles = styled.div`
+    .subscribers-list {
+        overflow : scroll;
+    }
+    
+    .subscribers-list-container {
+        padding : 16px;
+        height : calc(100% - 36px);
+    }
+
+    .subscriber-card {
+        padding : 8px;
+        margin : 8px 0px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 15px -10px rgba(0, 0, 0, 0.25);
+        border-radius: 5px;
+        // height : 82px;
+    }
+
+    .sub-profile-pic {
+        height : 48px;
+        width : 48px;
+        border-radius : 5px;
+        object-fit : none;
+    }
+
+    .subscriber-detail {
+        padding-left : 8px;
+    }
+
+    .subscriber-name {
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 17px;
+        color: #404040;
+    }
+
+    .subscriber-contact {
+        opacity : 0.6;
+        font-size : 12px;
+        line-height : 18px;
+    }
+
+    .validity-container{
+        width : 92px;
+        height : 48px;
+        border-radius : 5px;
+        color : var(--text-on-primary);
+        font-size : 13px;
+    }
+
+    .subscriber-detail-container {
+        padding : 8px;
+    }
+
+    .subscription-detail-container {
+        padding : 8px;
+    }
+
+    .subscription-count__label {
+        opacity : 0.5;
+    }
+
+    .validity {
+        opacity : 0.6;
+        font-size : 14px;
+        line-height : 18px;
+    }
+
+    .add-subscriber {
+        font-size : 30px;
+        padding-right : 20px;
+    }
+
+    .filter-container {
+        padding : 0px 16px;
+    }
+
+    .filter-btn {
+        padding : 2px 8px;
+        background : white;
+        border : 1px solid var(--primary-color);
+        border-radius : 3px;
+        color : var(--primary-color);
+        min-width : 100px;
+    }
+
+    .sort {
+        background : white;
+        border-radius : 3px;
+        padding : 5px;
+    }
+`

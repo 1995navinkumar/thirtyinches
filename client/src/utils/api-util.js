@@ -48,20 +48,20 @@ export async function getOrgDetails() {
 
 // ---------------------------------------------------- Subscribers -----------------------------------------
 
-export async function addNewSubscription(orgName, branchName, subscriberDetail, subscriptionDetail) {
+export async function addSubscription(orgName, subscriberDetail, subscriptionDetail) {
     return fetchData(
         `api/subscribers/${orgName}`,
         {
             method: "POST",
             body: JSON.stringify({
-                branchName,
-                subscriberDetail
+                subscriberDetail,
+                subscriptionDetail
             })
         }
     )
 }
 
-export async function addSubscription(orgName, contact, subscriptionDetail) {
+export async function renewSubscription(orgName, contact, subscriptionDetail) {
     return fetchData(
         `api/subscribers/${orgName}/${contact}/subscriptions`,
         {

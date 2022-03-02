@@ -6,6 +6,7 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@material-ui/core": "^4.12.3",
     "@mui/icons-material": "^5.4.1",
     "@mui/lab": "^5.0.0-alpha.68",
     "@mui/material": "^5.4.1",
@@ -38,6 +39,9 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.6.0",
+    "grunt": "^1.4.1",
+    "grunt-cli": "^1.4.3",
+    "grunt-svgstore": "^2.0.0",
     "nodemon": "^2.0.15",
     "ntee": "^2.0.0",
     "style-loader": "^3.3.1",
@@ -52,9 +56,10 @@
     "emulators": "firebase emulators:start --import ./emulators-export",
     "export": "firebase emulators:export ./emulators-export",
     "client-sw": "node client/writeFilePaths.js",
-    "client-build": "npm run client-sw && webpack --config webpack.config.js --mode=production",
-    "client-watch": "webpack --watch --mode=development",
+    "client-build": "npm run client-sw && npm run svg && webpack --config webpack.config.js --mode=production",
+    "client-watch": "npm run svg && webpack --watch --mode=development",
     "client-lh": "lighthouse http://localhost:5000 --budget-path=./budget.json --quiet --chrome-flags='--headless' --output-path=./li-out.html",
+    "svg": "node appendSVG.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

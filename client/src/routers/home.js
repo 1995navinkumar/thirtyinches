@@ -25,6 +25,7 @@ import {
     Navigate,
     useNavigate
 } from "react-router-dom";
+import Loader from '../components/loader';
 
 var Styles = styled.div`
     .app-body {
@@ -46,6 +47,8 @@ export default function Home() {
 
     var [toastProps, setToastProps] = React.useState({ messageId: 0 });
 
+    var [loading, setLoading] = React.useState(true);
+
     var showToastMessage = React.useCallback((args) => {
         setToastProps(props => ({ ...args, messageId: props.messageId + 1 }));
     }, []);
@@ -62,33 +65,38 @@ export default function Home() {
     }, []);
 
     React.useEffect(() => {
-        dispatch(userPersonalisationAction());
-    }, []);
-
-    React.useEffect(() => {
-        dispatch(getOrgDetailsAction());
+        Promise.all([
+            dispatch(userPersonalisationAction()),
+            dispatch(getOrgDetailsAction())
+        ])
+            .then(() => setLoading(false))
     }, []);
 
     return (
         <HomeContext.Provider value={{ showToastMessage, setShowMenu }}>
             <Styles className="full-height flex-column ">
-                <main className="app-body">
-                    <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
-                    {
-                        <Routes>
-                            <Route path="/" element={<Navigate replace to="/dashboard" />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/orgs/*" element={<Orgs />} />
-                            <Route path="/subscriptions/*" element={<Subscriptions />} />
-                            <Route path="/assets" element={<Assets />} />
-                            <Route path="/attendance" element={<Attendance />} />
-                            <Route path="/expenses" element={<Expenses />} />
-                            <Route path="/feedbacks" element={<Feedback />} />
-                            <Route path="/reports" element={<Reports />} />
-                        </Routes>
-                    }
+                {
+                    loading
+                        ? <Loader />
+                        : <main className="app-body">
+                            <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
+                            {
+                                <Routes>
+                                    <Route path="/" element={<Navigate replace to="/dashboard" />} />
+                                    <Route path="/dashboard" element={<Dashboard />} />
+                                    <Route path="/orgs/*" element={<Orgs />} />
+                                    <Route path="/subscriptions/*" element={<Subscriptions />} />
+                                    <Route path="/assets" element={<Assets />} />
+                                    <Route path="/attendance" element={<Attendance />} />
+                                    <Route path="/expenses" element={<Expenses />} />
+                                    <Route path="/feedbacks" element={<Feedback />} />
+                                    <Route path="/reports" element={<Reports />} />
+                                </Routes>
+                            }
 
-                </main>
+                        </main>
+                }
+
 
                 <ToastMessage {...toastProps} />
             </Styles>

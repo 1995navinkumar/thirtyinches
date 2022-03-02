@@ -1,12 +1,13 @@
 import React from "react";
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
+import Icon from "./icon";
 
 export default function SecondaryHeader({ title }) {
     var navigate = useNavigate();
     return (
         <Styles className="flex-row flex-align-center">
-            <img onClick={() => navigate(-1)} src="images/back-icon.png" className="back-icon" />
+            <Icon onClick={() => navigate(-1)} className="svg-filled icon" href={"#back-button"} />
             <div className="flex-1 flex-row app-header">
                 <h1 className='header--title'>{title}</h1>
             </div>
