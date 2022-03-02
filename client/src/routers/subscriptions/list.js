@@ -1,8 +1,8 @@
 import React from 'react';
-import { getAllSubscribers } from '../../utils/api-util.js';
 import { AppContext, HomeContext } from '../../context';
 import { useNavigate } from "react-router-dom";
 import { getSelectedOrg } from '../../redux/user.js';
+import { selectSubscribers, getSubscriptionDetailAction } from '../../redux/subscribers';
 
 import styled from 'styled-components';
 
@@ -19,23 +19,18 @@ import Loader from '../../components/loader.js';
 import NoData from '../../components/no-data.js';
 
 export default function SubscribersList() {
-    var { getState } = React.useContext(AppContext);
+    var { getState, dispatch } = React.useContext(AppContext);
     var selectedOrg = getSelectedOrg(getState());
 
     var [loading, setLoading] = React.useState(true);
 
-    var [subscriptions, setSubscriptions] = React.useState([]);
+    var subscriptions = selectSubscribers(getState());
 
     React.useEffect(() => {
-        if (selectedOrg) {
-            setLoading(true);
-            getAllSubscribers(selectedOrg)
-                .then(data => {
-                    setSubscriptions(data);
-                })
-                .finally(() => setLoading(false))
-        }
-    }, [selectedOrg]);
+        setLoading(true);
+        dispatch(getSubscriptionDetailAction(selectedOrg))
+            .then(() => setLoading(false))
+    }, []);
 
 
 
@@ -73,7 +68,7 @@ function SubscriptionContainer({ subscriptions }) {
                             </div>
                         </div>
                     )
-                    : <NoData description='Add a subscriber'/>
+                    : <NoData description='Add a subscriber' />
             }
             <Fab onClick={() => navigate("../add")} style={{ position: "absolute", bottom: "12px", right: "12px" }} color="primary" aria-label="add">
                 <AddIcon />

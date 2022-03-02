@@ -24,6 +24,7 @@ import SecondaryHeader from '../../components/secondary-header.js';
 import { selectBranchDetails } from '../../redux/orgs.js';
 import { getSelectedOrg } from '../../redux/user.js';
 import { MenuItem } from '@mui/material';
+import { addSubscriptionAction } from '../../redux/subscribers.js';
 
 var Styles = styled.div`
     height : 100%;
@@ -48,7 +49,7 @@ var Styles = styled.div`
 `
 
 export default function AddSubscribers() {
-    var { getState } = React.useContext(AppContext);
+    var { getState, dispatch } = React.useContext(AppContext);
     var selectedOrg = getSelectedOrg(getState());
     var { showToastMessage } = React.useContext(HomeContext);
     var branches = selectBranchDetails(getState(), selectedOrg);
@@ -122,17 +123,18 @@ export default function AddSubscribers() {
 
             setDisableBtn(true);
 
-            addSubscription(
-                selectedOrg,
-                { name, address, dob, contact }, //subscriber detail
-                { amount, start, end, branchName } // subscription details
+            dispatch(
+                addSubscriptionAction(
+                    selectedOrg,
+                    { name, address, dob, contact }, //subscriber detail
+                    { amount, start, end, branchName } // subscription details
+                )
             )
                 .then(res => {
                     showToastMessage({
                         message: "Subscriber added successfully"
                     })
-                    setDisableBtn(false);
-
+                    navigate("../list");
                 })
                 .catch(err => {
                     console.log(err);
