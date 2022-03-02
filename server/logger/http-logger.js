@@ -27,7 +27,7 @@ const reqLog = bunyan.createLogger({
 
         // In case there's a proxy server:
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-        headers: req.headers
+        // headers: req.headers
       };
     },
   }
