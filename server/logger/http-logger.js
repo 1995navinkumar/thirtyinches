@@ -8,12 +8,12 @@ const uuid = (function uuid() {
 
 const reqLog = bunyan.createLogger({
   name: "reqLog",
-  streams: [
-    {
-      level: "info",
-      path: "logs/req_res.log"
-    }
-  ],
+  // streams: [
+  //   {
+  //     level: "info",
+  //     path: "logs/req_res.log"
+  //   }
+  // ],
   serializers: {
     req: function reqSerializer(req) {
       // check for null/undefined and unexpected type 
@@ -35,12 +35,12 @@ const reqLog = bunyan.createLogger({
 
 const resLog = bunyan.createLogger({
   name: "resLog",
-  streams: [
-    {
-      level: "info",
-      path: "logs/req_res.log"
-    }
-  ],
+  // streams: [
+  //   {
+  //     level: "info",
+  //     path: "logs/req_res.log"
+  //   }
+  // ],
   serializers: {
     res: function resSerializer(res) {
       // check for null/undefined and unexpected type 

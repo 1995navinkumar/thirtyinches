@@ -51,7 +51,7 @@
   "scripts": {
     "postinstall": "mkdir -p logs && mkdirp public/js public/css && npm run client-build",
     "db": "~/Official/Services/mongodb-macos-x86_64-5.0.3/bin/mongod --dbpath ~/Official/Services/mongodb-macos-x86_64-5.0.3/bin/data/db",
-    "start": "NODE_ENV=production DB=production node main.js >> logs/app.log",
+    "start": "NODE_ENV=production DB=production node main.js",
     "server-watch": "NODE_ENV=development nodemon main.js | ntee logs/dev.log | bunyan -o json",
     "emulators": "firebase emulators:start --import ./emulators-export",
     "export": "firebase emulators:export ./emulators-export",

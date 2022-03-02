@@ -15,12 +15,12 @@ const getFullStack = function getFullStack(err) {
 };
 const log = bunyan.createLogger({
   name: "errorLog",
-  streams: [
-    {
-      level: "info",
-      path: "logs/error.log"
-    }
-  ],
+  // streams: [
+  //   {
+  //     level: "info",
+  //     path: "logs/error.log"
+  //   }
+  // ],
   serializers: {
     err: function errSerializer(err) {
       // check for undefined/null and of expected type

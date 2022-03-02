@@ -8,14 +8,13 @@ function readHTMLFile(error, stdout, stderr) {
   console.log(stdout);
   console.log(stderr);
   fs.readFile("client/index.html", "utf-8", (err, html) => {
-    console.log(html);
     readSVGFile(html);
   });
 }
 
 function readSVGFile(html) {
   fs.readFile("dest/dest.svg", "utf-8", (err, svg) => {
-    console.log(svg);
+    console.log(err);
     appendSVG(html, svg);
   });
 }
