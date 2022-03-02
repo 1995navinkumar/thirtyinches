@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
+const appLogger = require("../logger/app-logger");
 
 const { asyncPipe } = require("../utils");
 
@@ -32,7 +33,7 @@ router.post("/", async function createOrgAndBranch(req, res, next) {
             }
         })
     } catch (error) {
-        console.log(error);
+        appLogger.error(error);
         res.status(500);
         res.json({
             message: error.message
@@ -50,7 +51,7 @@ router.get("/", async function getOrgDetails(req, res, next) {
         var orgDetail = await pureDBFns.getOrgDetails({ db, userPrivileges });
         res.json(orgDetail);
     } catch (error) {
-        console.log(error);
+        appLogger.error(error);
         res.status(500);
         res.json({
             message: error.message
@@ -77,7 +78,7 @@ router.post("/:orgName/branches", async function createBranch(req, res, next) {
         })
 
     } catch (error) {
-        console.log(error);
+        appLogger.error(error);
         res.status(500);
         res.json({
             status: "error",
@@ -86,29 +87,6 @@ router.post("/:orgName/branches", async function createBranch(req, res, next) {
     }
 
 });
-
-router.get("/:orgName/branches", async function getBranchDetails(req, res, next) {
-    var db = await getDB(req.dbname);
-    var orgName = req.params.orgName;
-
-    try {
-        var branches = await pureDBFns.getBranchesFromOrg({
-            db,
-            userPrivileges,
-            orgName
-        })
-
-        res.json(branches[0])
-
-    } catch (error) {
-        res.status(500);
-        res.json({
-            status: "error",
-            message: error.message
-        })
-    }
-})
-
 
 var pureDBFns = {
 

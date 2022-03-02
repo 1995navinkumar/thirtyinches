@@ -3,11 +3,17 @@ const bunyan = require("bunyan");
 // substitute with uuid package
 const uuid = (function uuid() {
   let count = 0;
-  return function() { return count++; }
+  return function () { return count++; }
 })();
 
 const reqLog = bunyan.createLogger({
   name: "reqLog",
+  streams: [
+    {
+      level: "info",
+      path: "logs/req_res.log"
+    }
+  ],
   serializers: {
     req: function reqSerializer(req) {
       // check for null/undefined and unexpected type 
@@ -17,7 +23,7 @@ const reqLog = bunyan.createLogger({
         method: req.method,
         protocol: req.protocol,
         req_Id: req.req_Id,
-        time : new Date(),
+        time: new Date(),
 
         // In case there's a proxy server:
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
@@ -26,8 +32,15 @@ const reqLog = bunyan.createLogger({
     },
   }
 });
+
 const resLog = bunyan.createLogger({
   name: "resLog",
+  streams: [
+    {
+      level: "info",
+      path: "logs/req_res.log"
+    }
+  ],
   serializers: {
     res: function resSerializer(res) {
       // check for null/undefined and unexpected type 
@@ -49,14 +62,14 @@ const resLog = bunyan.createLogger({
  */
 module.exports = function httpLogger(req, res, next) {
   var startTime = new Date();
-  req.req_Id = uuid(); 
+  req.req_Id = uuid();
 
-  reqLog.info({req: req});
+  reqLog.info({ req: req });
 
   res.on('finish', function () {
     res.responseTime = new Date() - startTime;
     res.req_Id = req.req_Id;
-    resLog.info({res: res});
+    resLog.info({ res: res });
   });
 
   next();

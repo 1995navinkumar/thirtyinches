@@ -17,7 +17,7 @@ var cardHandlers = {
 async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
     var gt = new Date(Date.now() - (noOfMonthsBefore * 30 * 24 * 3600 * 1000));
 
-    // console.log(ISODate);
+    // appLogger.info(ISODate);
 
     // var currentMonth = (new Date()).getMonth();
 

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
+const appLogger = require("../logger/app-logger");
 
 
 router.get("/:orgName", async function getAllAssets(req, res) {

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
+const appLogger = require("../logger/app-logger");
 
 router.get("/:orgName", async function getSubscribers(req, res) {
     var db = await getDB(req.dbname);
@@ -40,7 +41,7 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
             }
         })
     } catch (error) {
-        console.log(error);
+        appLogger.error(error);
         res.status(500);
         res.json({
             message: error.message

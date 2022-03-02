@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
+const appLogger = require("../logger/app-logger");
+
 
 
 router.post("/:orgName/:contact", async function markAttendance(req, res) {

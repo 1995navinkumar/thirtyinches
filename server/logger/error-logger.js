@@ -1,6 +1,6 @@
 const bunyan = require("bunyan");
 
-const  getFullStack = function getFullStack(err) {
+const getFullStack = function getFullStack(err) {
   var ret = err.stack || err.toString(),
     cause;
 
@@ -15,6 +15,12 @@ const  getFullStack = function getFullStack(err) {
 };
 const log = bunyan.createLogger({
   name: "errorLog",
+  streams: [
+    {
+      level: "info",
+      path: "logs/error.log"
+    }
+  ],
   serializers: {
     err: function errSerializer(err) {
       // check for undefined/null and of expected type
@@ -23,13 +29,13 @@ const log = bunyan.createLogger({
       }
 
       return {
-          message: err.message,
-          name: err.name,
-          stack: getFullStack(err),
-          code: err.code,
-          signal: err.signal,
-          requestId: err.requestId,
-          statusCode: err.statusCode
+        message: err.message,
+        name: err.name,
+        stack: getFullStack(err),
+        code: err.code,
+        signal: err.signal,
+        requestId: err.requestId,
+        statusCode: err.statusCode
       };
     }
   }
@@ -43,7 +49,7 @@ const log = bunyan.createLogger({
 module.exports = function errorLogger(err, req, res, next) {
   err.requestId = req && req.requestId;
 
-  log.error({err: err});
+  log.error({ err: err });
   next(err);
 }
 

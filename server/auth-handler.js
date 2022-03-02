@@ -4,6 +4,8 @@ const { getAuth } = require("firebase-admin/auth");
 
 const getDB = require("./mongo");
 
+const appLogger = require("./logger/app-logger");
+
 var serviceAccount = require("./serviceAccount.json");
 
 admin.initializeApp({
@@ -40,7 +42,7 @@ async function authHandler(req, res, next) {
 
             var isDemoMode = demoAccounts.includes(decodedToken.uid) && req.headers.demomode == "true";
 
-            console.log(`isDemoMode : ${isDemoMode}`, decodedToken.uid);
+            appLogger.info(`isDemoMode : ${isDemoMode}`, decodedToken.uid);
 
             if (isDemoMode) {
                 req.dbname = "demo";
@@ -50,7 +52,7 @@ async function authHandler(req, res, next) {
             req.userPrivileges = await getUserPrivileges(req, usermail);
             authorized = true;
         } catch (er) {
-            console.log(er);
+            appLogger.error(er);
         }
 
     }
