@@ -15,6 +15,9 @@ router.get("/:orgName", async function getAllAssets(req, res) {
             orgName,
             branchName: { $in: allowedBranches }
         })
+        .project({
+            _id: 0
+        })
         .toArray()
 
     res.json(assets);
@@ -25,7 +28,7 @@ router.post("/:orgName", async function newAsset(req, res) {
     var { orgName } = req.params;
     var { assetDetail } = req.body;
 
-    assetDetail.timestamp = new Date(assetDetail.timestamp);
+    assetDetail.purchaseDate = new Date(assetDetail.purchaseDate || Date.now());
 
     await db.collection("assets")
         .insertOne({

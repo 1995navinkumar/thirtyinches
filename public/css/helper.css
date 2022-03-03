@@ -71,6 +71,10 @@
     position: relative;
 }
 
+.hide-scroll {
+    overflow: hidden;
+}
+
 [contenteditable='true'] {
     min-width: 24px;
     border: none;

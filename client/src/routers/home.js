@@ -30,11 +30,11 @@ import Loader from '../components/loader';
 var Styles = styled.div`
     .app-body {
         flex : 1;
-        overflow-y : scroll;
+        overflow-y : hidden;
     }
 
     .app-footer {
-        height : 56px;
+        min-height : 56px;
         background-color : var(--text-on-primary);
         justify-content : space-around;
     }

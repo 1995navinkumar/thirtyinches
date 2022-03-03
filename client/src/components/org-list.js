@@ -17,8 +17,6 @@ var Styles = styled.div`
 
     .branch-list {
         overflow : scroll;
-        // background: #F2F2F2;
-        // box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
         border-radius: 10px;
         padding : 4px 8px;
     }
