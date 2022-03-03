@@ -7,6 +7,7 @@ import { getSelectedOrg } from '../redux/user';
 import AppHeader from '../components/header';
 import Footer from '../components/footer';
 import AddOrganisation from '../components/add-organisation';
+import UnderConstruction from '../components/under-construction';
 
 var Styles = styled.div`
     .card-container {
@@ -41,7 +42,7 @@ export default function Dashboard() {
             <div className="flex-1">
                 {
                     selectedOrg
-                        ? <ShowCards />
+                        ? <UnderConstruction />
                         : <AddOrganisation />
                 }
             </div>
@@ -53,7 +54,7 @@ export default function Dashboard() {
 function ShowCards() {
     return (
         <div className='full-height full-width'>
-            <IncomeVersusExpense />
+
         </div>
     )
 }

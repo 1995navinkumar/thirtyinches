@@ -31,21 +31,6 @@ var Styles = styled.div`
     .form-container {
         padding-top : 40px;
     }
-    .add-subscriber-form input, .add-subscriber-form textarea {
-        margin : 8px 0px;
-        min-height : 32px;
-        border-radius : 44px;
-        padding : 8px;
-    }
-
-    .add-subscriber--btn {
-        width : 144px;
-        height : 44px;
-        border-radius : 44px;
-        background : #EE6211;
-        border : 1px solid #FFF202;
-        color : #FFFFFF;
-    }
 `
 
 export default function AddSubscribers() {

@@ -86,9 +86,9 @@ export default function Home() {
                                     <Route path="/dashboard" element={<Dashboard />} />
                                     <Route path="/orgs/*" element={<Orgs />} />
                                     <Route path="/subscriptions/*" element={<Subscriptions />} />
-                                    <Route path="/assets" element={<Assets />} />
+                                    <Route path="/assets/*" element={<Assets />} />
                                     <Route path="/attendance" element={<Attendance />} />
-                                    <Route path="/expenses" element={<Expenses />} />
+                                    <Route path="/expenses/*" element={<Expenses />} />
                                     <Route path="/feedbacks" element={<Feedback />} />
                                     <Route path="/reports" element={<Reports />} />
                                 </Routes>

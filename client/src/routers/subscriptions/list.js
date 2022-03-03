@@ -68,7 +68,7 @@ function SubscriptionContainer({ subscriptions }) {
                             </div>
                         </div>
                     )
-                    : <NoData description='Add a subscriber' />
+                    : <NoData description={"You don't have any Subscribers."} />
             }
             <Fab onClick={() => navigate("../add")} style={{ position: "absolute", bottom: "12px", right: "12px" }} color="primary" aria-label="add">
                 <AddIcon />

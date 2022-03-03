@@ -67,6 +67,10 @@
     display: none;
 }
 
+.position-relative {
+    position: relative;
+}
+
 [contenteditable='true'] {
     min-width: 24px;
     border: none;
