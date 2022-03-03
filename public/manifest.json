@@ -1,14 +1,14 @@
 {
-    "short_name": "30\"",
-    "name": "thirtyinches",
-    "start_url": ".",
-    "display": "standalone",
-    "scope": ".",
-    "icons": [
-        {
-          "src": "/images/icon.png",
-          "type": "image/png",
-          "sizes": "400x400"
-        }
-      ]
+  "short_name": "30",
+  "name": "thirtyinches",
+  "start_url": ".",
+  "background_color": "#D00737",
+  "display": "standalone",
+  "scope": ".",
+  "icons": [
+    {
+      "src": "android/android-launchericon-512-512.png",
+      "sizes": "512x512"
+    }
+  ]
 }
