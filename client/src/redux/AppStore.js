@@ -4,6 +4,7 @@ import { userReducer } from './user';
 import { orgsReducer } from './orgs';
 import { subscriberReducer } from './subscribers';
 import { assetReducer } from './asset';
+import { expenseReducer } from './expense';
 
 function AppReducer(state = defaultState, action) {
     return {
@@ -11,7 +12,8 @@ function AppReducer(state = defaultState, action) {
         user: userReducer(state.user, action),
         orgs: orgsReducer(state.orgs, action),
         subscribers: subscriberReducer(state.subscribers, action),
-        assets: assetReducer(state.assets, action)
+        assets: assetReducer(state.assets, action),
+        expense: expenseReducer(state.expense, action)
     }
 }
 

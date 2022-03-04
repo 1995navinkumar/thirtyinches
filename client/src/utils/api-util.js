@@ -145,13 +145,12 @@ export async function getPersonalisedData() {
 
 // -------------------------------------------------------- expense ---------------------------------------
 
-export async function addExpense(orgName, branchName, expenseDetail) {
+export async function addExpense(orgName, expenseDetail) {
     return fetchData(
         `api/expenses/${orgName}`,
         {
             method: "POST",
             body: JSON.stringify({
-                branchName,
                 expenseDetail
             })
         }
@@ -162,6 +161,18 @@ export async function addExpense(orgName, branchName, expenseDetail) {
 export async function getAllExpense(orgName) {
     return fetchData(
         `api/expenses/${orgName}`
+    )
+}
+
+export async function addNewCategory(orgName, categoryName) {
+    return fetchData(
+        `api/expenses/${orgName}/category`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                categoryName
+            })
+        }
     )
 }
 

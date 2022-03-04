@@ -50,3 +50,5 @@ export const selectBranchDetails = (state, orgName) => {
     var org = state.orgs.find(o => o.name == orgName);
     return org?.branches ?? [];
 }
+
+export const selectOrgDetail = (state, orgName) => state.orgs.find(o => o.name == orgName)

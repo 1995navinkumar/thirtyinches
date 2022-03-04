@@ -10,10 +10,36 @@ router.get("/:orgName", async function getSubscribers(req, res) {
     var allowedBranches = req.userPrivileges.find(doc => doc.orgName == orgName).branches;
 
     var subscribers = await db.collection("subscribers")
-        .find(
-            { orgName }
-        )
-        .toArray();
+        .aggregate([
+            {
+                $match: {
+                    orgName,
+                    "subscriptions.branchName": { $in: allowedBranches }
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    address: 1,
+                    dob: 1,
+                    contact: 1,
+                    subscriptions: {
+                        $filter: {
+                            input: "$subscriptions",
+                            as: "subscription",
+                            cond: {
+                                $in: [
+                                    "$$subscription.branchName", allowedBranches
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ])
+        .toArray()
+
+
 
     res.json(subscribers);
 })

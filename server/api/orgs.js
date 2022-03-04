@@ -144,7 +144,8 @@ var pureDBFns = {
                                 as: "branch",
                                 cond: { $in: ["$$branch.name", allowedBranches] }
                             }
-                        }
+                        },
+                        expenseCategories: 1
                     }
                 }
             ])

@@ -24,7 +24,7 @@ var Styles = styled.header`
     }
 
     .header--title {
-        font-size : 16px;
+        font-size : 18px;
         padding-left : 20px;
         font-weight : 700;
     }
