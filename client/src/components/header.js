@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { HomeContext } from '../context';
 
 var Styles = styled.header`
@@ -26,6 +26,9 @@ var Styles = styled.header`
 
 export default function AppHeader({ title }) {
     var { setShowMenu } = React.useContext(HomeContext);
+
+    var navigate = useNavigate();
+
     var menuHandler = React.useCallback((e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -42,7 +45,7 @@ export default function AppHeader({ title }) {
             </div>
 
             <div className='action-container flex-row flex-align-center'>
-                <img src="/images/search-icon.svg" />
+                <img onClick={() => navigate("/search")} src="/images/search-icon.svg" />
                 <img src="/images/notification-icon.svg" />
             </div>
         </Styles>

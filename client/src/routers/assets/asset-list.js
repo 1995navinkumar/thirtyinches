@@ -96,7 +96,7 @@ export default function AssetList() {
     )
 }
 
-function RenderAssetDetail({ asset }) {
+export function RenderAssetDetail({ asset }) {
     var keys = Object.keys(asset).filter(k => k != "orgName");
     return (
         <table>

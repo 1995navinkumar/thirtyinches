@@ -26,6 +26,7 @@ import {
     useNavigate
 } from "react-router-dom";
 import Loader from '../components/loader';
+import Search from './search';
 
 var Styles = styled.div`
     .app-body {
@@ -91,6 +92,7 @@ export default function Home() {
                                     <Route path="/expenses/*" element={<Expenses />} />
                                     <Route path="/feedbacks" element={<Feedback />} />
                                     <Route path="/reports" element={<Reports />} />
+                                    <Route path="/search" element={<Search />} />
                                 </Routes>
                             }
 

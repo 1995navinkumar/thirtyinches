@@ -57,7 +57,9 @@ router.post("/:orgName", async function newExpense(req, res) {
         });
 
     let orgDoc = await db.collection("orgs")
-        .findOne({ orgName });
+        .findOne({ name : orgName });
+
+    console.log(orgDoc.expenseCategories);
 
     var allCategories = [...defaultCategories, ...orgDoc?.expenseCategories || []];
 

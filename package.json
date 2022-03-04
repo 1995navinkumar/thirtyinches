@@ -17,6 +17,7 @@
     "express": "^4.17.2",
     "firebase": "^9.6.0",
     "firebase-admin": "^10.0.1",
+    "fuse.js": "^6.5.3",
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "mongodb": "^4.2.2",

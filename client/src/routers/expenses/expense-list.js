@@ -100,7 +100,7 @@ function RenderExpenseDetail({ expense }) {
             <tbody>
                 {
                     keys.map(key => (
-                        <tr key={expense[key]}>
+                        <tr key={key}>
                             <td>{labelMap[key]}</td>
                             <td>:</td>
                             <td>{expense[key]}</td>
