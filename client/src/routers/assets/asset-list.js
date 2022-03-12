@@ -91,7 +91,7 @@ export default function AssetList() {
                 }
             </div>
 
-            <Footer />
+            <Footer selectedRoute='assets'/>
         </Styles>
     )
 }

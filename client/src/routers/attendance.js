@@ -46,7 +46,7 @@ export default function Attendance() {
                         </React.Fragment>
                 }
             </div>
-            <Footer />
+            <Footer selectedRoute='attendance' />
         </div>
     )
 }

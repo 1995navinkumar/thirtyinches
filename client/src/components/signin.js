@@ -1,9 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
 import { signInWithGoogle, signInAsDemoUser } from '../utils/auth-util';
+import Icon from './icon';
 
 var Styles = styled.div`
     height : 100%;
+
+    .logo-holder {
+        width: 52px;
+        height: 52px;
+        position: relative;
+        fill: white;
+    }
+
+    .logo-dot {
+        width: 28%;
+        height: 100%;
+        right: 7px;
+        bottom: -8px;
+        position: absolute;
+    }
 
     .signin-container {
         background-color : var(--primary-color);
@@ -41,6 +57,7 @@ var Styles = styled.div`
         padding : 24px;
         color : var(--text-color);
         font-size : 24px;
+        text-align : center;
     }
 
     .signin-google {
@@ -102,8 +119,13 @@ export default function SignIn({ setSignUp }) {
             <div className="signin-container flex-column full-height">
                 <div className="signin-header-container">
                     <div className="flex-row flex-justify-center app-header">
-                        <img src="/images/logo-outline.svg" />
-                        <img className='logo-stacked' src="/images/logo-filled.svg" />
+                        <span className='logo-holder'>
+                            <Icon className="full-height full-width" href={"#logo"} />
+                            <Icon className="logo-dot" href={"#logo-dot"} />
+                        </span>
+
+                        {/* <img src="/images/logo-outline.svg" /> */}
+                        {/* <img className='logo-stacked' src="/images/logo-filled.svg" /> */}
                     </div>
                     <div className="flex-row flex-justify-center">
                         <p className="signin-header--subtitle">Gym Management App</p>
@@ -127,7 +149,9 @@ export default function SignIn({ setSignUp }) {
                         </button>
                     </div>
                 </div>
-                <img className="signin-backdrop" src="images/logo.svg"></img>
+
+                {/* <Icon href={"#logo"} /> */}
+                {/* <img className="signin-backdrop" src="images/logo.svg"></img> */}
 
             </div>
         </Styles>

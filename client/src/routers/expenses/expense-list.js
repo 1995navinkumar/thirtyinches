@@ -87,7 +87,7 @@ export default function ExpenseList() {
                 }
             </div>
 
-            <Footer />
+            <Footer selectedRoute='expenses'/>
         </Styles>
     )
 }

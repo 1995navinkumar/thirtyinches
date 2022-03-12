@@ -23,3 +23,9 @@ self.addEventListener('fetch', function (event) {
     );
 });
 
+self.onpush = function (event) {
+    var message = event.data?.json();
+    self.registration.showNotification(message.name);
+    // From here we can write the data to IndexedDB, send it to any open
+    // windows, display a notification, etc.
+}

@@ -46,7 +46,7 @@ export default function Dashboard() {
                         : <AddOrganisation />
                 }
             </div>
-            <Footer />
+            <Footer selectedRoute='dashboard'/>
         </Styles>
     )
 }

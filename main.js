@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const { httpLogger, errorLogger } = require("./server/logger");
 const api = require("./server/api");
 const compression = require('compression');
+require("./server/webpush");
 
 const authHandler = require("./server/auth-handler");
 

@@ -44,7 +44,7 @@ export default function SubscribersList() {
                         : <SubscriptionContainer subscriptions={subscriptions} />
                 }
             </div>
-            <Footer />
+            <Footer selectedRoute='subscriptions' />
         </Styles>
     )
 }
@@ -61,8 +61,8 @@ function SubscriptionContainer({ subscriptions }) {
                             <ListFilter />
                             <div className="subscribers-list-container">
                                 <ul className="subscribers-list full-height">
-                                    {subscriptions.map(subscriber =>
-                                        <Subscriber key={subscriber.contact} subscriber={subscriber} />
+                                    {subscriptions.map((subscriber, idx) =>
+                                        <Subscriber key={subscriber.contact} subscriber={subscriber} idx={idx} />
                                     )}
                                 </ul>
                             </div>
@@ -77,12 +77,12 @@ function SubscriptionContainer({ subscriptions }) {
     )
 }
 
-function Subscriber({ subscriber }) {
+function Subscriber({ subscriber, idx }) {
     return (
         <li className="subscriber-card flex-column" >
             <div className="flex-align-center flex-row flex-1 subscriber-detail-container">
                 <div className='flex-row flex-1 flex-align-center'>
-                    <img src="images/dummy-profile.png" className="sub-profile-pic" />
+                    <img src={`https://i.pravatar.cc/48?img=${idx + 1}`} className="sub-profile-pic" />
                     <div className="subscriber-detail">
                         <p className="subscriber-name">{subscriber.name}</p>
                         <p className="subscriber-contact">{subscriber.contact}</p>
@@ -144,7 +144,7 @@ function ListFilter({ subscriber }) {
     )
 }
 
-var count = 0;
+var menuId = 0;
 
 function MenuFilter({ label }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -157,7 +157,7 @@ function MenuFilter({ label }) {
     };
 
     var uid = React.useMemo(() => {
-        return `input-${++count}`;
+        return `input-${++menuId}`;
     }, [])
 
     return (
@@ -230,7 +230,7 @@ var Styles = styled.div`
         height : 48px;
         width : 48px;
         border-radius : 5px;
-        object-fit : none;
+        object-fit : contain;
     }
 
     .subscriber-detail {
