@@ -14,14 +14,22 @@ export async function generateData() {
     for (var orgIdx = 0; orgIdx < orgs.length; orgIdx++) {
         var org = orgs[orgIdx];
 
-        await apiUtils.createOrg(org.name);
 
         branches = generateBranches(2);
-        org.branches = branches; // mutation
 
-        for (var brIdx = 0; brIdx < branches.length; brIdx++) {
+
+        await apiUtils.createOrg(org.name, branches[0]);
+
+        for (let brIdx = 1; brIdx < branches.length; brIdx++) {
             var branch = branches[brIdx];
             await apiUtils.createBranch(org.name, branch);
+        }
+
+        // branches = branches.slice(1);
+        org.branches = branches; // mutation
+
+        for (let brIdx = 0; brIdx < branches.length; brIdx++) {
+            var branch = branches[brIdx];
 
             var assets = generateAssets();
             for (var assetIdx = 0; assetIdx < assets.length; assetIdx++) {
@@ -36,20 +44,32 @@ export async function generateData() {
             var expenses = generateExpenses();
             for (var expIdx = 0; expIdx < expenses.length; expIdx++) {
                 var expense = expenses[expIdx];
-                await apiUtils.addExpense(org.name, branch.name, expense);
+                await apiUtils.addExpense(org.name, {
+                    branchName: branch.name,
+                    ...expense
+                });
             }
 
             subscribers = generateSubscribers();
             for (var subIdx = 0; subIdx < subscribers.length; subIdx++) {
                 var subscriber = subscribers[subIdx];
 
-                await apiUtils.addSubscriber(org.name, branch.name, subscriber);
 
-                subscriptions = generateSubscriptions(3);
-                for (var sbnIdx = 0; sbnIdx < subscriptions.length; sbnIdx++) {
+                subscriptions = generateSubscriptions(3, branch.name);
+
+                // await apiUtils.addSubscriber(org.name, branch.name, subscriber);
+
+                await apiUtils.addSubscription(org.name, subscriber, subscriptions[0]);
+
+                // subscriptions = subscriptions.slice(1);
+
+                for (let sbnIdx = 1; sbnIdx < subscriptions.length; sbnIdx++) {
                     var subscription = subscriptions[sbnIdx];
-                    await apiUtils.addSubscription(org.name, subscriber.contact, subscription);
+                    await apiUtils.renewSubscription(org.name, subscriber.contact, subscription);
+                }
 
+                for (let sbnIdx = 0; sbnIdx < subscriptions.length; sbnIdx++) {
+                    var subscription = subscriptions[sbnIdx];
                     var { start, end } = subscription;
                     var diff = end - start;
 
@@ -86,14 +106,14 @@ export async function generateData() {
 
     // org admin
 
-    // await apiUtils.addPrivilege({
-    //     userId: users[0],
-    //     roleName: "OrgAdmin",
-    //     orgName: orgs[0].name,
-    //     branches: orgs[0].branches.map(b => b.name)
-    // })
+    await apiUtils.addPrivilege({
+        userId: users[0],
+        roleName: "OrgAdmin",
+        orgName: orgs[0].name,
+        branches: orgs[0].branches.map(b => b.name)
+    })
 
-    // // org moderator
+    // org moderator
 
     await apiUtils.addPrivilege({
         userId: users[1],
@@ -230,6 +250,9 @@ var expenseCategory = [
     "Misc"
 ]
 
+
+var expenseCount = 0;
+
 function generateExpenses(limit = 10) {
     var sixMonthsFromNow = 6 * 30 * 24 * 60 * 60 * 1000;
     var generateRandomTime = () => (new Date(Date.now() - (sixMonthsFromNow * Math.random()))).getTime();
@@ -238,14 +261,17 @@ function generateExpenses(limit = 10) {
         .fill(0)
         .map((el, idx) => {
             return {
-                title: `Expense_${idx + 1}`,
+                title: `Expense_${expenseCount++}`,
                 description: "expense",
                 amount: Math.ceil(Math.random() * 5000),
-                timestamp: generateRandomTime(),
+                billDate: generateRandomTime(),
                 category: expenseCategory[Math.floor(Math.random() * expenseCategory.length)]
             }
         })
 }
+
+var assets = ["Training Bench ", "Dumbbell Set ", "Barbell Set ", "Kettlebell Set ", "Pull-Up Frame and Bar ", "Treadmill ", "Stationary Bicycle ", "Rowing Machine ", "Fitness Ball ", "Accessories"]
+var assetCount = 0;
 
 function generateAssets(limit = 10) {
     var sixMonthsFromNow = 6 * 30 * 24 * 60 * 60 * 1000;
@@ -255,10 +281,11 @@ function generateAssets(limit = 10) {
         .fill(0)
         .map(() => {
             return {
-                title: `dumbbell_${Math.ceil(Math.random() * 30)}kg`,
+                assetName: `${assets[Math.random() * 10 | 1]}_${assetCount++}`,
                 description: "asset",
-                cost: Math.ceil(Math.random() * 5000),
-                timestamp: generateRandomTime()
+                price: Math.ceil(Math.random() * 5000),
+                quantity: (Math.random() * 10) | 1,
+                purchaseDate: generateRandomTime()
             }
         })
 }
@@ -276,7 +303,7 @@ function generateSubscribers(limit = 10) {
         })
 }
 
-function generateSubscriptions(limit = 3) {
+function generateSubscriptions(limit = 3, branchName) {
     var now = Date.now();
     var oneDay = 24 * 3600 * 1000;
 
@@ -313,9 +340,10 @@ function generateSubscriptions(limit = 3) {
         .map((sub, idx) => {
             return {
                 ...dates[idx],
-                amountPaid: Math.floor(Math.random() * 4000)
+                amount: Math.floor(Math.random() * 4000),
+                branchName
             }
         })
 }
 
-window.generateSubscriptions = generateSubscriptions;
+window.generateData = generateData;

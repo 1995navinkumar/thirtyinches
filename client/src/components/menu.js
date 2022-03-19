@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { AppContext, HomeContext } from '../context';
-import { addPersonalisedData } from '../utils/api-util.js';
+import { NavLink } from 'react-router-dom';
+import { AppContext } from '../context';
 import { logout } from '../utils/auth-util';
 import { getSelectedOrg, selectPrivileges, selectUser, setPersonalisationAction } from '../redux/user';
 

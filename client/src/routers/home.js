@@ -27,6 +27,8 @@ import {
 } from "react-router-dom";
 import Loader from '../components/loader';
 import Search from './search';
+import { checkPushSubscription } from '../utils/push-util';
+import { isDemoMode } from '../utils/auth-util';
 
 var Styles = styled.div`
     .app-body {
@@ -71,6 +73,13 @@ export default function Home() {
             dispatch(getOrgDetailsAction())
         ])
             .then(() => setLoading(false))
+    }, []);
+
+    React.useEffect(() => {
+        if (!isDemoMode()) {
+            var timer = setTimeout(checkPushSubscription, 5000);
+            return () => clearTimeout(timer);
+        }
     }, []);
 
     return (

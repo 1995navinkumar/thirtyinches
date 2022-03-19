@@ -1,4 +1,5 @@
 import { getIdToken, getUserId, isDemoMode } from './auth-util';
+
 // -------------------------------------------------------- Dashboard & Cards ---------------------------------------
 
 export async function getCardData(cardName, params) {
@@ -209,6 +210,34 @@ export async function markAttendance(orgName, branchName, contact, timestamp) {
             })
         }
     );
+}
+
+//------------------------------------------------------------ Push Subscriptions --------------------------------------
+
+export async function getApplicationServerKey() {
+    return fetchData(
+        `api/pushSubscription/serverkey`
+    )
+}
+
+export async function sendPushSubscription(pushSubscription) {
+    return fetchData(
+        `api/pushSubscription`,
+        {
+            method: "POST",
+            body: JSON.stringify(pushSubscription)
+        }
+    )
+}
+
+export async function userLogout(payload) {
+    return fetchData(
+        `api/logout`,
+        {
+            method: "POST",
+            body: JSON.stringify(payload)
+        }
+    )
 }
 
 //------------------------------------------------------------ utils --------------------------------------

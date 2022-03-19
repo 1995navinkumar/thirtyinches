@@ -1,4 +1,6 @@
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { userLogout } from "./api-util";
+import { getPushSubscription } from "./push-util";
 
 var isDemo = false;
 
@@ -10,7 +12,7 @@ export function AuthStateChanged(cb) {
     const auth = getAuth();
     onAuthStateChanged(auth, (userObj) => {
         if (userObj && demoAccounts.includes(userObj.uid)) {
-            isDemo = true;   
+            isDemo = true;
         }
         cb(userObj);
     })
@@ -23,6 +25,8 @@ export async function signInWithGoogle() {
 }
 
 export async function logout() {
+    var pushSubscription = await getPushSubscription();
+    await userLogout({ pushSubscription });
     const auth = getAuth();
     return signOut(auth);
 }

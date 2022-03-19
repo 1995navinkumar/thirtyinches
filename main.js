@@ -5,7 +5,7 @@ const api = require("./server/api");
 const compression = require('compression');
 require("./server/webpush");
 
-const authHandler = require("./server/auth-handler");
+const { authHandler } = require("./server/auth-handler");
 
 const app = express();
 

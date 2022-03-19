@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
 const appLogger = require("../logger/app-logger");
-const { pushSubscriptions } = require("../webpush");
-const webpush = require('web-push');
-
-
+const webpush = require("web-push");
 
 router.get("/:orgName", async function getAllAssets(req, res) {
     var db = await getDB(req.dbname);

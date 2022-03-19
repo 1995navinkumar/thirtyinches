@@ -10,8 +10,11 @@ self.addEventListener("install", function (event) {
                 return cache.addAll(urlsToCache);
             })
     );
-
 })
+
+// self.addEventListener("activate", function (event) {
+// self.clients.claim().then(checkPushSubscription);
+// })
 
 
 self.addEventListener('fetch', function (event) {
@@ -23,9 +26,22 @@ self.addEventListener('fetch', function (event) {
     );
 });
 
+
+// async function sendSubscriptionInfo(pushSubscription) {
+//     var windowClient = await getWindowClient();
+//     windowClient.postMessage({
+//         type: "pushSubscription",
+//         payload: JSON.stringify(pushSubscription)
+//     });
+// }
+
+// async function getWindowClient() {
+//     return await self.clients.matchAll().then(clients => clients.find(c => c.type == "window"));
+// }
+
 self.onpush = function (event) {
     var message = event.data?.json();
-    self.registration.showNotification(message.name);
+    self.registration.showNotification(message.title, message.options);
     // From here we can write the data to IndexedDB, send it to any open
     // windows, display a notification, etc.
 }

@@ -20,18 +20,6 @@
             window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/sw.js', { scope: ".", type: "module" }).then(function (registration) {
                     console.log("Service worker registered");
-                    var options = {
-                        userVisibleOnly: true,
-                        applicationServerKey: "BJb102kMNJnDjP9C-IOC1jXNHb4HcyHOtI6SAGo86pwNL24jfvZmZhm_Kk4JxPOdIxTNWfGVO2byPrHU33XlyjU"
-                    };
-                    registration.pushManager.subscribe(options)
-                        .then(pushSubscription => {
-                            console.log(pushSubscription);
-                            console.log(JSON.stringify(pushSubscription));
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        })
                 }, function (err) {
                     console.log('ServiceWorker registration failed: ', err);
                 });

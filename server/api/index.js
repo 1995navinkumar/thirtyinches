@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const getDB = require("../mongo");
 const orgs = require("./orgs");
 const userprivilege = require("./user-privilege");
 const roles = require("./roles");
@@ -10,10 +9,7 @@ const expenses = require("./expenses");
 const assets = require("./assets");
 const personalisation = require("./personalisation");
 const dashboard = require("./dashboard");
-
-router.get("/usermeta", async (req, res, next) => {
-    res.json({});
-});
+const pushSubscription = require("./pushSubscription");
 
 router.use("/dashboard", dashboard);
 
@@ -32,5 +28,7 @@ router.use("/expenses", expenses);
 router.use("/assets", assets);
 
 router.use("/personalisation", personalisation);
+
+router.use("/pushSubscription", pushSubscription);
 
 module.exports = router;

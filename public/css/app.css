@@ -70,3 +70,11 @@ body {
 #app-root .MuiDivider-wrapper {
     opacity: 0.5;
 }
+
+button.MuiButtonBase-root.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-primary {
+    background-color: var(--primary-color);
+}
+
+button.MuiLoadingButton-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButtonBase-root {
+    background-color: var(--primary-color);
+}

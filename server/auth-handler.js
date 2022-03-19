@@ -4,9 +4,13 @@ const { getAuth } = require("firebase-admin/auth");
 
 const getDB = require("./mongo");
 
+const express = require("express");
+const router = express.Router();
+
 const appLogger = require("./logger/app-logger");
 
 var serviceAccount = require("./serviceAccount.json");
+const { asyncPipe } = require("./utils");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -16,7 +20,7 @@ var demoAccounts = [
     "Uq6uheVxXlNsr217p64xdmE01C72"
 ]
 
-async function authHandler(req, res, next) {
+router.use("/", async function authHandler(req, res, next) {
     var headers = req.headers;
     var authorization = headers.authorization || "";
     var [type, jwt] = authorization?.split(" ") || [];
@@ -27,7 +31,7 @@ async function authHandler(req, res, next) {
 
     if (mode == "development") {
         var uid = req.headers.uid;
-        authorized = uid.length > 0 && jwt && jwt.length > 0;
+        authorized = uid?.length > 0 && jwt && jwt.length > 0;
         if (authorized) {
             req.uid = uid;
             req.dbname = "demo";
@@ -64,7 +68,14 @@ async function authHandler(req, res, next) {
         res.send("Invalid Token");
         res.end();
     }
-}
+});
+
+router.post("/logout", async function logout(req, res, next) {
+    await asyncPipe(logoutHandlers, req);
+    res.json({
+        message: req.body
+    })
+})
 
 async function getUserPrivileges(req, userId) {
     var db = await getDB(req.dbname);
@@ -76,4 +87,6 @@ async function getUserPrivileges(req, userId) {
             .toArray()
 }
 
-module.exports = authHandler;
+var logoutHandlers = [];
+
+module.exports = { authHandler: router, logoutHandlers };

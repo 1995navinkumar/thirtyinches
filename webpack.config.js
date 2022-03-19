@@ -29,22 +29,4 @@ const appConfig = {
   }
 };
 
-const serviceWorkerConfig = {
-  entry: './client/src/firebase-messaging-sw.js',
-  output: {
-    filename: 'firebase-messaging-sw.js',
-    path: path.resolve(__dirname, 'public')
-  },
-  module: {
-    rules: [{
-      test: /\.m?js/,
-      resolve: {
-        fullySpecified: false
-      }
-    }, {
-      ...babelConfig
-    }]
-  }
-};
-
-module.exports = [appConfig, serviceWorkerConfig];
+module.exports = [appConfig];

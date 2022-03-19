@@ -2,21 +2,22 @@ import React from 'react';
 import { AppContext, HomeContext } from '../../context';
 import { useNavigate } from "react-router-dom";
 import { getSelectedOrg } from '../../redux/user.js';
+import { selectBranchDetails } from '../../redux/orgs.js';
 import { selectSubscribers, getSubscriptionDetailAction } from '../../redux/subscribers';
 
 import styled from 'styled-components';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-
-import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+
 import AppHeader from '../../components/header.js';
 import Footer from '../../components/footer.js';
 import Loader from '../../components/loader.js';
 import NoData from '../../components/no-data.js';
+import { formatDate } from '../../utils/common-util';
+
 
 export default function SubscribersList() {
     var { getState, dispatch } = React.useContext(AppContext);
@@ -32,12 +33,10 @@ export default function SubscribersList() {
             .then(() => setLoading(false))
     }, []);
 
-
-
     return (
         <Styles className="full-height flex-column">
             <AppHeader title={"Subscriptions"} />
-            <div className='flex-1' style={{ position: "relative" }}>
+            <div className='flex-1' style={{ position: "relative", overflow : "hidden" }}>
                 {
                     loading
                         ? <Loader />
@@ -130,81 +129,62 @@ function EndsIn({ subscriber }) {
 }
 
 function ListFilter({ subscriber }) {
+    var { getState, dispatch } = React.useContext(AppContext);
+    var selectedOrg = getSelectedOrg(getState());
+    var branches = selectBranchDetails(getState(), selectedOrg);
+    branches = [{ name: "-- All --" }, ...branches];
+    let [branchName, setBranchName] = React.useState("");
+    let statuses = ["-- All --", "Active", "Expired"];
+    let [status, setStatus] = React.useState("");
+
 
     return (
         <div className='filter-container flex-row flex-align-center'>
             <div className='filters flex-1 flex-row flex-align-center'>
-                <MenuFilter label={"--Branches--"} />
-                <MenuFilter label={"--Status--"} />
+                <TextField
+                    value={branchName}
+                    onChange={e => setBranchName(e.target.value)}
+                    select // tell TextField to render select
+                    size='small'
+                    label="Branch"
+                    className='branch-filter'
+                >
+                    {
+                        branches.map(br => (
+                            <MenuItem key={br.name} value={br.name}>
+                                {br.name}
+                            </MenuItem>
+                        ))
+                    }
+
+                </TextField>
+
+                <TextField
+                    value={status}
+                    onChange={e => setStatus(e.target.value)}
+                    select // tell TextField to render select
+                    size='small'
+                    label="Status"
+                    className='status-filter'
+                >
+
+                    {
+                        statuses.map(st => (
+                            <MenuItem key={st} value={st}>
+                                {st}
+                            </MenuItem>
+                        ))
+                    }
+
+                </TextField>
+
+
             </div>
             <div className='sort flex-row'>
                 <img src="/images/sort-icon.svg" />
             </div>
         </div>
     )
-}
-
-var menuId = 0;
-
-function MenuFilter({ label }) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    var uid = React.useMemo(() => {
-        return `input-${++menuId}`;
-    }, [])
-
-    return (
-        <div style={{ marginRight: "8px" }}>
-
-            {/* <InputLabel id={uid}>Age</InputLabel>
-            <Select
-                labelId={uid}
-                value={24}
-                sx={{ minWidth: 120 }}
-                label={"Age"}
-                // size={"small"}
-            // onChange={handleChange}
-            >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-            </Select> */}
-
-            <button className='filter-btn flex-row flex-align-center flex-justify-center' id={`basic-button-${uid}`} onClick={handleClick}>
-                <span style={{ marginRight: "8px" }}>{label}</span>
-                <img src="/images/down-arrow.svg" />
-            </button>
-
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': `basic-button-${uid}`,
-                }}
-            >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </Menu>
-
-        </div >
-    )
-}
-
-var options = { year: 'numeric', month: 'short', day: 'numeric' };
-var formatter = new Intl.DateTimeFormat('en-us', options);
-
-function formatDate(date) {
-    return formatter.format(date);
 }
 
 var Styles = styled.div`
@@ -298,5 +278,14 @@ var Styles = styled.div`
         background : white;
         border-radius : 3px;
         padding : 5px;
+    }
+
+    .branch-filter {
+        width : 100px;
+        margin-right : 16px;
+    }
+
+    .status-filter {
+        width : 100px;
     }
 `
