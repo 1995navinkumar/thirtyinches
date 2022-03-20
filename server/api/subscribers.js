@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
 const appLogger = require("../logger/app-logger");
+const { getUsersWithPrivilege, getPushSubscriptionsForUsers } = require("../db-util");
+const webpush = require("web-push");
 
 router.get("/:orgName", async function getSubscribers(req, res) {
     var db = await getDB(req.dbname);
@@ -39,8 +41,6 @@ router.get("/:orgName", async function getSubscribers(req, res) {
         ])
         .toArray()
 
-
-
     res.json(subscribers);
 })
 
@@ -58,6 +58,29 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
                 ...subscriberDetail,
                 subscriptions: [subscriptionDetail]
             });
+
+
+        var userId = req.uid;
+
+        var usersWithPrivilege = await getUsersWithPrivilege(db, orgName, subscriptionDetail.branchName);
+
+        var otherUsersWithSamePrivilege = usersWithPrivilege.filter(user => user.userId != userId).map(user => user.userId);
+
+        var pushSubscriptions = await getPushSubscriptionsForUsers(db, otherUsersWithSamePrivilege);
+
+        appLogger.info(JSON.stringify(pushSubscriptions));
+
+        pushSubscriptions
+            .flatMap(pushSubscription => pushSubscription.subscriptions)
+            .forEach(push => {
+                webpush.sendNotification(push, JSON.stringify({
+                    title: "New Subscription Added",
+                    options: {
+                        body: `Name : ${subscriberDetail.name} \nAmount : ${subscriptionDetail.amount}`
+                    }
+                }));
+            })
+
         res.status(201);
         res.json({
             status: "success",

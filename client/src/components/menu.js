@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import { AppContext } from '../context';
 import { logout } from '../utils/auth-util';
 import { getSelectedOrg, selectPrivileges, selectUser, setPersonalisationAction } from '../redux/user';
+import { getPushSubscription, unsubscribePush } from '../utils/push-util';
+import { userLogout } from '../utils/api-util';
 
 var Styles = styled.div`
     width : 300px;
@@ -109,7 +111,10 @@ export default function Menu({ showMenu, setShowMenu }) {
 
     var orgs = selectPrivileges(getState()).map(p => p.orgName);
 
-    var signout = React.useCallback((e) => {
+    var signout = React.useCallback(async (e) => {
+        var pushSubscription = await getPushSubscription();
+        await userLogout({ pushSubscription });
+        await unsubscribePush();
         logout().then(() => {
             window.location.reload();
             // Sign-out successful.

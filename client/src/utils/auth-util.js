@@ -25,8 +25,6 @@ export async function signInWithGoogle() {
 }
 
 export async function logout() {
-    var pushSubscription = await getPushSubscription();
-    await userLogout({ pushSubscription });
     const auth = getAuth();
     return signOut(auth);
 }

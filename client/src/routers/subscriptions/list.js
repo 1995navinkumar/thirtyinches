@@ -262,7 +262,7 @@ var Styles = styled.div`
     }
 
     .filter-container {
-        padding : 0px 16px;
+        padding : 6px 16px;
     }
 
     .filter-btn {

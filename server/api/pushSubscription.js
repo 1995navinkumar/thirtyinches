@@ -44,7 +44,22 @@ router.post("/silentNotification", async function silentPushNotification(req, re
 })
 
 logoutHandlers.push(async function (req) {
-    console.log(req.dbname);
+    var db = await getDB(req.dbname);
+    // unsubscribe push notification
+
+    var userId = req.uid;
+    var { pushSubscription } = req.body;
+
+    var endpoint = pushSubscription.endpoint;
+
+    await db.collection("pushSubscription")
+        .updateOne(
+            { userId },
+            {
+                $pull: { subscriptions: { endpoint } }
+            }
+        )
+
     return req;
 })
 

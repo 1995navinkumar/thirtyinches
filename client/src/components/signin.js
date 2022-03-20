@@ -7,8 +7,8 @@ var Styles = styled.div`
     height : 100%;
 
     .logo-holder {
-        width: 52px;
-        height: 52px;
+        width: 60px;
+        height: 60px;
         position: relative;
         fill: white;
     }
@@ -88,6 +88,16 @@ var Styles = styled.div`
          width : 16px;
     }
 
+    .logo-backdrop {
+        fill: var(--primary-color);
+        position: absolute;
+        bottom: 0;
+        width: 320px;
+        height: 320px;
+        right: 0;
+        opacity: 0.2
+    }
+
     .demo-container {
         border: 1px solid var(--primary-color);
         padding: 6px;
@@ -120,8 +130,8 @@ export default function SignIn({ setSignUp }) {
                 <div className="signin-header-container">
                     <div className="flex-row flex-justify-center app-header">
                         <span className='logo-holder'>
-                            <Icon className="full-height full-width" href={"#logo"} />
-                            <Icon className="logo-dot" href={"#logo-dot"} />
+                            <Icon className="full-height full-width" href={"#logo-group"} />
+                            {/* <Icon className="logo-dot" href={"#logo-dot"} /> */}
                         </span>
 
                         {/* <img src="/images/logo-outline.svg" /> */}
@@ -150,7 +160,7 @@ export default function SignIn({ setSignUp }) {
                     </div>
                 </div>
 
-                {/* <Icon href={"#logo"} /> */}
+                <Icon className="logo-backdrop" href={"#logo-backdrop"} />
                 {/* <img className="signin-backdrop" src="images/logo.svg"></img> */}
 
             </div>

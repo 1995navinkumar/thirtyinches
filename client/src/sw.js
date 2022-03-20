@@ -12,11 +12,6 @@ self.addEventListener("install", function (event) {
     );
 })
 
-// self.addEventListener("activate", function (event) {
-// self.clients.claim().then(checkPushSubscription);
-// })
-
-
 self.addEventListener('fetch', function (event) {
     // it can be empty if you just want to get rid of that error
     event.respondWith(
@@ -25,19 +20,6 @@ self.addEventListener('fetch', function (event) {
         })
     );
 });
-
-
-// async function sendSubscriptionInfo(pushSubscription) {
-//     var windowClient = await getWindowClient();
-//     windowClient.postMessage({
-//         type: "pushSubscription",
-//         payload: JSON.stringify(pushSubscription)
-//     });
-// }
-
-// async function getWindowClient() {
-//     return await self.clients.matchAll().then(clients => clients.find(c => c.type == "window"));
-// }
 
 self.onpush = function (event) {
     var message = event.data?.json();
