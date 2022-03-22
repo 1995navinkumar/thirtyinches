@@ -50,16 +50,17 @@ logoutHandlers.push(async function (req) {
     var userId = req.uid;
     var { pushSubscription } = req.body;
 
-    var endpoint = pushSubscription.endpoint;
+    if (pushSubscription) {
+        var endpoint = pushSubscription.endpoint;
 
-    await db.collection("pushSubscription")
-        .updateOne(
-            { userId },
-            {
-                $pull: { subscriptions: { endpoint } }
-            }
-        )
-
+        await db.collection("pushSubscription")
+            .updateOne(
+                { userId },
+                {
+                    $pull: { subscriptions: { endpoint } }
+                }
+            )
+    }
     return req;
 })
 

@@ -26,7 +26,7 @@ export async function getPushSubscription() {
 export async function unsubscribePush() {
     var registration = await getSWRegistration();
     var subscription = await registration.pushManager.getSubscription();
-    return subscription.unsubscribe();
+    return subscription && subscription.unsubscribe();
 }
 
 async function getSWRegistration() {

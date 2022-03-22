@@ -74,6 +74,7 @@ var Styles = styled.div`
     .menu-actions {
         padding : 16px;
         display : block;
+        text-align : initial;
     }
 
     .routes-icon-container {
@@ -105,6 +106,8 @@ export default function Menu({ showMenu, setShowMenu }) {
 
     var { getState, dispatch } = React.useContext(AppContext);
 
+    var [disableLogout, setDisableLogout] = React.useState(false);
+
     var user = selectUser(getState());
 
     var selectedOrg = getSelectedOrg(getState());
@@ -112,6 +115,7 @@ export default function Menu({ showMenu, setShowMenu }) {
     var orgs = selectPrivileges(getState()).map(p => p.orgName);
 
     var signout = React.useCallback(async (e) => {
+        setDisableLogout(true);
         var pushSubscription = await getPushSubscription();
         await userLogout({ pushSubscription });
         await unsubscribePush();
@@ -178,7 +182,7 @@ export default function Menu({ showMenu, setShowMenu }) {
                         <div className="routes-icon-container flex-row flex-align-center flex-justify-center" >
                             <img className="routes-icon" src="images/expenses.svg" />
                         </div>
-                        <span className="flex-1 menu-actions" onClick={signout}>Logout</span>
+                        <button disabled={disableLogout} className="flex-1 menu-actions" onClick={signout}>Logout</button>
                     </li>
                 </ul>
             </div>
