@@ -65,7 +65,7 @@ var Styles = styled.div`
     }
 
     .signin-google--btn {
-        width: 172px;
+        // width: 172px;
         background: linear-gradient(90deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 100%);
         height: 44px;
         border : 1px solid var(--text-on-primary);
@@ -90,12 +90,10 @@ var Styles = styled.div`
 
     .logo-backdrop {
         fill: var(--primary-color);
-        position: absolute;
-        bottom: 0;
-        width: 320px;
-        height: 320px;
-        right: 0;
-        opacity: 0.2
+        opacity: 0.2;
+        height: 80%;
+        width: 80%;
+        align-self: flex-end;
     }
 
     .demo-container {
@@ -131,11 +129,7 @@ export default function SignIn({ setSignUp }) {
                     <div className="flex-row flex-justify-center app-header">
                         <span className='logo-holder'>
                             <Icon className="full-height full-width" href={"#logo-group"} />
-                            {/* <Icon className="logo-dot" href={"#logo-dot"} /> */}
                         </span>
-
-                        {/* <img src="/images/logo-outline.svg" /> */}
-                        {/* <img className='logo-stacked' src="/images/logo-filled.svg" /> */}
                     </div>
                     <div className="flex-row flex-justify-center">
                         <p className="signin-header--subtitle">Gym Management App</p>
@@ -144,7 +138,7 @@ export default function SignIn({ setSignUp }) {
                 <div className="signin-description">
                     <p>Manage Subscriptions, Expenses, Attendance and much more..! </p>
                 </div>
-                <div className="signin-google flex-column flex-align-center flex-1">
+                <div className="signin-google flex-column flex-align-center">
 
                     <button onClick={signInUsingGoogle} className="signin-google--btn flex-row flex-align-center flex-justify-center">
                         <img src="/images/google-logo.svg" className='google-logo' />
@@ -160,8 +154,9 @@ export default function SignIn({ setSignUp }) {
                     </div>
                 </div>
 
-                <Icon className="logo-backdrop" href={"#logo-backdrop"} />
-                {/* <img className="signin-backdrop" src="images/logo.svg"></img> */}
+                <div className='flex-column flex-1' style={{ justifyContent: "end" }}>
+                    <Icon className="full-height full-width logo-backdrop" href={"#logo-backdrop"} />
+                </div>
 
             </div>
         </Styles>

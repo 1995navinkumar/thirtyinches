@@ -17,7 +17,7 @@ import ToastMessage from '../components/ToastMessage';
 import { AppContext, HomeContext } from '../context';
 
 import { userPersonalisationAction } from '../redux/user';
-import { getOrgDetailsAction } from '../redux/orgs';
+import { getOrgDetailsAction, selectOrgsDetail } from '../redux/orgs';
 
 import {
     Routes,
@@ -52,6 +52,8 @@ export default function Home() {
 
     var [loading, setLoading] = React.useState(true);
 
+    var orgDetails = selectOrgsDetail(getState());
+
     var showToastMessage = React.useCallback((args) => {
         setToastProps(props => ({ ...args, messageId: props.messageId + 1 }));
     }, []);
@@ -76,11 +78,11 @@ export default function Home() {
     }, []);
 
     React.useEffect(() => {
-        if (!isDemoMode()) {
+        if (!isDemoMode() && orgDetails.length > 0) {
             var timer = setTimeout(checkPushSubscription, 5000);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [orgDetails]);
 
     return (
         <HomeContext.Provider value={{ showToastMessage, setShowMenu }}>

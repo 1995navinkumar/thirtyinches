@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const babelConfig = {
   test: /\.(js|jsx)$/,
@@ -19,6 +20,13 @@ const appConfig = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public/js'),
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "client/public", to: path.resolve(__dirname, 'public/') }
+      ],
+    }),
+  ],
   module: {
     rules: [{
       ...babelConfig

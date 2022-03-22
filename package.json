@@ -40,6 +40,7 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.2.3",
+    "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.6.0",
     "grunt": "^1.4.1",
     "grunt-cli": "^1.4.3",
@@ -57,11 +58,9 @@
     "server-watch": "NODE_ENV=development nodemon main.js | ntee logs/dev.log | bunyan -o json >> logs/dev.log",
     "emulators": "firebase emulators:start --import ./emulators-export",
     "export": "firebase emulators:export ./emulators-export",
-    "client-sw": "node client/writeFilePaths.js",
-    "client-build": "npm run client-sw && npm run svg && webpack --config webpack.config.js --mode=production",
+    "client-build": "webpack --config webpack.config.js --mode=production",
     "client-watch": "webpack --watch --mode=development",
     "client-lh": "lighthouse http://localhost:5000 --budget-path=./budget.json --quiet --chrome-flags='--headless' --output-path=./li-out.html",
-    "svg": "node appendSVG.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

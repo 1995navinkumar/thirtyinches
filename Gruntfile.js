@@ -11,7 +11,7 @@ var gruntTask = function (grunt) {
       },
       default: {
         files: {
-          'dest/dest.svg': ['public/images/*.svg']
+          'client/public/dest.svg': ['public/images/*.svg']
         }
       },
       your_target: {

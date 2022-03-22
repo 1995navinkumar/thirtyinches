@@ -35,12 +35,20 @@
 </head>
 
 <body>
-    $svg
+    <div id="svg-store"></div>
 
     <div id="app-root"></div>
 
-    <script defer src="./js/bundle.js"></script>
+    <script>
+        fetch("dest.svg")
+            .then(svg => svg.text())
+            .then(svg => {
+                let svgStore = document.getElementById("svg-store");
+                svgStore.innerHTML = svg;
+            })
+    </script>
 
+    <script defer src="./js/bundle.js"></script>
 </body>
 
 </html>
