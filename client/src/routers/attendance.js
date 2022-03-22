@@ -3,19 +3,21 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { getSelectedOrg } from '../redux/user';
 import { getSubscriptionDetailAction, selectSubscribers } from '../redux/subscribers';
-import { AppContext } from '../context';
+import { AppContext, HomeContext } from '../context';
 import AppHeader from '../components/header';
 import Footer from '../components/footer';
 import NoData from '../components/no-data';
 import Loader from '../components/loader';
-import UnderConstruction from '../components/under-construction';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { markAttendance } from '../utils/api-util';
+import { selectBranchDetails } from '../redux/orgs';
+import { MenuItem } from '@mui/material';
 
 var Styles = styled.div`
     .attendance-form {
-        padding-top : 44px;
+        padding-top : 164px;
     }
 
     .subscriber-card {
@@ -54,13 +56,23 @@ var Styles = styled.div`
         font-size : 12px;
         line-height : 18px;
     }
+
+
+    .profile-pic {
+        height: 48px;
+        width: 48px;
+        border-radius: 50%;
+    }
 `
 
 export default function Attendance() {
     var { getState, dispatch } = React.useContext(AppContext);
     var selectedOrg = getSelectedOrg(getState());
+    var branchDetails = selectBranchDetails(getState(), selectedOrg);
     var subscribers = selectSubscribers(getState());
     var [loading, setLoading] = React.useState(true);
+
+    subscribers = subscribers.map((sub, idx) => ({ ...sub, idx }));
 
     var navigate = useNavigate();
 
@@ -85,7 +97,7 @@ export default function Attendance() {
                         : <React.Fragment>
                             {
                                 subscribers.length > 0
-                                    ? <AttendanceForm subscribers={subscribers} />
+                                    ? <AttendanceForm subscribers={subscribers} selectedOrg={selectedOrg} branches={branchDetails} />
                                     : <NoData description="You don't have any Subscribers for marking attendance" />
                             }
                         </React.Fragment>
@@ -96,37 +108,92 @@ export default function Attendance() {
     )
 }
 
-function AttendanceForm({ subscribers }) {
+function AttendanceForm({ subscribers, selectedOrg, branches }) {
+    var { showToastMessage } = React.useContext(HomeContext);
     var [searchValue, setSearchValue] = React.useState("");
+    let [disableBtn, setDisableBtn] = React.useState(false);
+    let [branchName, setBranchName] = React.useState(branches?.[0]?.name ?? "");
+
+    let onSubmit = () => {
+        if (!searchValue || !branchName) { return };
+        setDisableBtn(true);
+        markAttendance(selectedOrg, branchName, searchValue.contact, new Date())
+            .then(() => {
+                setSearchValue("");
+                setDisableBtn(false);
+                showToastMessage({
+                    message: "Attendance Marked Successfully"
+                })
+            })
+            .catch(err => {
+                console.log(err);
+                showToastMessage({
+                    message: err.message,
+                    severity: "error"
+                });
+                setDisableBtn(false);
+            })
+    }
 
     return (
         <div className='flex-column flex-align-center attendance-form'>
             <TextField
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                type="number"
-            />
-
-            <ul className='subscriber-list'>
+                value={branchName}
+                onChange={e => setBranchName(e.target.value)}
+                select // tell TextField to render select
+                label="Branch Name"
+                sx={{ width: 300 }}
+            >
                 {
-                    subscribers.map((subscriber, idx) =>
-                        <li className="subscriber-card flex-column" key={subscriber.contact}>
-                            <div className="flex-align-center flex-row flex-1 subscriber-detail-container">
-                                <div className='flex-row flex-1 flex-align-center'>
-                                    <img src={`https://i.pravatar.cc/48?img=${idx + 1}`} className="sub-profile-pic" />
-                                    <div className="subscriber-detail">
-                                        <p className="subscriber-name">{subscriber.name}</p>
-                                        <p className="subscriber-contact">{subscriber.contact}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    )
+                    branches.map(br => (
+                        <MenuItem key={br.name} value={br.name}>
+                            {br.name}
+                        </MenuItem>
+                    ))
                 }
 
+            </TextField>
 
-            </ul>
+            <div style={{ marginBottom: "32px" }}></div>
+
+            <Autocomplete
+                value={searchValue}
+                onChange={(e, value) => setSearchValue(value)}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                options={subscribers}
+                getOptionLabel={option => option ? `${option.name} - ${option.contact}` : option}
+                renderOption={
+                    (props, option) =>
+                        <li {...props} key={option.contact}>
+                            <RenderSubscriber subscriber={option} />
+                        </li>
+                }
+                sx={{ width: 300 }}
+                freeSolo
+                renderInput={(params) => (
+                    <TextField {...params} label="Mark Attendance" />
+                )}
+            />
+
+            <LoadingButton disabled={!searchValue} loading={disableBtn} loadingPosition="end" onClick={onSubmit} style={{ marginTop: "64px", color: "var(--text-on-primary)", width: "150px" }} variant="contained">Submit</LoadingButton>
+
 
         </div>
+    )
+}
+
+function RenderSubscriber({ subscriber }) {
+    return (
+        <Styles className="flex-align-center flex-row flex-1 subscriber-detail-container">
+            <div className='flex-row flex-1 flex-align-center'>
+                <img src={`https://i.pravatar.cc/48?img=${subscriber.idx + 1}`} className="sub-profile-pic" />
+                <div className="subscriber-detail">
+                    <p className="subscriber-name">{subscriber.name}</p>
+                    <p className="subscriber-contact">{subscriber.contact}</p>
+                </div>
+            </div>
+        </Styles>
     )
 }
