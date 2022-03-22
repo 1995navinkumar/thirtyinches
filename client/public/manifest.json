@@ -2,12 +2,12 @@
   "short_name": "30",
   "name": "thirtyinches",
   "start_url": ".",
-  "background_color": "#D00737",
+  "background_color": "#E5E5E5",
   "display": "standalone",
   "scope": ".",
   "icons": [
     {
-      "src": "images/logo-group.svg"
+      "src": "images/pwa-icon.svg"
     }
   ]
 }
