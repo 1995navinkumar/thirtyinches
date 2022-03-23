@@ -1,7 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
+const { eTagFilter, setResourceUpdateTime } = require("../etag");
 
+const expensesETagFilter = eTagFilter("expenses");
+
+router.get("/:orgName", async function checkETag(req, res, next) {
+    expensesETagFilter(req, res, next);
+})
 
 router.get("/:orgName", async function getAllExpense(req, res) {
     var db = await getDB(req.dbname);
@@ -57,7 +63,7 @@ router.post("/:orgName", async function newExpense(req, res) {
         });
 
     let orgDoc = await db.collection("orgs")
-        .findOne({ name : orgName });
+        .findOne({ name: orgName });
 
     console.log(orgDoc.expenseCategories);
 
@@ -72,6 +78,8 @@ router.post("/:orgName", async function newExpense(req, res) {
                 }
             )
     }
+
+    await setResourceUpdateTime(db, orgName, "expenses");
 
     res.json({
         ...req.body

@@ -3,6 +3,13 @@ const router = express.Router();
 const getDB = require("../mongo");
 const appLogger = require("../logger/app-logger");
 const webpush = require("web-push");
+const { eTagFilter, setResourceUpdateTime } = require("../etag");
+
+const assetsETagFilter = eTagFilter("assets");
+
+router.get("/:orgName", async function checkETag(req, res, next) {
+    assetsETagFilter(req, res, next);
+})
 
 router.get("/:orgName", async function getAllAssets(req, res) {
     var db = await getDB(req.dbname);
@@ -35,6 +42,9 @@ router.post("/:orgName", async function newAsset(req, res) {
             orgName,
             ...assetDetail
         });
+
+    await setResourceUpdateTime(db, orgName, "assets");
+
 
     res.json({
         ...req.body

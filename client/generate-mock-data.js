@@ -106,12 +106,12 @@ export async function generateData() {
 
     // org admin
 
-    await apiUtils.addPrivilege({
-        userId: users[0],
-        roleName: "OrgAdmin",
-        orgName: orgs[0].name,
-        branches: orgs[0].branches.map(b => b.name)
-    })
+    // await apiUtils.addPrivilege({
+    //     userId: users[0],
+    //     roleName: "OrgAdmin",
+    //     orgName: orgs[0].name,
+    //     branches: orgs[0].branches.map(b => b.name)
+    // })
 
     // org moderator
 

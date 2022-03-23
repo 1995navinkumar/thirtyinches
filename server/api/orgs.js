@@ -22,6 +22,7 @@ router.post("/", async function createOrgAndBranch(req, res, next) {
 
     try {
         let org = await asyncPipe(PipedTasks.createNewOrgAndBranch({ db, userId }), { orgName, branchDetails });
+
         res.status(201);
         res.json({
             status: "success",
@@ -91,10 +92,18 @@ router.post("/:orgName/branches", async function createBranch(req, res, next) {
 var pureDBFns = {
 
     createNewOrg: async function createNewOrg({ db, userId, orgName, branchDetails }) {
+        var updateTime = new Date().toISOString();
+        var resourceUpdateTime = ["assets", "attendance", "expenses", "subscribers"]
+            .reduce((acc, resource) => {
+                acc[resource] = updateTime;
+                return acc;
+            }, {});
+
         var org = await db.collection("orgs")
             .insertOne({
                 name: orgName,
-                branches: [branchDetails]
+                branches: [branchDetails],
+                resourceUpdateTime
             })
 
         await db.collection("userPrivileges")

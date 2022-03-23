@@ -4,6 +4,13 @@ const getDB = require("../mongo");
 const appLogger = require("../logger/app-logger");
 const { getUsersWithPrivilege, getPushSubscriptionsForUsers } = require("../db-util");
 const webpush = require("web-push");
+const { eTagFilter, setResourceUpdateTime } = require("../etag");
+
+const subscribersETagFilter = eTagFilter("subscribers");
+
+router.get("/:orgName", async function checkETag(req, res, next) {
+    subscribersETagFilter(req, res, next);
+})
 
 router.get("/:orgName", async function getSubscribers(req, res) {
     var db = await getDB(req.dbname);
@@ -80,6 +87,8 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
                     }
                 }));
             })
+
+        await setResourceUpdateTime(db, orgName, "subscribers");
 
         res.status(201);
         res.json({

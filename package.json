@@ -14,6 +14,7 @@
     "body-parser": "^1.19.1",
     "bunyan": "^1.8.15",
     "compression": "^1.7.4",
+    "etag": "^1.8.1",
     "express": "^4.17.2",
     "firebase": "^9.6.0",
     "firebase-admin": "^10.0.1",
