@@ -75,6 +75,10 @@
     overflow: hidden;
 }
 
+.overflow-scroll {
+    overflow: scroll;
+}
+
 [contenteditable='true'] {
     min-width: 24px;
     border: none;

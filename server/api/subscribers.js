@@ -58,6 +58,9 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
 
     var { subscriberDetail, subscriptionDetail } = req.body;
 
+    subscriptionDetail.start = new Date(subscriptionDetail.start);
+    subscriptionDetail.end = new Date(subscriptionDetail.end);
+
     try {
         await db.collection("subscribers")
             .insertOne({

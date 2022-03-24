@@ -43,8 +43,8 @@ async function getResourceUpdateTime(db, orgName, resourceName) {
             .collection("orgs")
             .findOne({ name: orgName });
 
-        console.log(doc);
-        if (doc) {
+        // console.log(doc);
+        if (doc.resourceUpdateTime) {
             resourceUpdateTime[orgName] = doc.resourceUpdateTime;
         }
     }
@@ -64,8 +64,6 @@ async function setResourceUpdateTime(db, orgName, resourceName) {
             { name: orgName },
             { $set: { [`resourceUpdateTime.${resourceName}"`]: updateTime } }
         )
-
-    resourceUpdateTime[orgName][resourceName] = updateTime;
     return updateTime;
 }
 

@@ -32,14 +32,8 @@ async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
                 '$unwind': {
                     'path': '$subscriptions'
                 }
-            }, {
-                '$match': {
-                    'subscriptions.start': {
-                        '$gte': gt,
-                        '$lte': new Date()
-                    }
-                }
-            }, {
+            },
+            {
                 '$group': {
                     '_id': {
                         'year': {
@@ -50,7 +44,7 @@ async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
                         }
                     },
                     'subscriptions': {
-                        '$sum': '$subscriptions.amountPaid'
+                        '$sum': '$subscriptions.amount'
                     }
                 }
             }, {
@@ -72,23 +66,14 @@ async function incomeVersusExpense(db, noOfMonthsBefore = 3) {
 
     var expenses = await db.collection("expenses")
         .aggregate([
-            {
-                '$match': {
-                    'timestamp': {
-                        '$gte': gt,
-                        '$lte': new Date()
-                    }
-                }
-            }, {
+             {
                 '$group': {
                     '_id': {
                         'year': {
-                            '$year': {
-                                '$toDate': '$timestamp'
-                            }
+                            '$year': '$billDate'
                         },
                         'month': {
-                            '$month': '$timestamp'
+                            '$month': '$billDate'
                         },
                         'category': '$category'
                     },

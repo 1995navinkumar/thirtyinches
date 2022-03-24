@@ -16,7 +16,9 @@
     --primary-light-color: #f7fbfc;
     --primary-dark-color: #7B0421;
 
-    --background-color: #E5E5E5;
+    /* --background-color: #E5E5E5; */
+    --background-color: #F5F5F5;
+
     --text-on-background: #333333;
 
     --text-on-primary: #FFFFFF;
