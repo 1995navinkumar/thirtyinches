@@ -2,9 +2,9 @@ import { getIdToken, getUserId, isDemoMode } from './auth-util';
 
 // -------------------------------------------------------- Dashboard & Cards ---------------------------------------
 
-export async function getCardData(cardName, params) {
+export async function getCardData(orgName, cardName, params) {
     return fetchData(
-        `api/dashboard/${cardName}?${getQueryParams(params)}`
+        `api/dashboard/${orgName}/${cardName}?${getQueryParams(params)}`
     )
 }
 
