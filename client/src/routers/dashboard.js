@@ -238,13 +238,10 @@ function IncomeVersusExpense({ orgName }) {
 
 function Card({ chartData, title, loading }) {
     var chartRef = React.createRef();
-    var [chartObj, setChartObj] = React.useState();
 
     var renderChart = () => {
         var canvas = chartRef.current;
-        console.log(chartData);
-        var chartInstance = new Chart(canvas, chartData);
-        setChartObj(chartInstance);
+        new Chart(canvas, chartData);
     }
 
     React.useEffect(() => {

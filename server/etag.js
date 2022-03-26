@@ -48,7 +48,7 @@ async function getResourceUpdateTime(db, orgName, resourceName) {
             resourceUpdateTime[orgName] = doc.resourceUpdateTime;
         }
     }
-    return resourceUpdateTime[orgName]?.[resourceName];
+    return resourceUpdateTime[orgName]?.[resourceName] || new Date().toISOString();
 
 }
 

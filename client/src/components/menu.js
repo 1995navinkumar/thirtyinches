@@ -220,6 +220,10 @@ var routes = [{
     icon: "images/expenses.svg"
 
 }, {
+    href: "/users",
+    label: "User Management",
+    icon: "images/orgs.svg"
+}, {
     href: "/reports",
     label: "Reports",
     icon: "images/assets.svg"

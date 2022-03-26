@@ -29,6 +29,7 @@ import Loader from '../components/loader';
 import Search from './search';
 import { checkPushSubscription } from '../utils/push-util';
 import { isDemoMode } from '../utils/auth-util';
+import Users from './users';
 
 var Styles = styled.div`
     .app-body {
@@ -101,6 +102,7 @@ export default function Home() {
                                     <Route path="/assets/*" element={<Assets />} />
                                     <Route path="/attendance" element={<Attendance />} />
                                     <Route path="/expenses/*" element={<Expenses />} />
+                                    <Route path="/users/*" element={<Users />} />
                                     <Route path="/feedbacks" element={<Feedback />} />
                                     <Route path="/reports" element={<Reports />} />
                                     <Route path="/search" element={<Search />} />
