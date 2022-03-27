@@ -11,17 +11,9 @@ webpush.setVapidDetails(
 );
 
 function getVapidKeys() {
-    if (fs.existsSync("vapidKeys.json")) {
-        var keys = fs.readFileSync("vapidKeys.json");
-        return JSON.parse(keys);
-    } else {
-        const vapidKeys = webpush.generateVAPIDKeys();
-        fs.writeFileSync("vapidKeys.json", JSON.stringify(vapidKeys));
-        return vapidKeys;
-    }
+    var keys = fs.readFileSync("vapidKeys.json");
+    return JSON.parse(keys);
 }
-
-
 
 module.exports = {
     getVapidKeys
