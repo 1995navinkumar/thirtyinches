@@ -30,6 +30,7 @@ import Search from './search';
 import { checkPushSubscription } from '../utils/push-util';
 import { isDemoMode } from '../utils/auth-util';
 import Users from './users';
+import { reportError } from '../utils/api-util';
 
 var Styles = styled.div`
     .app-body {
@@ -117,4 +118,8 @@ export default function Home() {
             </Styles>
         </HomeContext.Provider>
     )
+}
+
+window.onerror = function (...error) {
+    reportError(error);
 }

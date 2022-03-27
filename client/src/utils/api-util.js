@@ -240,6 +240,22 @@ export async function userLogout(payload) {
     )
 }
 
+//------------------------------------------------------------ Report Client Error --------------------------------------
+
+
+export async function reportError(error) {
+    return fetchData(
+        `api/client-errors`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                error
+            })
+        }
+    )
+}
+
+
 //------------------------------------------------------------ utils --------------------------------------
 
 function _throw(er) {

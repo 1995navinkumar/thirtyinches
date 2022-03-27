@@ -10,6 +10,7 @@ const assets = require("./assets");
 const personalisation = require("./personalisation");
 const dashboard = require("./dashboard");
 const pushSubscription = require("./pushSubscription");
+const clientErrors = require("./client-errors");
 
 router.use("/dashboard", dashboard);
 
@@ -30,5 +31,7 @@ router.use("/assets", assets);
 router.use("/personalisation", personalisation);
 
 router.use("/pushSubscription", pushSubscription);
+
+router.use("/client-errors", clientErrors);
 
 module.exports = router;

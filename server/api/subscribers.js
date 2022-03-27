@@ -88,7 +88,9 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
                     options: {
                         body: `Name : ${subscriberDetail.name} \nAmount : ${subscriptionDetail.amount}`
                     }
-                }));
+                }))
+                    .then(console.log)
+                    .catch(console.log);
             })
 
         await setResourceUpdateTime(db, orgName, "subscribers");
