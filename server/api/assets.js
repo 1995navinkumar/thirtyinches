@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
 const appLogger = require("../logger/app-logger");
-const webpush = require("web-push");
 const { eTagFilter, setResourceUpdateTime } = require("../etag");
+const { sendNotification } = require("../webpush");
 
 const assetsETagFilter = eTagFilter("assets");
 
@@ -42,6 +42,15 @@ router.post("/:orgName", async function newAsset(req, res) {
             orgName,
             ...assetDetail
         });
+
+    var notificationMessage = {
+        title: "New Asset Added",
+        options: {
+            body: `Asset : ${assetDetail.assetName}\nPrice : ${assetDetail.price}\nQuantity : ${assetDetail.quantity}`
+        }
+    }
+
+    sendNotification(db, req.uid, orgName, assetDetail.branchName, notificationMessage);
 
     await setResourceUpdateTime(db, orgName, "assets");
 

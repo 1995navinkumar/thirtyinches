@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
 const { eTagFilter, setResourceUpdateTime } = require("../etag");
+const { sendNotification } = require("../webpush");
 
 const expensesETagFilter = eTagFilter("expenses");
 
@@ -78,6 +79,15 @@ router.post("/:orgName", async function newExpense(req, res) {
                 }
             )
     }
+
+    var notificationMessage = {
+        title: "New Expense Added",
+        options: {
+            body: `Title : ${expenseDetail.title}\n Amount : ${expenseDetail.amount}`
+        }
+    }
+
+    sendNotification(db, req.uid, orgName, expenseDetail.branchName, notificationMessage);
 
     await setResourceUpdateTime(db, orgName, "expenses");
 

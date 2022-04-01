@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const getDB = require("../mongo");
 const appLogger = require("../logger/app-logger");
-const { getUsersWithPrivilege, getPushSubscriptionsForUsers } = require("../db-util");
-const webpush = require("web-push");
 const { eTagFilter, setResourceUpdateTime } = require("../etag");
+const { sendNotification } = require("../webpush");
 
 const subscribersETagFilter = eTagFilter("subscribers");
 
@@ -70,28 +69,14 @@ router.post("/:orgName", async function addNewSubscription(req, res) {
             });
 
 
-        var userId = req.uid;
+        var notificationMessage = {
+            title: "New Subscription Added",
+            options: {
+                body: `Name : ${subscriberDetail.name} \nAmount : ${subscriptionDetail.amount}`
+            }
+        };
 
-        var usersWithPrivilege = await getUsersWithPrivilege(db, orgName, subscriptionDetail.branchName);
-
-        var otherUsersWithSamePrivilege = usersWithPrivilege.filter(user => user.userId != userId).map(user => user.userId);
-
-        var pushSubscriptions = await getPushSubscriptionsForUsers(db, otherUsersWithSamePrivilege);
-
-        appLogger.info(JSON.stringify(pushSubscriptions));
-
-        pushSubscriptions
-            .flatMap(pushSubscription => pushSubscription.subscriptions)
-            .forEach(push => {
-                webpush.sendNotification(push, JSON.stringify({
-                    title: "New Subscription Added",
-                    options: {
-                        body: `Name : ${subscriberDetail.name} \nAmount : ${subscriptionDetail.amount}`
-                    }
-                }))
-                    .then(console.log)
-                    .catch(console.log);
-            })
+        sendNotification(db, req.uid, orgName, subscriptionDetail.branchName, notificationMessage);
 
         await setResourceUpdateTime(db, orgName, "subscribers");
 
