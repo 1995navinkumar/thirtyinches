@@ -27,6 +27,10 @@ export default function SubscribersList() {
 
     var subscriptions = selectSubscribers(getState());
 
+    if (subscriptions.length > 0) {
+        subscriptions = subscriptions.map((sub, idx) => ({ ...sub, idx }));
+    }
+
     React.useEffect(() => {
         setLoading(true);
         dispatch(getSubscriptionDetailAction(selectedOrg))
@@ -36,7 +40,7 @@ export default function SubscribersList() {
     return (
         <Styles className="full-height flex-column">
             <AppHeader title={"Subscriptions"} />
-            <div className='flex-1' style={{ position: "relative", overflow : "hidden" }}>
+            <div className='flex-1' style={{ position: "relative", overflow: "hidden" }}>
                 {
                     loading
                         ? <Loader />
@@ -50,6 +54,23 @@ export default function SubscribersList() {
 
 function SubscriptionContainer({ subscriptions }) {
     var navigate = useNavigate();
+    var [filteredSubscriptions, setFilteredSubscriptions] = React.useState(subscriptions);
+
+
+    var applyFilter = (status, brName) => setFilteredSubscriptions(() => {
+        return subscriptions
+            .filter(subscriber => {
+                if (status != "Active" && status != "Expired") { return true };
+                var { endsIn } = useEndsIn(subscriber);
+                var statusFilter = (status == "Active" && endsIn > 0) || (status == "Expired" && endsIn < 0)
+                return statusFilter;
+            })
+            .filter(subscriber => {
+                if (brName.includes("--") || brName == "") { return true }
+                var { branchName } = useEndsIn(subscriber);
+                return branchName == brName;
+            })
+    })
 
     return (
         <React.Fragment>
@@ -57,14 +78,20 @@ function SubscriptionContainer({ subscriptions }) {
                 subscriptions.length > 0
                     ? (
                         <div className='flex-column full-height'>
-                            <ListFilter />
-                            <div className="subscribers-list-container">
-                                <ul className="subscribers-list full-height">
-                                    {subscriptions.map((subscriber, idx) =>
-                                        <Subscriber key={subscriber.contact} subscriber={subscriber} idx={idx} />
-                                    )}
-                                </ul>
-                            </div>
+                            <ListFilter applyFilter={applyFilter} />
+                            {
+                                filteredSubscriptions.length > 0
+                                    ? <div className="subscribers-list-container">
+                                        <p className='record-details'>Showing {filteredSubscriptions.length} of {subscriptions.length}</p>
+                                        <ul className="subscribers-list full-height">
+                                            {filteredSubscriptions.map((subscriber) =>
+                                                <Subscriber key={subscriber.contact} subscriber={subscriber} />
+                                            )}
+                                        </ul>
+                                    </div>
+                                    : <p> No Data Available for applied Filters </p>
+                            }
+
                         </div>
                     )
                     : <NoData description={"You don't have any Subscribers."} />
@@ -76,12 +103,12 @@ function SubscriptionContainer({ subscriptions }) {
     )
 }
 
-function Subscriber({ subscriber, idx }) {
+function Subscriber({ subscriber }) {
     return (
         <li className="subscriber-card flex-column" >
             <div className="flex-align-center flex-row flex-1 subscriber-detail-container">
                 <div className='flex-row flex-1 flex-align-center'>
-                    <img src={`https://i.pravatar.cc/48?img=${idx + 1}`} className="sub-profile-pic" />
+                    <img src={`https://i.pravatar.cc/48?img=${subscriber.idx + 1}`} className="sub-profile-pic" />
                     <div className="subscriber-detail">
                         <p className="subscriber-name">{subscriber.name}</p>
                         <p className="subscriber-contact">{subscriber.contact}</p>
@@ -100,15 +127,10 @@ function Subscriber({ subscriber, idx }) {
 }
 
 function EndsIn({ subscriber }) {
-    var { subscriptions } = subscriber;
-    subscriptions.sort((a, b) => {
-        return new Date(b.end).getTime() - new Date(a.end).getTime();
-    });
-
-    var endDate = new Date(subscriptions[0].end);
-
-    var remaining = new Date(subscriptions[0].end).getTime() - Date.now();
-    var endsIn = Math.floor(remaining / (1000 * 60 * 60 * 24));
+    var {
+        endDate,
+        endsIn
+    } = useEndsIn(subscriber);
 
     var bgcolor = endsIn < 0 ? `var(--background-color)` : `var(--primary-color)`;
     var color = endsIn < 0 ? `var(--text-on-background)` : `var(--text-on-primary)`;
@@ -128,7 +150,28 @@ function EndsIn({ subscriber }) {
 
 }
 
-function ListFilter({ subscriber }) {
+function useEndsIn(subscriber) {
+    var { subscriptions } = subscriber;
+    subscriptions.sort((a, b) => {
+        return new Date(b.end).getTime() - new Date(a.end).getTime();
+    });
+
+    var endDate = new Date(subscriptions[0].end);
+
+    var remaining = new Date(subscriptions[0].end).getTime() - Date.now();
+    var endsIn = Math.floor(remaining / (1000 * 60 * 60 * 24));
+
+    var branchName = subscriptions[0].branchName;
+
+    return {
+        endDate,
+        remaining,
+        endsIn,
+        branchName
+    }
+}
+
+function ListFilter({ subscriber, applyFilter }) {
     var { getState, dispatch } = React.useContext(AppContext);
     var selectedOrg = getSelectedOrg(getState());
     var branches = selectBranchDetails(getState(), selectedOrg);
@@ -137,6 +180,11 @@ function ListFilter({ subscriber }) {
     let statuses = ["-- All --", "Active", "Expired"];
     let [status, setStatus] = React.useState("");
 
+    React.useEffect(() => {
+        if (status || branchName) {
+            applyFilter(status, branchName);
+        }
+    }, [status, branchName]);
 
     return (
         <div className='filter-container flex-row flex-align-center'>
@@ -161,7 +209,7 @@ function ListFilter({ subscriber }) {
 
                 <TextField
                     value={status}
-                    onChange={e => setStatus(e.target.value)}
+                    onChange={e => { setStatus(e.target.value) }}
                     select // tell TextField to render select
                     size='small'
                     label="Status"
@@ -194,7 +242,7 @@ var Styles = styled.div`
     
     .subscribers-list-container {
         padding : 16px;
-        height : calc(100% - 36px);
+        height : calc(100% - 60px);
     }
 
     .subscriber-card {
@@ -272,6 +320,12 @@ var Styles = styled.div`
         border-radius : 3px;
         color : var(--primary-color);
         min-width : 100px;
+    }
+
+    .record-details {
+        text-align: right;
+        color: var(--primary-color);
+        padding-bottom: 3px;
     }
 
     .sort {

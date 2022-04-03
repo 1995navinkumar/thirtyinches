@@ -47,6 +47,19 @@ router.get("/:orgName", async function getSubscribers(req, res) {
         ])
         .toArray()
 
+    subscribers = subscribers.map(subscriber => {
+        return {
+            ...subscriber,
+            subscriptions: subscriber.subscriptions.sort((a, b) => {
+                return new Date(b.end).getTime() - new Date(a.end).getTime();
+            })
+        }
+    })
+
+    subscribers.sort(({ subscriptions: subA }, { subscriptions: subB }) => {
+        return new Date(subB[0].end).getTime() - new Date(subA[0].end).getTime();
+    })
+
     res.json(subscribers);
 })
 

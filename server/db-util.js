@@ -1,15 +1,13 @@
-async function getUsersWithPrivilege(db, orgName, branch) {
-    console.log(orgName, branch);
+async function getUsersWithPrivilege(db, orgName, branches) {
     return db.collection("userPrivileges")
         .find({
             orgName,
-            branches: branch
+            branches: { $in: branches }
         })
         .toArray()
 }
 
 async function getPushSubscriptionsForUsers(db, users = []) {
-    console.log(users);
     return db.collection("pushSubscription")
         .find({
             userId: { $in: [...users] }

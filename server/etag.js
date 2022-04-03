@@ -9,6 +9,10 @@ function getEtag(value) {
 }
 
 const eTagFilter = resourceName => async (req, res, next) => {
+    if (process.env.NODE_ENV == "development") {
+        next();
+        return;
+    }
     var db = await getDB(req.dbname);
     var { orgName } = req.params;
     let updatedTime = await getResourceUpdateTime(db, orgName, resourceName);

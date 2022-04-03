@@ -84,4 +84,4 @@ export const selectPersonalisedData = state => state.user.personalisedData;
 
 export const getSelectedOrg = state => selectPersonalisedData(state)?.selectedOrg ?? selectPrivileges(state).map(p => p.orgName)?.[0];
 
-
+export const isAdmin = (state, orgName) => !!(selectPrivileges(state).find(privilege => privilege.orgName == orgName)?.roleName == "OrgAdmin");

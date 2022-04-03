@@ -20,7 +20,7 @@ function getVapidKeys() {
 
 
 async function sendNotification(db, userId, orgName, branchName, notification) {
-    var usersWithPrivilege = await getUsersWithPrivilege(db, orgName, branchName);
+    var usersWithPrivilege = await getUsersWithPrivilege(db, orgName, [branchName]);
 
     var otherUsersWithSamePrivilege = usersWithPrivilege.filter(user => user.userId != userId).map(user => user.userId);
 

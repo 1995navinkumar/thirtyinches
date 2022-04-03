@@ -101,6 +101,12 @@ export async function addPrivilege(p) {
     )
 }
 
+export async function getAllManagedUsers(orgName) {
+    return fetchData(
+        `api/userprivilege/${orgName}/managed-users`
+    )
+}
+
 // -------------------------------------------------------- roles ---------------------------------------
 
 

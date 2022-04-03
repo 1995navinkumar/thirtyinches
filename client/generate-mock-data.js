@@ -153,17 +153,17 @@ function generatePrivileges() {
         "branch_read",
         "branch_write",
 
-        "org_user_read",
-        "org_user_write",
+        // "org_user_read",
+        // "org_user_write",
 
-        "branch_user_read",
-        "branch_user_write",
+        // "branch_user_read",
+        // "branch_user_write",
 
-        "org_role_read",
-        "org_role_write",
+        // "org_role_read",
+        // "org_role_write",
 
-        "branch_role_read",
-        "branch_role_write",
+        // "branch_role_read",
+        // "branch_role_write",
 
         "subscriber_read",
         "subsriber_write",
