@@ -7,6 +7,7 @@ import { dataStore } from "./data-store";
 
 export function generatePDF() {
     var destinationNode = document.querySelector("#pdf-destination");
+    destinationNode.innerHTML = '';
 
     var pdf = document.querySelector("#pdf");
 
@@ -49,10 +50,12 @@ export function generatePDF() {
         templates
     })
 
-    setTimeout(() => {
-        printPage(pdf.innerHTML);
-        destinationNode.innerHTML = '';
-    }, 0);
+    printPage(pdf.innerHTML).then((iframe) => {
+        setTimeout(() => {
+            destinationNode.innerHTML = '';
+            document.body.removeChild(iframe);
+        }, 10000);
+    })
 
 }
 
@@ -115,31 +118,37 @@ function getStyles() {
     return cssLink;
 }
 
-var title = document.title;
+// var title = document.title;
 
 function closePrint() {
     document.body.removeChild(this.__container__);
-    document.title = title;
 }
 
 function setPrint() {
-    this.contentWindow.__container__ = this;
-    this.contentWindow.onbeforeunload = closePrint;
-    this.contentWindow.onafterprint = closePrint;
+    // this.contentWindow.__container__ = this;
+    // this.contentWindow.onbeforeunload = closePrint;
+    // this.contentWindow.onafterprint = closePrint;
     this.contentWindow.focus(); // Required for IE
-    document.title = "Dashboard";
+    // document.title = "Dashboard";
     this.contentWindow.print();
 }
 
-function printPage(htmlString) {
-    var oHideFrame = document.createElement("iframe");
-    oHideFrame.onload = setPrint;
-    oHideFrame.style.position = "fixed";
-    oHideFrame.style.right = "0";
-    oHideFrame.style.bottom = "0";
-    oHideFrame.style.width = "0";
-    oHideFrame.style.height = "0";
-    oHideFrame.style.border = "0";
-    oHideFrame.srcdoc = htmlString;
-    document.body.appendChild(oHideFrame);
+async function printPage(htmlString) {
+    return new Promise(resolve => {
+        var oHideFrame = document.createElement("iframe");
+        oHideFrame.onload = () => {
+            setTimeout(() => {
+                setPrint.call(oHideFrame);
+            }, 100);
+            resolve(oHideFrame);
+        };
+        oHideFrame.style.position = "fixed";
+        oHideFrame.style.right = "0";
+        oHideFrame.style.bottom = "0";
+        oHideFrame.style.width = "0";
+        oHideFrame.style.height = "0";
+        oHideFrame.style.border = "0";
+        oHideFrame.srcdoc = htmlString;
+        document.body.appendChild(oHideFrame);
+    })
 }
