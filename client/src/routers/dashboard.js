@@ -8,6 +8,11 @@ import Footer from '../components/footer';
 import AddOrganisation from '../components/add-organisation';
 import { getCardData } from '../utils/api-util';
 import Loader from '../components/loader';
+import Icon from '../components/icon';
+import { generatePDF } from '../paged-html/dashboard';
+import { dataStore } from '../paged-html/data-store';
+
+window.dataStore = dataStore;
 
 var Styles = styled.div`
     .card-container {
@@ -45,6 +50,9 @@ export default function Dashboard() {
         <Styles className="full-height flex-column">
             <AppHeader title={"Dashboard"} />
             <div className="flex-1 hide-scroll">
+                <p className='flex-row' style={{ justifyContent: "end", paddingRight: "24px" }}>
+                    <Icon href={"#export_icon"} className="icon" onClick={() => generatePDF(getState())} />
+                </p>
                 {
                     selectedOrg
                         ? <ShowCards selectedOrg={selectedOrg} />
@@ -116,7 +124,7 @@ function ExpenseAndAssetCount({ orgName }) {
 
     return (
         <div>
-            <Card loading={loading} chartData={chartData} title={"No.of Assets and Expenses"} />
+            <Card loading={loading} name="ExpenseAndAssetCount" chartData={chartData} title={"No.of Assets and Expenses"} />
         </div>
     )
 }
@@ -159,7 +167,7 @@ function SubscriptionCount({ orgName }) {
     }, [orgName]);
     return (
         <div>
-            <Card loading={loading} chartData={chartData} title={"No.of Subscriptions"} />
+            <Card loading={loading} name="SubscriptionCount" chartData={chartData} title={"No.of Subscriptions"} />
         </div>
     )
 }
@@ -224,24 +232,34 @@ function IncomeVersusExpense({ orgName }) {
                     datasets
                 }
             })
+
             setLoading(false);
 
         });
     }, [orgName]);
     return (
         <div>
-            <Card loading={loading} chartData={chartData} title={"Income vs Expense"} />
+            <Card loading={loading} name={"IncomeVersusExpense"} chartData={chartData} title={"Income vs Expense"} />
         </div>
     )
 
 }
 
-function Card({ chartData, title, loading }) {
+function Card({ chartData, title, name, loading }) {
     var chartRef = React.createRef();
 
     var renderChart = () => {
         var canvas = chartRef.current;
-        new Chart(canvas, chartData);
+        new Chart(canvas, {
+            ...chartData,
+            options: {
+                animation: {
+                    onComplete: () => {
+                        dataStore[name] = canvas.toDataURL();
+                    }
+                }
+            }
+        });
     }
 
     React.useEffect(() => {

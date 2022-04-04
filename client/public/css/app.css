@@ -36,6 +36,12 @@ body {
     color: var(--text-on-background);
 }
 
+@media print {
+    body {
+        background: initial;
+    }
+}
+
 .firebase-emulator-warning {
     display: none;
 }

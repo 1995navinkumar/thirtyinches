@@ -21,6 +21,7 @@
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "mongodb": "^4.2.2",
+    "paged-html": "^1.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-html5-camera-photo": "^1.5.5",
