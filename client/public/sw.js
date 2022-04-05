@@ -18,6 +18,8 @@ var urlsToCache = [
     "/css/app.css",
     "/css/helper.css",
     "/css/user-agent.css",
+    "/css/paged.css",
+    "/css/pdf.css",
     "/index.html",
     "/js/bundle.js"
 ];
@@ -31,39 +33,30 @@ self.addEventListener("install", function (event) {
     );
 })
 
-// self.addEventListener("activate", function (event) {
-// self.clients.claim().then(checkPushSubscription);
-// })
+const putInCache = async (request, response) => {
+    if (request.method == "POST") { return };
+    const cache = await caches.open("resource-cache-v1");
+    await cache.put(request, response);
+};
 
-
-self.addEventListener('fetch', function (event) {
-    // it can be empty if you just want to get rid of that error
+self.addEventListener('fetch', async function (event) {
     event.respondWith(
-        fetch(event.request).catch(function () {
-            return caches.match(event.request);
-        })
+        fetch(event.request)
+            .then(res => {
+                putInCache(event.request, res.clone());
+                return res;
+            })
+            .catch(function () {
+                return caches
+                    .match(event.request)
+                    .then(res => res ? res : caches.match("/404.html"))
+            })
     );
 });
 
-
-// async function sendSubscriptionInfo(pushSubscription) {
-//     var windowClient = await getWindowClient();
-//     windowClient.postMessage({
-//         type: "pushSubscription",
-//         payload: JSON.stringify(pushSubscription)
-//     });
-// }
-
-// async function getWindowClient() {
-//     return await self.clients.matchAll().then(clients => clients.find(c => c.type == "window"));
-// }
-
 self.onpush = function (event) {
     var message = event.data?.json();
-    console.log(message);
     self.registration.showNotification(message.title, { ...defaultOptions, ...message.options });
-    // From here we can write the data to IndexedDB, send it to any open
-    // windows, display a notification, etc.
 }
 
 let defaultOptions = {
