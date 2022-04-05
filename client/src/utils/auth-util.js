@@ -1,6 +1,4 @@
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
-import { userLogout } from "./api-util";
-import { getPushSubscription } from "./push-util";
 
 var isDemo = false;
 

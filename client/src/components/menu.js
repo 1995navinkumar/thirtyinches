@@ -138,6 +138,20 @@ export default function Menu({ showMenu, setShowMenu }) {
         setShowMenu(false);
     }
 
+    var shareApp = () => {
+        const shareData = {
+            title: 'Thirty Inches',
+            text: 'Gym Management App',
+            url: 'http://thirtyinches.herokuapp.com/'
+        }
+
+        if (navigator.share) {
+            navigator.share(shareData);
+        } else { 
+            console.log("share not supported");
+        }
+    }
+
     return (
         <Styles style={menuStyle} className="app-menu flex-column">
             <div className="user-profile flex-row flex-align-center">
@@ -186,6 +200,9 @@ export default function Menu({ showMenu, setShowMenu }) {
                     </li>
                 </ul>
             </div>
+
+            <p onClick={shareApp}>Share this App</p>
+
         </ Styles >
     )
 }
