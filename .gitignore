@@ -1,12 +1,1 @@
 node_modules
-/public
-*.log
-*.gz
-.firebase
-.github
-/*.html
-
-emulators-export
-logs
-mongo-export
-dest

@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+
+    // required for packages
+    //"declaration": true,
+    //"emitDeclarationOnly": true,
+    //"declarationMap": true,
+    //"outDir": "ts-types",
+
+
+    "module": "esnext",
+    "target": "es6",
+    "jsx": "react-jsx",
+    // required to import d.ts file through jsdoc. otherwise cannot find module error
+    "moduleResolution": "node",
+
+    // expects types for all files and libs
+    "strict": true,
+    // may replace eslint
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true
+  },
+  "include": ["main.jsx", "src/**/*"]
+
+}

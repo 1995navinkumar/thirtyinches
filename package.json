@@ -1,0 +1,52 @@
+{
+  "name": "react-starter-vite",
+  "version": "1.0.0",
+  "description": "react starter with vite + routing + lazy loader + unit tests + functional tests",
+  "main": "main.jsx",
+  "scripts": {
+    "start": "run-s build serve",
+    "start:local": "vite --debug --force",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test": "tape -r ./esbuild-register.js 'src/**/*.test.+(js|jsx)' | tap-nirvana",
+    "lint": "echo 'eslint-prettier-tsc'",
+    "functional-test": "echo playwright",
+    "docker-build": "docker build -t react-starter-vite .",
+    "docker-run": "docker run -d -p 8080:8080 react-starter-vite"
+  },
+  "keywords": [
+    "react",
+    "starter",
+    "vite",
+    "unit-test",
+    "functional-test",
+    "msw",
+    "lazy-load"
+  ],
+  "author": "sandeepkumaar.c",
+  "license": "ISC",
+  "dependencies": {
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.0",
+    "sort-by": "^1.2.0"
+  },
+  "devDependencies": {
+    "@happy-dom/global-registrator": "^9.20.3",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/react": "^18.2.14",
+    "@vitejs/plugin-react": "^4.0.0",
+    "esbuild-register": "^3.4.2",
+    "msw": "^1.2.2",
+    "npm-run-all": "^4.1.5",
+    "tap-nirvana": "^1.1.0",
+    "tape": "^5.6.3",
+    "vite": "^4.3.1"
+  },
+  "msw": {
+    "workerDirectory": "public"
+  }
+}
