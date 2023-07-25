@@ -24,7 +24,6 @@ const appConfig = {
     new CopyPlugin({
       patterns: [
         { from: "client/public", to: path.resolve(__dirname, 'public/') },
-        { from: "node_modules/paged-html/paged.css", to: path.resolve(__dirname, 'public/css') }
       ],
     }),
   ],

@@ -18,14 +18,14 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 
-if (process.env.NODE_ENV != "production") {
-    var { getAuth, connectAuthEmulator } = require("firebase/auth");
-    var { generateData } = require("./generate-mock-data");
-    window.generateData = generateData;
-    const auth = getAuth();
+// if (process.env.NODE_ENV != "production") {
+//     var { getAuth, connectAuthEmulator } = require("firebase/auth");
+//     var { generateData } = require("./generate-mock-data");
+//     window.generateData = generateData;
+//     const auth = getAuth();
 
-    connectAuthEmulator(auth, `http://${window.location.hostname}:9099`);
-}
+//     connectAuthEmulator(auth, `http://${window.location.hostname}:9099`);
+// }
 
 function render() {
     ReactDOM.render(<App AppStore={AppStore} />, document.getElementById('app-root'));
