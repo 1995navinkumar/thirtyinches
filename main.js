@@ -4,6 +4,7 @@ const { httpLogger, errorLogger } = require("./server/logger");
 const api = require("./server/api");
 const compression = require('compression');
 require("./server/webpush");
+var cors = require('express-cors')
 
 const { authHandler } = require("./server/auth-handler");
 
@@ -16,6 +17,11 @@ app.use(express.static("public"));
 
 app.use(httpLogger); // log req, res 
 app.use(bodyParser.json());
+
+app.use(cors({
+    allowedOrigins: ['http://localhost:5173'],
+    headers: ['uid', 'content-type', 'authorization']
+}))
 
 app.use("/api", authHandler);
 

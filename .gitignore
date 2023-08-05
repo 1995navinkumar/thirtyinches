@@ -10,3 +10,4 @@ emulators-export
 logs
 mongo-export
 dest
+_client

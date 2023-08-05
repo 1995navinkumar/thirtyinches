@@ -278,6 +278,7 @@ function getQueryParams(params = {}) {
 
 export async function fetchData(url, options = {}) {
     var jwt = await getIdToken();
+    const apiUrl = `http://localhost:8800/${url}`;
 
     var defaultOptions = {
         method: "GET",
@@ -287,7 +288,7 @@ export async function fetchData(url, options = {}) {
         }
     }
 
-    if (process.env.NODE_ENV == "development") {
+    if (import.meta.env.DEV) {
         defaultOptions.headers.uid = await getUserId();
     }
 
@@ -296,7 +297,7 @@ export async function fetchData(url, options = {}) {
     }
 
     return fetch(
-        url,
+        apiUrl,
         {
             ...defaultOptions,
             ...options,

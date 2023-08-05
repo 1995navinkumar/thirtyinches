@@ -23,6 +23,6 @@ const defaultState = {
 
 export const AppStore = createStore(AppReducer, applyMiddleware(thunk));
 
-if (process.env.NODE_ENV == "development") {
+if (import.meta.env.DEV) {
     window.AppStore = AppStore;
 }

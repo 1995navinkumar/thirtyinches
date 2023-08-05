@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const appLogger = require("./logger/app-logger");
+// const appLogger = require("./logger/app-logger");
 
 const uri =
     process.env.DB == "production"
